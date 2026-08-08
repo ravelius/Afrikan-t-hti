@@ -129,6 +129,27 @@ export const MAA_KATEGORIAT = {
           wiki: 'Stonehenge',
         },
         {
+          otsikko: 'Mustat kivet piirtävät areenan',
+          tiedosto: 'The Guildhall (16763316129).jpg',
+          teksti: 'Guildhall Yardin aukion kivetyksessä kaartaa tummasta kivestä '
+            + 'ladottu soikea juova. Se ei ole koriste vaan tarkka merkki: '
+            + 'siinä kulki roomalaisen amfiteatterin areenan ulkoreuna. Koko '
+            + 'rakennelma oli noin 100 metriä pitkä ja 85 metriä leveä, ja '
+            + 'katsomoon mahtui noin 7 000 katsojaa eli viidesosa Londiniumin '
+            + 'väestä. Areena tehtiin puusta vuonna 70 ja rakennettiin '
+            + 'kivestä uudelleen 100-luvun alussa. Sitten se unohtui '
+            + 'vuosisadoiksi ja löytyi vasta 1988, kun aukion laitaan '
+            + 'kaivettiin taidemuseon perustuksia. Muurit, puinen '
+            + 'vedenpoistokouru ja areenan hiekkapohja ovat nyt esillä museon '
+            + 'kellarissa noin kuusi metriä kadun pinnan alapuolella.',
+          selite: 'Guildhall Yardin aukio Lontoon Cityssä. Kivetyksen halki '
+            + 'kaartava tumma juova merkitsee roomalaisen amfiteatterin '
+            + 'areenan ulkoreunan, ja oikealla on Guildhall Art Gallery, '
+            + 'jonka kellarissa rauniot ovat esillä.',
+          lahde: 'It\'s No Game (Duncan Harris), Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Londinium',
+        },
+        {
           otsikko: 'Kuningas pakotettiin lain alle',
           aika: '1215',
           tiedosto: 'Magna Carta (British Library Cotton MS Augustus II.106).jpg',
@@ -182,83 +203,154 @@ export const MAA_KATEGORIAT = {
           lahde: 'Malcolmxl5, Wikimedia Commons (CC0)',
           wiki: 'George Stephenson',
         },
+        {
+          otsikko: 'Rantakatu on viemärin katto',
+          tiedosto: 'Installation of the sewerage system of the Metropolis Wellcome M0010346.jpg',
+          teksti: 'Kesällä 1858 Thames löyhkäsi niin pahasti, että parlamentin '
+            + 'jokipuolen verhot kastettiin kalkkikloridiin ja edustajat '
+            + 'puhuivat vakavissaan hallituksen siirtämisestä Oxfordiin tai '
+            + 'St Albansiin. Laki uudesta viemäriverkosta säädettiin jo saman '
+            + 'kesän elokuussa. Insinööri Joseph Bazalgette muurasi 318 '
+            + 'miljoonasta tiilestä järjestelmän, joka vie jätevedet '
+            + 'kaupungin ohi itään. Viemäri tarvitsi tilaa, joten jokeen '
+            + 'rakennettiin uusi rantamuuri ja väli täytettiin maalla: noin '
+            + 'yhdeksän hehtaaria eli 22 eekkeriä Thamesia muuttui kaduksi. '
+            + 'Victoria Embankmentin leveä rantakatu on siis viemärin katto — '
+            + 'ja saman penkereen sisällä kulkee myös metro.',
+          selite: 'Poikkileikkaus Thamesin penkereestä vuodelta 1867, Charing '
+            + 'Crossin aseman kohdalta. Kadun alle on merkitty johtotunneli '
+            + '(1), matalan tason viemäri (2), metrorata höyryvetureineen (3) '
+            + 'ja joen pohjan alle paineilmarata (4); oikealla muurataan '
+            + 'uutta rantamuuria ulos jokeen.',
+          lahde: 'The Illustrated London News / Wellcome Collection, Wikimedia Commons (PD)',
+          wiki: 'Thames',
+        },
+        {
+          otsikko: 'Maailman ensimmäinen metro',
+          tiedosto: 'Metropolitan Railway, Baker Street Station.jpg',
+          teksti: 'Lontoon metro avattiin 10. tammikuuta 1863 maailman '
+            + 'ensimmäisenä. Vaunut olivat puuta ja niitä valaistiin '
+            + 'kaasulyhdyillä, ja maan alla junaa veti höyryveturi — savu '
+            + 'johdettiin ulos tunneliin jätetyistä aukoista. Ensimmäisenä '
+            + 'vuonna tehtiin 9,5 miljoonaa matkaa. Nyt asemia on 272 ja '
+            + 'rataa 400 kilometriä.',
+          selite: 'Baker Streetin asema noin 1863. Krinoliinihameiset matkustajat '
+            + 'odottavat laiturilla, ja tunnelin suulla savuaa höyryveturi.',
+          lahde: 'Wikimedia Commons (PD)',
+          wiki: 'Lontoon metro',
+        },
+        {
+          otsikko: 'Kirkko, josta tuli puutarha',
+          tiedosto: 'St.Dunstan in the East Church Garden, London - geograph.org.uk - 2595823.jpg',
+          teksti: 'Vuoden 1666 suurpalo tuhosi Cityssä 87 seurakuntakirkkoa. St '
+            + 'Dunstan-in-the-East selvisi vaurioituneena, se paikattiin, ja '
+            + 'Christopher Wren lisäsi siihen tornin, jonka neulanterävä '
+            + 'huippu lepää neljän kaaren varassa. Kirkkosali rakennettiin '
+            + 'vielä kertaalleen uudelleen 1817–1821, mutta Wrenin torni jäi '
+            + 'paikalleen. Vuoden 1941 pommituksissa kirkkoon osui täysosuma: '
+            + 'pystyyn jäivät torni sekä pohjois- ja eteläseinä. Uutta '
+            + 'kirkkoa ei rakennettu, vaan kaupunki päätti 1967 jättää '
+            + 'rauniot paikalleen ja istuttaa niiden sisään puutarhan, joka '
+            + 'avattiin 1971. Nyt ikkuna-aukoista työntyy puita ja '
+            + 'köynnöksiä, ja entisen keskilaivan kohdalla lorisee matala '
+            + 'suihkulähde.',
+          selite: 'Goottilainen holvikaari St Dunstan-in-the-Eastin raunioissa. '
+            + 'Kiviportaat johtavat entiseen kirkkosaliin, jossa kasvaa nyt '
+            + 'palmu ja tiheää vihreää; seinät ovat pystyssä, mutta kattoa ei '
+            + 'ole.',
+          lahde: 'Peter Trimming, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Lontoon pommitukset',
+        },
       ],
     },
     {
-      id: 'ruoka',
-      nimi: 'Ruoka',
-      tehtava: {
-        kysymys: 'Miksi voileipä sai nimensä?',
-        vaihtoehdot: ['Jaarli halusi syödä pelipöydässä', 'Se keksittiin Sandwichin kaupungissa', 'Leipä leikattiin hiekkarannalla'],
-        oikea: 0,
-        fakta: 'Sandwichin jaarli halusi syödä korttipöydästä nousematta — '
-          + 'vastaus löytyi voileipänostosta.',
-      },
+      id: 'kuvataide',
+      nimi: 'Kuvataide',
       nostot: [
         {
-          otsikko: 'Kalaa ja ranskalaisia sanomalehdestä',
-          tiedosto: 'Modern fish and chips (8368723726).jpg',
-          teksti: 'Fish and chips syntyi kahdesta erillisestä ideasta, jotka '
-            + 'löysivät toisensa 1860-luvun Lontoossa: juutalaiset '
-            + 'maahanmuuttajat olivat tuoneet tavan uppopaistaa kalaa '
-            + 'taikinassa, ja pohjoisen tehdaskaupungeissa paistettiin '
-            + 'perunaa. Yhdessä niistä tuli työväen ruokaa, jota myytiin '
-            + 'kadulla käärittynä vanhaan sanomalehteen — halpaa, kuumaa ja '
-            + 'täyttävää. Toisessa maailmansodassa fish and chips oli yksi '
-            + 'harvoista ruoista, joita ei säännöstelty: hallitus katsoi sen '
-            + 'pitävän mielialaa yllä.',
-          selite: 'Uppopaistettu turska taikinakuoressa, paksut chipsit ja '
-            + 'sitruuna — annos sanomalehden päällä kuten ennenkin.',
-          lahde: 'LearningLark, Wikimedia Commons (CC BY 2.0)',
-          wiki: 'Fish and chips',
+          otsikko: 'Piirros, joka synnytti tekijänoikeuden',
+          tiedosto: 'A Rake\'s Progress, Plate 2 MET DP825208.jpg',
+          teksti: 'Lontoossa syntynyt William Hogarth kertoi tarinansa '
+            + 'kuvasarjoina, ja kun niistä tehdyt vedokset menivät kaupaksi, '
+            + 'painajat kopioivat ne omiin nimiinsä muutamassa päivässä. '
+            + 'Hogarth vei asian parlamenttiin, ja 25. kesäkuuta 1735 astui '
+            + 'voimaan laki, jota kutsutaan yhä Hogarthin laiksi: se oli '
+            + 'ensimmäisiä tekijänoikeuslakeja, joka suojasi kuvia eikä '
+            + 'pelkkää kirjoitettua sanaa. Samana päivänä hän julkaisi '
+            + 'kahdeksan lehden sarjansa perintönsä tuhlaavasta nuoresta '
+            + 'miehestä, ja jokaisen lehden alle painettiin rivi "Publish\'d '
+            + 'according to Act of Parliament".',
+          selite: 'Hogarthin kuvasarjan toinen lehti: nuori perijä seisoo salinsa '
+            + 'keskellä miekkailumestarin, viulua pitelevän tanssimestarin, '
+            + 'metsästystorven soittajan ja muiden onnenonkijoiden '
+            + 'ympäröimänä. Alareunan tekstirivi kertoo, että lehti on '
+            + 'julkaistu parlamentin lain mukaisesti 25. kesäkuuta 1735.',
+          lahde: 'William Hogarth / Metropolitan Museum of Art, Wikimedia Commons (CC0)',
+          wiki: 'William Hogarth',
         },
         {
-          otsikko: 'Herttuatar keksi iltapäivän välipalan',
-          tiedosto: 'Afternoon Tea - geograph.org.uk - 4115260.jpg',
-          teksti: '1800-luvun alussa britit söivät aamiaisen ja sitten '
-            + 'päivällisen vasta kahdeksalta illalla. Bedfordin herttuatar '
-            + 'Anna kärsi iltapäivällä nälästä ja pyysi kamaripalvelijaa '
-            + 'tuomaan huoneeseensa teetä ja voileipiä. Tavasta tuli '
-            + 'seurustelumuoto: pian koko Britannia joi teetä neljän ja '
-            + 'viiden välillä. Teetä juodaan yhä noin sata miljoonaa '
-            + 'kupillista päivässä, ja kiista maidon lisäämisen '
-            + 'järjestyksestä jatkuu — vanha tapa oli kaataa maito ensin, '
-            + 'jottei ohut posliini haljennut kuumasta teestä.',
-          selite: 'Iltapäivätee tarjoillaan teehuoneessa: kannu, maitokannu ja '
-            + 'leivonnaiset kuuluvat asiaan.',
-          lahde: 'Anthony O\'Neil, Wikimedia Commons (CC BY-SA 2.0)',
-          wiki: 'Tee',
+          otsikko: 'Parturin poika maalasi valon',
+          tiedosto: 'The Fighting Temeraire, JMW Turner, National Gallery.jpg',
+          teksti: 'Joseph Mallord William Turner syntyi vuonna 1775 Covent '
+            + 'Gardenissa, jossa hänen isällään oli parturinliike Maiden '
+            + 'Lanen varrella. Isä ripusti kymmenvuotiaan poikansa '
+            + 'piirustuksia näyteikkunaan ja myi niitä muutamalla '
+            + 'shillingillä, ja neljäntoistavuotiaana poika pääsi '
+            + 'kuninkaallisen taideakatemian oppilaaksi. Kuollessaan 1851 hän '
+            + 'testamenttasi kansakunnalle noin 300 öljymaalausta, noin 30 '
+            + '000 akvarellia ja piirustusta sekä satoja luonnoskirjoja ja '
+            + 'toivoi valmiiden töidensä pysyvän yhdessä. Toive ei aivan '
+            + 'toteutunut, mutta hänen töitään katsellaan yhä ilman '
+            + 'pääsymaksua Tate Britainissa ja National Galleryssä.',
+          selite: 'Turnerin Taisteleva Temeraire vuodelta 1839: kalpea, '
+            + 'kolmimastoinen sotalaiva liukuu pienen mustatorvisen '
+            + 'höyryhinaajan perässä viimeiseen satamaansa purettavaksi. '
+            + 'Oikealla aurinko laskee punaisena, ylhäällä vasemmalla '
+            + 'häämöttää ohut kuunsirppi.',
+          lahde: 'Joseph Mallord William Turner, Wikimedia Commons (PD)',
+          wiki: 'William Turner',
         },
         {
-          otsikko: 'Jaarli ei halunnut nousta pelipöydästä',
-          tiedosto: 'John Montagu, 4th Earl of Sandwich by Johann Zoffany.jpg',
-          teksti: 'John Montagu, Sandwichin neljäs jaarli, oli innokas '
-            + 'korttipelaaja ja kova työntekijä. Kertomuksen mukaan hän pyysi '
-            + 'vuonna 1762 palvelijaa tuomaan lihaa kahden leipäviipaleen '
-            + 'välissä, jotta hän voisi syödä nousematta pöydästä eivätkä '
-            + 'sormet rasvaantuisi kortteihin. Muut alkoivat tilata samaa — '
-            + 'sitä mitä Sandwich syö. Nimi jäi. Jaarli oli myös laivaston '
-            + 'johtaja, ja kapteeni Cook nimesi hänen mukaansa Havaijin '
-            + 'saaret, jotka tunnettiin pitkään Sandwichsaarina.',
-          selite: 'Johann Zoffanyn muotokuva jaarlista. Sama mies antoi nimen '
-            + 'sekä voileivälle että Havaijin saarille.',
-          lahde: 'Johann Zoffany, Wikimedia Commons (PD)',
-          wiki: 'Voileipä',
+          otsikko: 'Talo, jota ei saanut muuttaa',
+          tiedosto: 'Interior view - Sir John Soane\'s Museum - DSC00041.jpg',
+          teksti: 'Arkkitehti John Soane täytti kotinsa Lincoln\'s Inn Fieldsin '
+            + 'varrella kipsivaloksilla, antiikin palasilla ja maalauksilla, '
+            + 'ja sai vuonna 1833 parlamentin säätämään lain: hänen '
+            + 'kuolemansa jälkeen taloa oli säilytettävä mahdollisimman '
+            + 'tarkalleen sellaisena kuin hän sen jätti — osaksi siksi, ettei '
+            + 'riitaantunut George-poika perisi sitä. Taulusalissa seinät '
+            + 'ovat suuria saranoituja levyjä, jotka aukeavat kaapinovien '
+            + 'tavoin, joten pieneen huoneeseen mahtuu kolminkertainen määrä '
+            + 'tauluja. Sisään pääsee yhä ilmaiseksi, mutta vain '
+            + 'yhdeksänkymmentä ihmistä kerrallaan.',
+          selite: 'Näkymä ylös Soanen museon kupolitilaan: seinät on peitetty '
+            + 'lattiasta kattoon kipsivaloksilla, pylväänpäillä ja '
+            + 'koristepalasilla. Kaaren takana kohoaa Apollon antiikkipatsaan '
+            + 'kipsikopio, sen edessä on rivi koristeltuja maljakoita ja '
+            + 'alempana leveä reliefivyö.',
+          lahde: 'Daderot, Wikimedia Commons (CC0)',
+          wiki: 'John Soane',
         },
         {
-          otsikko: 'Vanukas syötiin ennen lihaa',
-          tiedosto: '-2021-05-02 Roast beef and Yorkshire pudding, Trimingham, Norfolk.JPG',
-          teksti: 'Sunnuntain paistista tuli tapa siksi, että liha laitettiin '
-            + 'uuniin ennen kirkkoa ja se oli kypsä, kun väki palasi. Paistin '
-            + 'alle asetettiin astia, johon tippuva rasva kerättiin, ja '
-            + 'siihen kaadettiin ohut taikina: näin syntyi Yorkshiren '
-            + 'vanukas. Alun perin se tarjoiltiin ENNEN lihaa kastikkeen '
-            + 'kanssa — köyhässä talossa vatsa täyttyi halvalla vanukkaalla, '
-            + 'ja kallista lihaa tarvittiin vähemmän. Nykyään se kuuluu '
-            + 'samalle lautaselle paistin ja kastikkeen kanssa.',
-          selite: 'Sunnuntain naudanpaisti, Yorkshiren vanukas ja juurekset '
-            + 'norfolkilaisessa kodissa.',
-          lahde: 'Kolforn, Wikimedia Commons (CC BY-SA 4.0)',
+          otsikko: 'Neula, joka ei ole Kleopatran',
+          tiedosto: 'Cleopatra\'s Needle 2022-04-24d.jpg',
+          teksti: 'Victoria Embankmentin rantakadulla seisoo obeliski, jonka '
+            + 'faarao Thutmosis III pystytti Egyptiin noin vuonna 1450 eaa. '
+            + 'eli lähes 1 400 vuotta ennen Kleopatran syntymää, vaikka kivi '
+            + 'on nimetty tämän mukaan. Se lähti Aleksandriasta syyskuussa '
+            + '1877 maaten 28 metriä pitkän rautasylinterin sisällä, ja '
+            + 'Biskajanlahden myrskyssä hukkui kuusi pelastusveneeseen '
+            + 'lähtenyttä miestä, joiden nimet on kaiverrettu jalustan '
+            + 'pronssilaattaan. Kivi pystytettiin paikalleen vasta syyskuussa '
+            + '1878, ja kun viereen putosi pommi vuonna 1917, sirpaleiden '
+            + 'jäljet jätettiin tahallaan korjaamatta.',
+          selite: 'Kleopatran neula Victoria Embankmentilla alhaalta kuvattuna: '
+            + 'graniittiin hakatut hieroglyfit ja kartussit nousevat kohti '
+            + 'sinistä taivasta. Jalustan pronssisessa kannessa levittäytyy '
+            + 'siipipari, jonka keskellä on kahden kobran välissä pyhä '
+            + 'skarabee.',
+          lahde: 'Djehouty, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Kleopatran neulat',
         },
       ],
     },
@@ -286,6 +378,26 @@ export const MAA_KATEGORIAT = {
             + 'avoin katto kuin 1599 rakennetussa alkuperäisessä.',
           lahde: 'Amy Truter, Wikimedia Commons (CC BY 2.0)',
           wiki: 'Globe-teatteri',
+        },
+        {
+          otsikko: '42 773 sanaa yhdestä talosta',
+          tiedosto: 'Statue of Hodge - Dr Johnsons cat - in Gough Square (4043318307).jpg',
+          teksti: 'Samuel Johnson allekirjoitti sanakirjasopimuksen kesäkuussa '
+            + '1746 ja sai palkkioksi 1 500 guineaa. Työ tehtiin 17 Gough '
+            + 'Squaren talossa Fleet Streetin takana, jonne hän muutti 1748, '
+            + 'ja kirja ilmestyi 15. huhtikuuta 1755. Siinä oli 42 773 '
+            + 'hakusanaa ja noin 114 000 lainausta noin viideltäsadalta '
+            + 'kirjailijalta. Ullakolla kuusi apulaista seisoi pitkän pöydän '
+            + 'ääressä ja kopioi Johnsonin kirjoihin merkitsemiä kohtia '
+            + 'paperiliuskoille. Talon edustalla istuu nykyään pronssinen '
+            + 'kissa: Johnsonin Hodge, jolle isäntä kävi itse ostamassa '
+            + 'ostereita, jottei palvelusväki suuttuisi elukalle.',
+          selite: 'Hodge-patsas Gough Squarella, tohtori Johnsonin talon '
+            + 'vastapäätä. Jon Bickleyn vuonna 1997 tekemä kissa istuu '
+            + 'pronssisen sanakirjan päällä, ja kirjan kannella on kaksi '
+            + 'tyhjää osterinkuorta.',
+          lahde: 'Elliott Brown, Commons (CC BY 2.0)',
+          wiki: 'Samuel Johnson',
         },
         {
           otsikko: 'Kirjailija, joka oli itse ollut lapsityöläinen',
@@ -323,21 +435,82 @@ export const MAA_KATEGORIAT = {
           wiki: 'Liisan seikkailut ihmemaassa',
         },
         {
-          otsikko: 'Etsivälle tulee yhä postia',
-          tiedosto: 'Portrait of Sherlock Holmes by Sidney Paget.jpg',
-          teksti: 'Arthur Conan Doyle oli lääkäri, jonka vastaanotolle ei '
-            + 'riittänyt potilaita — odotellessa hän kirjoitti. Sherlock '
-            + 'Holmesin esikuva oli hänen opettajansa Joseph Bell, joka '
-            + 'päätteli potilaan ammatin pelkästä kädestä ja kengistä. Doyle '
-            + 'kyllästyi hahmoonsa ja tappoi tämän 1893, mutta lukijoiden '
-            + 'raivo oli niin kova, että Holmes oli herätettävä henkiin. '
-            + 'Baker Street 221B:hen tulee yhä kirjeitä, joissa pyydetään '
-            + 'apua — osoitteessa toimii museo, jonka työntekijät vastaavat '
-            + 'niihin.',
-          selite: 'Sidney Pagetin muotokuva vuodelta 1904. Piippu ja terävä katse '
-            + 'tulivat kuvituksista, eivät teksteistä.',
-          lahde: 'Sidney Paget, Wikimedia Commons (PD)',
+          otsikko: 'Osoite, jota ei ollut olemassa',
+          tiedosto: 'Sherlock Holmes Museum, Baker Street, London (2).jpg',
+          teksti: 'Arthur Conan Doyle antoi Sherlock Holmesille osoitteen 221B '
+            + 'Baker Street, vaikka sellaista ei ollut olemassa: vuonna 1890 '
+            + 'katu loppui numeroon 85. Vasta 1930-luvulla Baker Street '
+            + 'pidennettiin ja talot numeroitiin uudelleen, jolloin numerot '
+            + '219–229 osuivat asuntoluottoyhtiö Abbey Nationalin juuri '
+            + 'valmistuneeseen pääkonttoriin. Sinne alkoi tulla kirjeitä '
+            + 'ympäri maailmaa: ihmiset pyysivät Holmesia ratkaisemaan omia '
+            + 'arvoituksiaan. Yhtiö palkkasi työntekijän, jonka tehtävä oli '
+            + 'vastata niihin, ja tätä työtä riitti vuodesta 1932 aina '
+            + 'vuoteen 2002. Vakiovastaus kuului, että etsivä on jäänyt '
+            + 'eläkkeelle ja hoitaa nyt mehiläisiä Sussexissa.',
+          selite: 'Sherlock Holmes -museon vihreä julkisivu Baker Streetillä. '
+            + 'Parvekkeen takana seinässä on sininen laatta, jossa lukee 221b '
+            + 'ja vuodet 1881–1904, vaikka talo on todellisuudessa numeroiden '
+            + '237 ja 241 välissä.',
+          lahde: 'MOs810, Commons (CC BY-SA 4.0)',
           wiki: 'Sherlock Holmes',
+        },
+        {
+          otsikko: 'Patsas, joka ilmestyi yön aikana',
+          tiedosto: 'Peter Pan Statue in Kensington Gardens (01).jpg',
+          teksti: 'J. M. Barrie tilasi Peter Pan -patsaan omalla rahallaan ja '
+            + 'antoi pystyttää sen Kensington Gardensiin 30. huhtikuuta 1912 '
+            + 'salaa, ilman lupaa ja ilman juhlaa, jotta lapset luulisivat '
+            + 'keijujen tuoneen sen yöllä. Seuraavana aamuna hän ilmoitti '
+            + 'Times-lehdessä, että Serpentinen rannalle on ilmestynyt '
+            + 'vappulahja: Peter Pan puhaltamassa pilliään puunkannon päällä. '
+            + 'Kuvanveistäjä George Frampton ei kuitenkaan käyttänyt mallina '
+            + 'Michael Llewelyn Daviesia, jonka valokuvat Barrie oli hänelle '
+            + 'antanut, ja kirjailija jäi pettyneeksi: hänen mielestään '
+            + 'patsaasta puuttui Peterin pirullinen puoli.',
+          selite: 'Peter Pan soittaa pilliä puunkannon päällä Kensington '
+            + 'Gardensissa. Kannon kylkeen on valettu oravia, hiiriä, kaneja '
+            + 'ja keijuja, ja koko veistos on runsaat neljä metriä korkea.',
+          lahde: 'Ethan Doyle White, Commons (CC BY-SA 4.0)',
+          wiki: 'Peter Pan',
+        },
+        {
+          otsikko: 'Karhu, jolla on lappu kaulassa',
+          tiedosto: 'Statue of Paddington Bear with offerings.jpg',
+          teksti: 'Michael Bond osti jouluaattona 1956 Selfridgesin tavaratalosta '
+            + 'nallen, joka oli jäänyt yksin hyllylle, ja vei sen lahjaksi '
+            + 'vaimolleen. Tarina syntyi kymmenessä päivässä ja kirja '
+            + 'ilmestyi 13. lokakuuta 1958; karhu sai nimen läheisen '
+            + 'rautatieaseman mukaan, sillä Bond asui tuolloin Paddingtonin '
+            + 'kupeessa. Paddingtonin kaulassa roikkuu lappu "Please look '
+            + 'after this bear. Thank you", ja esikuvana olivat sota-ajan '
+            + 'uutisfilmit, joissa lontoolaislapsia lähetettiin maaseudulle '
+            + 'turvaan nimilappu kaulassa ja pieni matkalaukku kädessä.',
+          selite: 'Marcus Cornishin veistämä ja vuonna 2000 paljastettu '
+            + 'Paddington-patsas Paddingtonin asemalla heinäkuussa 2017. '
+            + 'Kirjailija Michael Bond oli kuollut 27. kesäkuuta, ja ihmiset '
+            + 'olivat tuoneet patsaan juurelle marmeladipurkkeja, kortteja ja '
+            + 'kukkia.',
+          lahde: 'JRennocks, Commons (CC BY-SA 4.0)',
+          wiki: 'Michael Bond',
+        },
+        {
+          otsikko: 'Runoilijoiden nurkka syntyi vahingossa',
+          tiedosto: 'Geoffrey Chaucer tomb, Poet\'s Corner.jpg',
+          teksti: 'Geoffrey Chaucer haudattiin Westminster Abbeyhin vuonna 1400, '
+            + 'mutta ei runojensa takia: hän oli hoitanut kuninkaan '
+            + 'rakennustöitä ja asunut vuokralla kirkon alueella. Vasta 156 '
+            + 'vuotta myöhemmin Nicholas Brigham teetti hänelle komean haudan '
+            + 'ja siirsi luut siihen. Kun Edmund Spenser haudattiin viereen '
+            + '1599, tapa oli syntynyt. Nyt saman eteläisen ristivarren '
+            + 'lattia on täynnä kirjailijoiden muistolaattoja, joiden yli '
+            + 'kävellään joka päivä.',
+          selite: 'Chaucerin hauta Westminster Abbeyn runoilijoiden nurkassa. '
+            + 'Tumma marmoriarkku ja goottilainen katos ovat vuodelta 1556, '
+            + 'ja latinankielisessä kirjoituksessa mainitaan niiden teettäjä '
+            + 'N. Brigham.',
+          lahde: '14GTR, Commons (CC BY-SA 4.0)',
+          wiki: 'Geoffrey Chaucer',
         },
       ],
     },
@@ -345,8 +518,7 @@ export const MAA_KATEGORIAT = {
       id: 'musiikki',
       nimi: 'Musiikki',
       johdanto: 'Kuninkaan jokijuhlat, marssi jota soitetaan koulun päättäjäisissä '
-        + 'ympäri maailmaa, merimiesten työlaulu — ja neljä nuorta miestä '
-        + 'Liverpoolista.',
+        + 'ympäri maailmaa, merimiesten työlaulu.',
       nostot: [
         {
           otsikko: 'Orkesteri soitti proomulla kuninkaalle',
@@ -366,6 +538,48 @@ export const MAA_KATEGORIAT = {
           wiki: 'Georg Friedrich Händel',
           musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/8/83/4-George_Frideric_Handel_-_Water_Music_Suite_in_F_major_%28Presto%29_HWV348.ogg/4-George_Frideric_Handel_-_Water_Music_Suite_in_F_major_%28Presto%29_HWV348.ogg.mp3',
           musiikkiNayteNimi: 'Händel: Vesimusiikki, Presto (CC BY-SA 3.0)',
+        },
+        {
+          otsikko: 'Sinfonia, joka sävellettiin päässä',
+          tiedosto: 'Mozart was here, pair of houses, 180 ^ 182 Ebury Street - geograph.org.uk - 8013426.jpg',
+          teksti: 'Mozartin perhe viipyi Lontoossa viisitoista kuukautta, '
+            + 'huhtikuusta 1764 heinäkuuhun 1765. Kesällä 1764 isä Leopold '
+            + 'sairastui pahasti, perhe muutti silloiseen Chelsean kylään '
+            + 'osoitteeseen 180 Ebury Street, ja talossa määrättiin täysi '
+            + 'hiljaisuus: kosketinsoittimeen ei saanut koskea kukaan. '
+            + 'Kahdeksanvuotias Wolfgang sävelsi silloin ensimmäisen '
+            + 'sinfoniansa päässään, ilman soitinta. Se kantaesitettiin 21. '
+            + 'helmikuuta 1765 Haymarketin pienessä teatterissa, ja poika '
+            + 'johti esitystä itse.',
+          selite: 'Ebury Streetin talot 180 ja 182 Belgraviassa; molempien '
+            + 'pohjakerros on rapattu valkeaksi. Oikeanpuoleisessa talossa '
+            + '180 on ruskea pyöreä laatta, jossa lukee Wolfgang Amadeus '
+            + 'Mozart 1756–1791. Vasemmanpuoleisen naapuritalon 182 laatta on '
+            + 'kirjailijapariskunnalle Harold Nicolson ja Vita '
+            + 'Sackville-West.',
+          lahde: 'A J Paxton, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Sinfonia nro 1 (Mozart)',
+        },
+        {
+          otsikko: 'Kellot soivat lukuja, ei sävelmää',
+          tiedosto: 'Great Bells of Bow.jpg',
+          teksti: 'Englantilaisessa kellonsoitossa kello heilahtaa lähes täyden '
+            + 'ympyrän, ja jokaista kelloa vetää oma soittajansa omasta '
+            + 'köydestään. Sävelmää ei synny: kellot soitetaan joka '
+            + 'kierroksella eri järjestyksessä, eikä sama järjestys saa '
+            + 'toistua kertaakaan. Kahdellatoista kellolla järjestyksiä on '
+            + '479 001 600, ja niiden kaikkien läpi soittaminen veisi yli '
+            + 'kolmekymmentä vuotta. Täysi peal on vähintään viisituhatta '
+            + 'vaihdosta ja kestää noin kolme tuntia, kaikki ulkomuistista '
+            + 'ilman nuotteja.',
+          selite: 'St Mary-le-Bow\'n kellohuone Cityssä. Kaksitoista pronssikelloa '
+            + 'lepää kehikossaan suu alaspäin, ja jokaisen kyljessä on iso '
+            + 'pyörä, jonka ympäri soittajan köysi kiertyy. Kellojen '
+            + 'olkapäähän on valettu valajan nimi Mears. Vanhastaan oikea '
+            + 'lontoolainen eli cockney on syntynyt näiden kellojen '
+            + 'kuuluvilla.',
+          lahde: 'Bellminsterboy, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'St Mary-le-Bow',
         },
         {
           otsikko: 'Marssi, jota soitetaan päättäjäisissä',
@@ -404,24 +618,217 @@ export const MAA_KATEGORIAT = {
           musiikkiNayteNimi: 'Drunken Sailor — USNA Midshipmen Glee Club (PD)',
         },
         {
-          otsikko: 'Neljä liverpoolilaista ja suojatie',
-          tiedosto: 'Abbey Road Crossing London Sander Lamme.jpg',
-          teksti: 'The Beatles aloitti Liverpoolin kellariklubeilla ja äänitti '
-            + 'lähes kaiken Lontoon Abbey Road -studiolla. Levyn kansikuvaa '
-            + 'varten valokuvaajalla oli kymmenen minuuttia aikaa: poliisi '
-            + 'pysäytti liikenteen, ja neljä miestä käveli suojatien yli '
-            + 'kuusi kertaa. Paul McCartney oli riisunut kenkänsä, koska '
-            + 'päivä oli kuuma — siitä syntyi vuosikymmeniä elänyt huhu, '
-            + 'jonka mukaan hän olisi salaa kuollut. Suojatie on nykyään '
-            + 'suojeltu muistomerkki, ja sen yli kävelee joka päivä satoja '
-            + 'matkailijoita.',
-          selite: 'Abbey Roadin suojatie Lontoon Pohjois-Lontoossa. Kuvauspaikka '
-            + 'on yhä käytössä oleva tavallinen katu.',
-          lahde: 'Sander Lamme, Wikimedia Commons (CC BY 3.0)',
-          wiki: 'The Beatles',
-          musiikki: 'https://music.apple.com/fi/album/hey-jude/1441133181?i=1441134371',
-          musiikkiNimi: 'The Beatles: Hey Jude',
-          esikuuntelu: 'Beatles Hey Jude',
+          otsikko: 'Proms — konsertti, jossa seistään',
+          tiedosto: 'Royal Albert Hall, BBC Proms 2017.jpg',
+          teksti: 'Proms on kahdeksan viikon konserttisarja, joka on soinut joka '
+            + 'kesä vuodesta 1895. Royal Albert Halliin mahtuu 5 272 istujaa, '
+            + 'mutta halvimmat liput ovat lattialle: prommaajat seisovat '
+            + 'orkesterin edessä koko illan. Jokainen konsertti lähetetään '
+            + 'radiossa, joten sen kuulee ilmaiseksi missä tahansa.',
+          selite: 'Royal Albert Hall Proms-konsertin aikana. Alhaalla areenalla '
+            + 'ei ole tuoleja lainkaan — siellä seisova yleisö on kuulunut '
+            + 'Promsiin alusta asti.',
+          lahde: 'Ed g2s, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'BBC Proms',
+          musiikki: 'https://music.apple.com/fi/search?term=bbc%20proms',
+          musiikkiNimi: 'Proms-konsertteja Apple Musicissa',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/2/28/ELGAR_Pomp_and_Circumstance_in_D%2C_Opus_39%2C_No._1_-_United_States_Marine_Band.mp3',
+          musiikkiNayteNimi: 'Elgar: Pomp and Circumstance nro 1 — United States Marine Band, PD',
+        },
+        {
+          otsikko: 'Öljytynnyri, joka soittaa melodian',
+          tiedosto: 'Ebony Steel Band raising funds for NSPCC Oxford Street, London.jpg',
+          teksti: 'Steel pan taotaan kahdensadan litran peltitynnyristä: pohja '
+            + 'lyödään kupiksi ja siihen taotaan soikeita kenttiä, joista '
+            + 'jokainen soi omaa säveltään. Mitä isompi soikio, sitä '
+            + 'matalampi ääni, ja korkeimpaan tenoripanniin mahtuu noin '
+            + 'kolmekymmentä säveltä. Soitin syntyi Trinidadissa, ja '
+            + 'Lontoossa se nähtiin ensi kerran vuoden 1951 Festival of '
+            + 'Britainissa. Notting Hillin karnevaalia edeltävässä '
+            + 'Panorama-kisassa soittaa nykyään noin tuhat ihmistä, kaikki '
+            + 'ulkomuistista.',
+          selite: 'Lontoolainen Ebony Steel Band soittaa Oxford Streetin varrella '
+            + 'House of Fraserin edustalla joulukuussa 2021 ja kerää samalla '
+            + 'rahaa lastensuojelujärjestö NSPCC:lle. Etualalla seisova '
+            + 'kerääjä pitelee vihreää keräyslipasta. Bassopanneista näkee '
+            + 'yhä tynnyrin: kiiltävät pellit seisovat pyörillä, ja kylkeen '
+            + 'on maalattu bändin nimi.',
+          lahde: 'Philafrenzy, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Steel pan',
+        },
+        {
+          otsikko: 'Metron soittopaikat jaetaan koesoitolla',
+          tiedosto: 'Busker at Piccadilly Circus tube station in March 2012.JPG',
+          teksti: 'Lontoon metrossa katusoitto on luvanvaraista. Transport for '
+            + 'London ylläpitää 39 soittopaikkaa 25 keskusta-asemalla, ja '
+            + 'luvan saa vain läpäisemällä raadin edessä pidettävän '
+            + 'koesoiton. Paikat on maalattu asemien lattioihin puolikaarina: '
+            + 'kaaren sisällä saa soittaa, sen ulkopuolella ei. Maan päällä '
+            + 'säännöt vaihtelevat kaupunginosittain. Cityn alueella '
+            + 'katusoitto on kielletty, ja Leicester Squaren esiintymispaikat '
+            + 'suljettiin huhtikuussa 2025, kun tuomioistuin oli määrännyt '
+            + 'melun loppumaan.',
+          selite: 'Kitaristi soittaa Piccadilly Circusin metroasemalla '
+            + 'maaliskuussa 2012. Hän istuu retkijakkaralla lattiaan maalatun '
+            + 'soittopaikan laidalla, kaaren reunassa lukee Mayor of London '
+            + 'ja Transport for London, ja kolikot kilahtavat auki jätettyyn '
+            + 'kitarapussiin. Vieressä olevalla kärryllä on kannettava '
+            + 'tietokone ja kaksi nukkea.',
+          lahde: 'Editor5807, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Katusoittaja',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      tehtava: {
+        kysymys: 'Miksi voileipä sai nimensä?',
+        vaihtoehdot: ['Jaarli halusi syödä pelipöydässä', 'Se keksittiin Sandwichin kaupungissa', 'Leipä leikattiin hiekkarannalla'],
+        oikea: 0,
+        fakta: 'Sandwichin jaarli halusi syödä korttipöydästä nousematta — '
+          + 'vastaus löytyi voileipänostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Kalaa ja ranskalaisia sanomalehdestä',
+          tiedosto: 'Modern fish and chips (8368723726).jpg',
+          teksti: 'Fish and chips syntyi kahdesta erillisestä ideasta, jotka '
+            + 'löysivät toisensa 1860-luvun Lontoossa: juutalaiset '
+            + 'maahanmuuttajat olivat tuoneet tavan uppopaistaa kalaa '
+            + 'taikinassa, ja pohjoisen tehdaskaupungeissa paistettiin '
+            + 'perunaa. Yhdessä niistä tuli työväen ruokaa, jota myytiin '
+            + 'kadulla käärittynä vanhaan sanomalehteen — halpaa, kuumaa ja '
+            + 'täyttävää. Toisessa maailmansodassa fish and chips oli yksi '
+            + 'harvoista ruoista, joita ei säännöstelty: hallitus katsoi sen '
+            + 'pitävän mielialaa yllä.',
+          selite: 'Uppopaistettu turska taikinakuoressa, paksut chipsit ja '
+            + 'sitruuna — annos sanomalehden päällä kuten ennenkin.',
+          lahde: 'LearningLark, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Fish and chips',
+        },
+        {
+          otsikko: 'Jaarli ei halunnut nousta pelipöydästä',
+          tiedosto: 'John Montagu, 4th Earl of Sandwich by Johann Zoffany.jpg',
+          teksti: 'John Montagu, Sandwichin neljäs jaarli, oli innokas '
+            + 'korttipelaaja ja kova työntekijä. Kertomuksen mukaan hän pyysi '
+            + 'vuonna 1762 palvelijaa tuomaan lihaa kahden leipäviipaleen '
+            + 'välissä, jotta hän voisi syödä nousematta pöydästä eivätkä '
+            + 'sormet rasvaantuisi kortteihin. Muut alkoivat tilata samaa — '
+            + 'sitä mitä Sandwich syö. Nimi jäi. Jaarli oli myös laivaston '
+            + 'johtaja, ja kapteeni Cook nimesi hänen mukaansa Havaijin '
+            + 'saaret, jotka tunnettiin pitkään Sandwichsaarina.',
+          selite: 'Johann Zoffanyn muotokuva jaarlista. Sama mies antoi nimen '
+            + 'sekä voileivälle että Havaijin saarille.',
+          lahde: 'Johann Zoffany, Wikimedia Commons (PD)',
+          wiki: 'Voileipä',
+        },
+        {
+          otsikko: 'Vanukas ennen lihaa',
+          tiedosto: 'Victoria Inn, Peckham, London (4872592446).jpg',
+          teksti: 'Sunnuntaipaisti on viikon tärkein ateria, ja siihen kuuluu '
+            + 'yorkshirenvanukas: ohut taikina kaadetaan tulikuumaan '
+            + 'paistinrasvaan, ja uunissa se kohoaa ontoksi kupoliksi. Ennen '
+            + 'se ei ollut lisuke vaan alkuruoka. Vanukas syötiin ensin '
+            + 'paksun kastikkeen kanssa, jotta pöytäseurue tulisi halvasta '
+            + 'jauhoruoasta kylläiseksi eikä söisi niin paljon kallista '
+            + 'lihaa. Kuninkaallinen kemian seura julisti vuonna 2008, ettei '
+            + 'alle neljän tuuman eli noin kymmenen sentin korkuinen kohokas '
+            + 'enää ansaitse vanukkaan nimeä.',
+          selite: 'Sunnuntaipaisti lontoolaisen pubin pöydässä Peckhamissa. '
+            + 'Paahtopaistin päällä lepää iso ruskistunut yorkshirenvanukas, '
+            + 'ja lautasella on uuniperunoita, kukkakaalia, vihreitä papuja '
+            + 'ja porkkanaa; vieressä höyryää kastikekannu.',
+          lahde: 'Ewan Munro, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Paahtopaisti',
+        },
+        {
+          otsikko: 'Hieno tee on matala tee',
+          tiedosto: 'Afternoon Tea at The Ritz.jpg',
+          teksti: 'Iltapäivätee sai alkunsa nälästä. Yläluokan päivällistä '
+            + 'syötiin 1800-luvulla vasta puoli kahdeksan jälkeen, ja '
+            + 'Bedfordin herttuatar Anna Russell alkoi noin vuonna 1840 '
+            + 'pyytää väliaikaan teetä ja pikkupurtavaa. Tapa levisi '
+            + 'seurapiireihin, ja sitä sanotaan myös matalaksi teeksi, koska '
+            + 'se juotiin salongin matalien sivupöytien ääressä. Korkea tee '
+            + 'eli high tea ei siis ole hienompi vaan päinvastoin: se on '
+            + 'työväen kunnon iltaruoka, joka syötiin viiden ja seitsemän '
+            + 'välillä korkean ruokapöydän ääressä.',
+          selite: 'Iltapäivätee kolmikerroksisessa telineessä Ritzillä Lontoossa: '
+            + 'alimpana pikkuvoileipiä, keskellä rusinaisia skonsseja ja '
+            + 'päällimmäisenä pikkuleivoksia. Etualalla on kullareunainen '
+            + 'teekuppi.',
+          lahde: 'RT6HPU, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Kello viiden tee',
+        },
+        {
+          otsikko: 'Yliopisto pennyn hinnalla',
+          tiedosto: 'Interior of a London Coffee-house, 17th centuryFXD.jpg',
+          teksti: 'Lontoon ensimmäisen kahvihuoneen avasi vuonna 1652 Pasqua '
+            + 'Rosée, joka oli tullut kaupunkiin kauppiaan palvelijana '
+            + 'Smyrnasta. Pennyllä pääsi sisään ja sai kupillisen kahvia, '
+            + 'päivän lehdet ja oikeuden osallistua keskusteluun — säätyyn '
+            + 'katsomatta. Siksi kahvihuoneita sanottiin pennyn '
+            + 'yliopistoiksi. Vuoteen 1708 mennessä niitä oli Cityssä ja '
+            + 'Westminsterissä 500–600. Edward Lloyd avasi omansa 1686, ja '
+            + 'siellä vaihdetuista laivauutisista kasvoi vakuutustalo '
+            + 'Lloyd\'s.',
+          selite: 'Lontoolaisen kahvihuoneen sisus 1600-luvun lopulta. '
+            + 'Peruukkipäiset miehet istuvat pitkien pöytien ääressä, lukevat '
+            + 'lehtiä ja juovat kahvia matalista kupeista; takan yllä riippuu '
+            + 'pannu ja vasemmalla emäntä istuu korotetussa kopissaan.',
+          lahde: 'Tuntematon taiteilija, Wikimedia Commons (PD)',
+          wiki: 'Lloyd’s of London',
+        },
+        {
+          otsikko: 'Tori, jonka parlamentti lakkautti',
+          tiedosto: 'Borough Market - geograph.org.uk - 5246520.jpg',
+          teksti: 'Southwarkin puolella on myyty ruokaa ainakin 1200-luvulta '
+            + 'asti. Vuonna 1754 parlamentti lakkautti torin kokonaan, koska '
+            + 'se tukki kadut — mutta seurakuntalaiset saivat luvan aloittaa '
+            + 'alusta, ja kahden vuoden päästä kojut nousivat viereiselle '
+            + 'tontille. Sinne ne jäivät. Kun rautatie 1860-luvulla halusi '
+            + 'kulkea yli, torin isännät eivät lain mukaan saaneet myydä '
+            + 'maataan, joten radalle annettiin vain vuokraoikeus sillan '
+            + 'verran ja kauppa jatkui sen alla. Nyt junat jyrisevät ostajien '
+            + 'pään päällä. Maanantaisin tori on kiinni.',
+          selite: 'Väkeä Borough Marketin kojujen välissä. Pään päällä kaartuu '
+            + 'rautatiesillan niitattu teräspalkisto, ja taustalla näkyy '
+            + 'torin kyltti ja kahvikoju.',
+          lahde: 'Chris Holifield, Wikimedia Commons (CC BY-SA 2.0)',
+        },
+        {
+          otsikko: 'Piirakka, muusi ja vihreä liquor',
+          tiedosto: 'Pie mash and liquor Manze Bermondsey.jpg',
+          teksti: 'Pie and mash on Lontoon satamakortteleiden ruokaa: '
+            + 'jauhelihapiirakka, perunamuusia ja päälle liquor eli vihreä '
+            + 'persiljakastike — nimestä huolimatta siinä ei ole tippaakaan '
+            + 'väkijuomaa. Ennen piirakat tehtiin ankeriaasta, sillä Thames '
+            + 'oli niitä täynnä ja ne olivat halvinta lihaa mitä sai.',
+          selite: 'Annos lontoolaisessa piirakkapuodissa marmoripöydällä. Liquor '
+            + 'keitettiin alun perin ankeriaan keitinliemestä, ja väri tulee '
+            + 'persiljasta.',
+          lahde: 'Secretlondon, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Brittiläinen keittiö',
+        },
+        {
+          otsikko: 'Seiso oikealla, kävele vasemmalla',
+          tiedosto: '2016-02 Escalators Underground London 02.jpg',
+          teksti: 'Metron liukuportaissa on yksi rautainen sääntö: seisojat '
+            + 'oikealle, kiirehtijät vasemmalle. Tapa syntyi vahingossa. '
+            + 'Ensimmäiset liukuportaat avattiin Earl\'s Courtin asemalla '
+            + 'vuonna 1911, ja niiden yläpäässä vino väliseinä ohjasi '
+            + 'matkustajat ulos vasemmalta puolelta, joten seisojan kannatti '
+            + 'pysyä oikealla. Vuonna 2015 Holbornissa kokeiltiin, että '
+            + 'kaikki seisoisivat molemmin puolin. Portaisiin mahtui lähes '
+            + 'kolmanneksen enemmän väkeä, mutta heti kun valvojat lähtivät, '
+            + 'lontoolaiset palasivat entiseen.',
+          selite: 'Ruuhkaiset liukuportaat Camden Townin metroasemalla. Sinisissä '
+            + 'kylteissä lukee Stand on the right, ja nousevissa portaissa '
+            + 'matkustajat ovat pakkautuneet oikeaan reunaan jättäen vasemman '
+            + 'puolen vapaaksi ohittajille.',
+          lahde: '0x010C, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Lontoon metro',
         },
       ],
     },
@@ -450,22 +857,42 @@ export const MAA_KATEGORIAT = {
           wiki: 'Isaac Newton',
         },
         {
-          otsikko: 'Kirjansitojan oppipoika luki kirjat, joita sitoi',
-          tiedosto: 'Portrait of Michael Faraday MET DP829484.jpg',
-          teksti: 'Michael Faraday syntyi köyhään perheeseen ja pääsi kouluun '
-            + 'vain muutamaksi vuodeksi. Kirjansitomon oppipoikana hän luki '
-            + 'kirjoja, joita oli sitomassa, ja innostui sähköstä. Hän pyrki '
-            + 'tiedemiehen apulaiseksi lähettämällä 300-sivuisen vihkon '
-            + 'muistiinpanoja luennoilta. Faraday keksi, että liikkuva '
-            + 'magneetti synnyttää kelaan sähkövirran — se on periaate, jolla '
-            + 'jokainen sähkögeneraattori yhä toimii. Hän aloitti myös '
-            + 'lapsille suunnatut joululuennot, joita on pidetty Lontoossa '
-            + 'vuodesta 1825 asti lähes katkeamatta.',
-          selite: 'George Richmondin piirros vuodelta 1852. Faradaylta puuttui '
-            + 'matemaattinen koulutus, mutta kokeet hän teki tarkemmin kuin '
-            + 'kukaan.',
-          lahde: 'George Richmond, Wikimedia Commons (CC0)',
+          otsikko: 'Kirjansitojasta sähkön löytäjä',
+          tiedosto: 'Faraday\'s Magnetic Laboratory.jpg',
+          teksti: 'Michael Faraday kävi koulua vain muutaman vuoden ja pääsi '
+            + 'neljätoistavuotiaana kirjansitojan oppipojaksi — siellä hän '
+            + 'luki seitsemän vuoden ajan kaikki kirjat, jotka sai käsiinsä. '
+            + 'Royal Institutionin kellarilaboratoriossa hän kiersi vuonna '
+            + '1831 kaksi eristettyä käämiä saman rautarenkaan ympäri ja '
+            + 'huomasi, että virran kytkeminen toiseen sai virran hetkeksi '
+            + 'liikkeelle myös toisessa. Saman talon luentosalissa hän piti '
+            + 'nuorille yhdeksäntoista joululuentosarjaa, ja sarja on '
+            + 'järjestetty vuodesta 1825 lähtien joka vuosi, neljää '
+            + 'maailmansodan vuotta lukuun ottamatta.',
+          selite: 'Faradayn magneettinen laboratorio Royal Institutionin '
+            + 'kellarissa, nykyään lasin takana. Huone purettiin ja koottiin '
+            + 'uudelleen 1930-luvulla Harriet Mooren 1850-luvun akvarellien '
+            + 'mukaan; hyllyillä on pulloja, lasikupuja ja koelaitteita.',
+          lahde: 'AndyScott, Commons (CC BY-SA 4.0)',
           wiki: 'Michael Faraday',
+        },
+        {
+          otsikko: 'Kartta, joka paljasti pumpun',
+          tiedosto: 'Snow-cholera-map-1.jpg',
+          teksti: 'Elokuun lopulla 1854 Sohossa puhkesi koleraepidemia, joka '
+            + 'tappoi 616 ihmistä. Lääkäri John Snow ei uskonut taudin '
+            + 'leviävän pahasta hajusta, vaan kiersi ovelta ovelle ja '
+            + 'merkitsi jokaisen kuolleen mustana palkkina sen talon '
+            + 'kohdalle, jossa tämä oli asunut. Palkit kasautuivat yhden '
+            + 'ainoan vesipumpun ympärille Broad Streetillä; pumpun kahva '
+            + 'irrotettiin 8. syyskuuta, ja myöhemmin selvisi, että kaivon '
+            + 'reunasta oli vajaa metri vuotavaan likakaivoon.',
+          selite: 'Snow\'n kartta vuodelta 1854, hänen kirjansa Map 1. Jokainen '
+            + 'musta palkki on yksi koleraan kuollut, ja sana PUMP merkitsee '
+            + 'kadun vesipumput; tihein rykelmä kasvaa keskellä karttaa Broad '
+            + 'Streetin pumpun ympärille.',
+          lahde: 'John Snow, Commons (PD)',
+          wiki: 'John Snow',
         },
         {
           otsikko: 'Viisi vuotta laivalla, kaksikymmentä vuotta epäröintiä',
@@ -485,6 +912,44 @@ export const MAA_KATEGORIAT = {
           wiki: 'Charles Darwin',
         },
         {
+          otsikko: 'Punainen pallo putoaa kello yksi',
+          tiedosto: 'Greenwich time ball 2014.jpg',
+          teksti: 'Greenwichin observatorion katolla seisoo mastossa punainen '
+            + 'pallo, joka nousee puoliväliin kello 12.55, huipulle 12.58 ja '
+            + 'putoaa tasan kello 13; näin on tehty vuodesta 1833. Thamesilla '
+            + 'ja Lontoon satama-altaissa olleet laivat tähystivät palloa '
+            + 'kaukoputkella ja säätivät sen mukaan merikellonsa, ja aika '
+            + 'luetaan siitä hetkestä, jolloin pallo lähtee liikkeelle, ei '
+            + 'siitä kun se pysähtyy. Merkki annetaan yhdeltä eikä '
+            + 'keskipäivällä siksi, että tähtitieteilijät olivat puolenpäivän '
+            + 'aikaan itse kiinni auringon mittauksissa.',
+          selite: 'Greenwichin observatorion Flamsteed Housen katto: punainen '
+            + 'aikapallo mastonsa juuressa, mastonhuipussa tuuliviiri ja alla '
+            + 'talon valkoinen pylväskaide.',
+          lahde: 'Stanislav Kozlovskiy, Commons (CC BY-SA 4.0)',
+          wiki: 'Greenwichin kuninkaallinen observatorio',
+        },
+        {
+          otsikko: 'Kone, joka odotti 142 vuotta',
+          tiedosto: 'London Science Museum by Marcin Wichary - Difference Engine No. 2, pt. 1 (2290036668).jpg',
+          teksti: 'Charles Babbage piirsi vuosina 1846–1849 laskukoneen, joka '
+            + 'pyörii kammesta ja laskee 31-numeroisilla luvuilla, mutta sitä '
+            + 'ei rakennettu hänen elinaikanaan. Lontoon Science Museum '
+            + 'halusi tietää, olisiko se toiminut, ja teki koneen Babbagen '
+            + 'omien piirustusten mukaan tarkkuudella, joka oli mahdollinen '
+            + '1800-luvulla: laskuosa valmistui vuonna 1991 keksijän syntymän '
+            + 'kaksisatavuotispäiväksi ja laski oikein. Babbagen '
+            + 'suunnittelema tulostin saatiin valmiiksi vasta 2002, ja koko '
+            + 'laitteessa on noin 8 000 osaa ja painoa viisi tonnia — sähköä '
+            + 'se ei tarvitse lainkaan.',
+          selite: 'Difference Engine No. 2 lasikaapissaan Lontoon Science '
+            + 'Museumissa. Pystyrivit ovat numeropyöriä, oikeassa reunassa '
+            + 'näkyy iso kampi ja vasemmalla tulostuslaite paperirullineen; '
+            + 'kaapin pohjalla lepää esittelytaulu.',
+          lahde: 'Marcin Wichary, Commons (CC BY 2.0)',
+          wiki: 'Charles Babbage',
+        },
+        {
           otsikko: 'Kone, joka luki vihollisen postit',
           tiedosto: 'Alan Turing by Stephen Kettle 2007.jpg',
           teksti: 'Saksan Enigma-koodikone vaihtoi asetuksensa joka keskiyö, '
@@ -500,6 +965,156 @@ export const MAA_KATEGORIAT = {
             + 'puolesta miljoonasta ohuesta liuskekivipalasta.',
           lahde: 'DeFacto, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Alan Turing',
+        },
+        {
+          otsikko: 'Sinivalas maksoi 250 puntaa',
+          tiedosto: 'Hope, Hintze Hall, Natural History Museum, London - 1.jpg',
+          teksti: 'Maaliskuussa 1891 valaanpyytäjien haavoittama nuori '
+            + 'naarassinivalas ajautui hiekkasärkälle Wexfordin edustalle '
+            + 'Irlannissa, ja Lontoon luonnontieteellinen museo osti sen '
+            + 'luurangon 250 punnalla. Luut makasivat varastossa yli '
+            + 'neljäkymmentä vuotta, ja vasta vuonna 1934 valmistunut '
+            + 'valassali antoi niille tilaa. Vuonna 2017 luuranko — 25,2 '
+            + 'metriä pitkä, 221 luuta, 4,5 tonnia — nostettiin pääsalin '
+            + 'kattoon syöksysukelluksen asentoon suu auki: se on maailman '
+            + 'ainoa näin ripustettu sinivalaan luuranko.',
+          selite: 'Hope-niminen sinivalaan luuranko Hintze Hallissa, kuvattuna '
+            + 'salin parvelta. Luuranko roikkuu katosta syöksyen alaspäin suu '
+            + 'auki, ja alaleuka kaartuu pitkälle kävijöiden pään '
+            + 'yläpuolelle.',
+          lahde: 'APK, Commons (CC BY 4.0)',
+          wiki: 'Natural History Museum',
+        },
+      ],
+    },
+    {
+      id: 'huumori',
+      nimi: 'Huumori',
+      nostot: [
+        {
+          otsikko: 'Nukke, jolla on syntymäpäivä',
+          tiedosto: 'Near this spot Punch\'s Puppet Show was first performed in England and witnessed by Samuel Pepys 1662.jpg',
+          teksti: 'Samuel Pepys kirjoitti päiväkirjaansa 9. toukokuuta 1662 '
+            + 'nähneensä Covent Gardenissa italialaisen nukketeatterin, joka '
+            + 'oli hänen mielestään hyvin sievä. Nukettaja oli italialainen '
+            + 'Pietro Gimonde, ja esityksen tähti oli Pulcinella, josta '
+            + 'englannissa tuli Mr Punch. Tuota päivää pidetään yhä Punchin '
+            + 'virallisena syntymäpäivänä. Punchin kimeä kirkuna syntyy '
+            + 'swazzlesta, kahdesta metalliliuskasta ja niiden välisestä '
+            + 'nauhasta, jota nukettaja pitää suussaan koko näytöksen ajan. '
+            + 'Punchista on jäänyt englantiin sanontakin: pleased as Punch '
+            + 'tarkoittaa hyvin tyytyväistä.',
+          selite: 'Muistolaatta St Paulin kirkon seinässä Covent Gardenissa. '
+            + 'Kiveen on hakattu, että lähellä tätä paikkaa Punchin '
+            + 'nukketeatteri esitettiin ensi kerran Englannissa ja Samuel '
+            + 'Pepys näki sen vuonna 1662. Alin rivi kertoo laatan vuosiluvun '
+            + '1962, tasan kolmesataa vuotta myöhemmin.',
+          lahde: 'Spudgun67, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Samuel Pepys',
+        },
+        {
+          otsikko: 'Sana cartoon syntyi vitsistä',
+          tiedosto: 'SubstanceandShadow.jpg',
+          teksti: 'Vuonna 1834 palanutta parlamenttitaloa rakennettiin uudelleen, '
+            + 'ja Westminster Hallissa oli kesällä 1843 esillä jättimäisiä '
+            + 'luonnoksia tulevia seinämaalauksia varten. Italiaksi tällaista '
+            + 'luonnosta sanotaan nimellä cartone, englanniksi cartoon. '
+            + 'Pilalehti Punch julkaisi 15. heinäkuuta 1843 oman versionsa '
+            + 'otsikolla Cartoon, No. 1: 25-vuotias John Leech päästi '
+            + 'ryysyiset katulapset hienoon taulugalleriaan, jossa rikkaiden '
+            + 'muotokuvat riippuivat nälkäisten silmien edessä. Pilkka jäi '
+            + 'elämään niin sitkeästi, että cartoon tarkoittaa englannissa '
+            + 'yhä pilapiirrosta.',
+          selite: 'Punchin ensimmäinen cartoon heinäkuulta 1843. Yläreunassa '
+            + 'lukee CARTOON, No. 1 ja alareunassa SUBSTANCE AND SHADOW. '
+            + 'Ryysyinen väki katselee kullattuihin kehyksiin ripustettuja '
+            + 'ylhäisön muotokuvia: mukana on kepin varassa kulkeva mies, '
+            + 'lapsia rievuissa ja pyörällisellä laudalla istuva raajarikko.',
+          lahde: 'John Leech, Wikimedia Commons (PD)',
+          wiki: 'Pilapiirros',
+        },
+        {
+          otsikko: 'Kellot ratkaisevat, kuka on cockney',
+          tiedosto: 'View of St. Mary-le-Bow church from Cheapside - geograph.org.uk - 7160633.jpg',
+          teksti: 'Vanhan säännön mukaan aito cockney on syntynyt St '
+            + 'Mary-le-Bow\'n kirkonkellojen kuuluvuusalueella. Vuoden 2012 '
+            + 'ääniselvityksessä todettiin, että 1850-luvulla kellot '
+            + 'kuuluivat idässä Hackney Marshesille ja Stratfordiin saakka, '
+            + 'mutta nykyään liikenteen melu kutistaa alueen Cityn itäosiin '
+            + 'ja Shoreditchiin. Kirkonkellojen soitto kiellettiin koko '
+            + 'maassa 13. kesäkuuta 1940, ja Blitzin viimeisenä yönä 10.–11. '
+            + 'toukokuuta 1941 kellot tuhoutuivat. Uudet kellot soivat vasta '
+            + '21. joulukuuta 1961. Näiden kellojen alla kehittyi myös '
+            + 'riimislangi, jossa portaat ovat apples and pears.',
+          selite: 'St Mary-le-Bow\'n torni kohoaa Cheapside-kadun päässä Lontoon '
+            + 'Cityssä. Christopher Wren suunnitteli kirkon vuoden 1666 '
+            + 'suurpalon jälkeen, ja juuri tämän tornin kelloja tarkoitetaan, '
+            + 'kun puhutaan cockneyn rajoista.',
+          lahde: 'Robert Lamb, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Cockney',
+        },
+        {
+          otsikko: 'Kadunlakaisijan nappipuku',
+          tiedosto: 'Pearly Kings and Queens Harvest Festival 2024 (28).jpg',
+          teksti: 'Henry Croft syntyi 24. toukokuuta 1861 St Pancrasin '
+            + 'vaivaistalossa ja ryhtyi kadunlakaisijaksi noin vuonna 1876, '
+            + 'viisitoistavuotiaana. Kerätäkseen rahaa sairaaloille ja '
+            + 'orpokodeille hän ompeli vaatteisiinsa tuhansia '
+            + 'helmiäisnappeja, joita valmistettiin East Endin tehtaissa, ja '
+            + 'puvusta tuli niin kirkas, ettei kerääjää voinut olla '
+            + 'huomaamatta. Tapa levisi: vuoteen 1911 mennessä Lontoon '
+            + 'kaikilla 28 kaupunginosalla oli oma pearly king ja pearly '
+            + 'queen. Croft kuoli tammikuussa 1930, ja hänen '
+            + 'hautajaissaattueensa oli noin puoli mailia pitkä; siinä käveli '
+            + '400 nappipukuista.',
+          selite: 'Pearly kings ja queens riviin asettuneina Guildhallin '
+            + 'edustalla sadonkorjuujuhlassa 2024. Napeista on muotoiltu '
+            + 'hevosenkenkiä, sydämiä, ankkureita ja korttikuvioita, ja '
+            + 'takkien selkämyksiin on kirjailtu tittelit: Pearly King of '
+            + 'Mile End, Pearly King of Highgate ja Pearly Queen of Royal '
+            + 'Greenwich.',
+          lahde: 'Doyle of London, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          otsikko: 'Chaplin oli lontoolainen köyhä poika',
+          tiedosto: 'Charlie Chaplin statue, Leicester Square.jpg',
+          teksti: 'Charlie Chaplin syntyi 16. huhtikuuta 1889 Walworthissa '
+            + 'Etelä-Lontoossa, ja seitsemänvuotiaana hänet vietiin Lambethin '
+            + 'vaivaistaloon. Molemmat vanhemmat olivat music hall '
+            + '-esiintyjiä, ja poika itse kiersi yhdeksänvuotiaana '
+            + 'englantilaisia varieteesaleja Eight Lancashire Lads '
+            + '-puukenkätanssiryhmässä. Kulkurin asun hän kokosi Keystonen '
+            + 'studiolla Los Angelesissa 1914 yhden periaatteen mukaan, jonka '
+            + 'hän myöhemmin kirjoitti muistiin: kaiken piti olla '
+            + 'ristiriitaista, housut pussittavat, takki tiukka, hattu pieni '
+            + 'ja kengät suuret.',
+          selite: 'John Doubledayn pronssiveistos Chaplinista Kulkurin roolissa '
+            + 'Leicester Squarella. Patsas paljastettiin 16. huhtikuuta 1981, '
+            + 'päivälleen 92 vuotta Chaplinin syntymän jälkeen. Keppi, '
+            + 'knalli, ahdas takki ja liian suuret kengät ovat kaikki '
+            + 'paikallaan.',
+          lahde: 'Matt Brown, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Charles Chaplin',
+        },
+        {
+          otsikko: 'Viimeinen suuri music hall',
+          tiedosto: 'Wilton\'s Music Hall - Interior.jpg',
+          teksti: 'John Wilton rakensi 1859 ostamansa Mahogany Bar -pubin taakse '
+            + 'Tower Hamletsiin salin, johon mahtui 1 500 työläistä istumaan '
+            + 'pöytien ääreen kuuntelemaan laulajia ja koomikoita. Katosta '
+            + 'riippui sun-burner, jossa paloi 300 kaasuliekkiä ja välkkyi 27 '
+            + '000 hiottua kristallia; sen kuumuuden jättämä palojälki näkyy '
+            + 'kattoparruissa yhä. Sali ehti olla metodistien lähetysasema ja '
+            + 'lumppuvarasto ennen kuin se määrättiin purettavaksi, mutta '
+            + 'koomikot Peter Sellers ja Spike Milligan olivat mukana '
+            + 'pelastamassa sitä, ja talo suojeltiin huhtikuussa 1971.',
+          selite: 'Wilton\'s Music Hallin sali East Endissä. Parveke kiertää '
+            + 'kolmelta sivulta kierteisten valurautapylväiden varassa, ja '
+            + 'seinien rapattu pinta on jätetty kulumaan näkyviin. Lattialle '
+            + 'katetaan pitkiä juhlapöytiä samaan tapaan kuin siihen aikaan, '
+            + 'kun salissa myös syötiin.',
+          lahde: 'Kbthompson at English Wikipedia, Wikimedia Commons (CC BY 3.0)',
+          wiki: 'Music hall',
         },
       ],
     },
