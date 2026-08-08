@@ -8420,6 +8420,10 @@ export class UI {
       sisalto.appendChild(this.nahtavyydenKuva(kuva));
     });
 
+    // Jutun ensimmäinen kuva saa oman luokkansa: vaakana se levenee
+    // koko palstalle, pystynä se pysyy pienenä (omistajan ohje).
+    sisalto.querySelector('.nahtavyys-kuvakehys')?.classList.add('nahtavyys-ensikuva');
+
     if (kohde.wiki) {
       const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
       nappi.type = 'button';
@@ -8488,6 +8492,19 @@ export class UI {
     el.alt = kuva.selite ?? '';
     // Sama peiliputki ja suurennus kuin nostojen kuvilla.
     this.varustaNostonKuva(el, kuva, 900);
+    /*
+     * Kuvan suunta luokaksi kehykseen (omistajan ohje 8.8.2026:
+     * jutun ensimmäinen kuva saa olla iso jos se on vaaka; pysty
+     * pidetään pienempänä). Suunta selviää vasta kun selain tietää
+     * kuvan mitat, joten luokka lisätään load-hetkellä — CSS päättää
+     * koon vasta ensikuva+suunta-yhdistelmästä.
+     */
+    const luokita = () => {
+      if (!el.naturalWidth || !el.naturalHeight) return;
+      kehys.classList.add(el.naturalWidth >= el.naturalHeight ? 'kuva-vaaka' : 'kuva-pysty');
+    };
+    if (el.complete) luokita();
+    el.addEventListener('load', luokita, { once: true });
     kehys.appendChild(el);
     const teksti = html('figcaption', 'nahtavyys-kuvateksti');
     if (kuva.selite) teksti.appendChild(html('span', 'nahtavyys-selite', kuva.selite));
