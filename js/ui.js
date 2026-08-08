@@ -8175,14 +8175,34 @@ export class UI {
        */
       const avaa = k.teksti ? () => this.avaaNahtavyys(k, numero)
         : (k.wiki ? () => this.openWikiArticle(k.wiki, k.nimi) : null);
+      /*
+       * Kohteen nimi hiiren alla (omistajan toive 8.8.2026). Ympyrässä
+       * lukee vain numero, ja selitelista on kartan alla — työpöydällä
+       * kohteen tunnistaminen vaati siis katseen siirtämistä edestakaisin.
+       *
+       * Vihje on oma elementtinsä eikä selaimen `title`, koska title
+       * ilmestyy sekunnin viiveellä eikä sitä voi tyylitellä. Se on myös
+       * syy, miksi pisteestä EI enää anneta titleä: kaksi vihjettä
+       * päällekkäin olisi pahempi kuin ei kumpaakaan. Saavutettava nimi
+       * tulee tilalle aria-labelina, ja selitelistan napissa title
+       * säilyy — siinä lukee jo nimi, joten päällekkäisyyttä ei synny.
+       *
+       * Näkyvyyden ratkaisee CSS yksin (`hover: hover`), joten
+       * kosketuslaitteella tämä on olemassa vain DOM:issa: napautus
+       * avaa jutun täsmälleen kuten ennen.
+       */
       if (avaa) {
         const otsikko = k.teksti ? `${k.nimi} — lue lisää` : `${k.nimi} — avaa artikkelin`;
         for (const el of [piste, selite]) {
           el.type = 'button';
-          el.title = otsikko;
           el.addEventListener('click', avaa);
         }
+        selite.title = otsikko;
+        piste.setAttribute('aria-label', otsikko);
       }
+      const vihje = html('span', 'kohde-vihje', k.nimi);
+      vihje.setAttribute('aria-hidden', 'true');
+      piste.appendChild(vihje);
       kotelo.appendChild(piste);
       selitteet.appendChild(selite);
     });

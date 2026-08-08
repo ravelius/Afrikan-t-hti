@@ -28,24 +28,28 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Omistajan päätös 8.8.: menovinkkisivu kaikille 23 '
-        + 'maalle, joilta lehti puuttuu (2–3 erää, ~140 nostoa). '
-        + 'Valmiina: v357 radio- ja tv-napit, v353 menovinkit '
-        + 'lehtimaille, v350 lehtijako.',
-      seuraavaksi: 'Maalehtien syvyys päätetään vasta omistajan '
-        + 'testikierroksen jälkeen (Ranskan pilotti odottaa '
-        + 'haaralla).',
+      tehtava: 'Maalehden rakenneuudistus (omistajan palaute 8.8.): '
+        + 'etusivulle sisällysluettelo kahdessa palstassa kartan '
+        + 'tilalle, hampurilaisvalikko, alavalikko kuntoon, '
+        + 'sivuaiheet nappien alle. Saksasta pois päivän kuva, '
+        + 'valokuvaus ja sarjakuva; ruokasivu uusiksi muotoon '
+        + 'Ruokaa ja tapakulttuuria. Lehden nimeksi Unohdettu '
+        + 'aarre (ent. Matkasanomat). Lisäksi tietovisa '
+        + 'iloisemmaksi ja menovinkit listamalliin (23 maata, erä '
+        + '1/3 mainissa v361).',
+      seuraavaksi: 'Pohja ensin, sitten loput menovinkkierät '
+        + 'uudelle pohjalle. Maalehtien syvyys päätetään omistajan '
+        + 'testikierroksen jälkeen.',
     },
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
       tila: 'odottaa',
-      tehtava: 'Kaista tyhjä. Valmiina: v360 Espanjan tv-nappi '
-        + '(Sää tänään + Uutiset neljässä minuutissa, '
-        + 'worker-reitti #492), v359 Venetsian laguuni, '
-        + 'v351/v354/v355 kartat, tv-kartoitus.',
-      seuraavaksi: 'Uusi tehtävä pilottikatselmuksen ja '
-        + 'testikierroksen tarpeiden mukaan.',
+      tehtava: 'Kaista tyhjä. Valmiina: v362 kaupunkikarttojen '
+        + 'ulkoasu (kontrasti alas, vaaleat numeroympyrät, pieni '
+        + 'OSM-rivi, hover-seloste pöytäkoneelle), v360 Espanjan '
+        + 'tv-nappi, v359 laguuni, v351/v354/v355 kartat.',
+      seuraavaksi: 'Uusi tehtävä testikierroksen tarpeiden mukaan.',
     },
     {
       tekija: 'Sonnet 1',
@@ -84,6 +88,15 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Kaupunkikarttojen uusi ilme (v362)',
+    ohje: 'Avaa mikä tahansa kuudesta kaupunkikartasta: kartta on '
+      + 'nyt vaaleampi tausta ja numerot pääosassa, ympyröiden '
+      + 'tausta hiekanvaalea, OSM-rivi pikkuruinen. Pöytäkoneella '
+      + 'vie hiiri numeron päälle — kohteen nimi tulee '
+      + 'selosteeseen. Kosketuslaitteella napautus toimii kuten '
+      + 'ennen.',
+  },
   {
     otsikko: 'Espanjan tv-nappi — TESTAA IPADILLA (v360)',
     ohje: 'Avaa Espanjan maalehti: tv-napissa kaksi valintaa, Sää '
