@@ -170,4 +170,90 @@ export const TV_KANAVAT = {
       ],
     },
   },
+  /*
+   * RUOTSILLA EI OLE TV-NAPPIA (kartoitettu 8.8.2026).
+   *
+   * SVT olisi muuten kelvollinen: `https://api.svt.se/video/<id>`
+   * vastaa CORS `*`:lla, eikä sisältö ole suojattua tai rajattua
+   * (`drmCopyProtection: false`, `geoBlockedSweden: false`,
+   * `preventExternalEmbed: false`, osoitteessa jopa `/world/`-polku).
+   *
+   * Este on muoto: videoReferences tarjoaa yksitoista muunnosta, ja
+   * jokainen niistä on HLS tai DASH — mp4:ää ei ole yhtään. HLS soi
+   * natiivisti vain Safarissa ja iOS:ssä; Chrome ja Firefox
+   * vaatisivat hls.js-kirjaston, ja sen lisääminen on oma
+   * päätöksensä (voidaan avata myöhemmin). Nappi, joka toimii
+   * puolella laitteista, on huonompi kuin ei nappia.
+   *
+   * Toinen puute: tuoreimmalle Rapport-lähetykselle ei löytynyt
+   * rajapintaa, vaan id on kaivettava svt.se:n artikkelisivun
+   * HTML:stä — se ei ole tagesschaun kaltainen siisti lista.
+   */
+  /*
+   * ITALIALLA EI OLE TV-NAPPIA (kartoitettu 8.8.2026, omistajan
+   * päätös: ei jatkohakua RAI:n ulkopuolelta).
+   *
+   * RAI:n video tulee relinkerin kautta
+   * (`mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=<token>`),
+   * ja siinä on kolme estettä, joista jokainen yksin riittäisi:
+   *
+   * 1. Vastaus on XML, jonka sisällä on m3u8 — ei mp4:ää.
+   * 2. Osoitteessa on Akamai-token (`hdnea=st=…~exp=…`), jonka
+   *    voimassaolo oli mitattuna noin 150 sekuntia. Peliin ei voi
+   *    kirjoittaa osoitetta, joka vanhenee kahdessa minuutissa.
+   * 3. Relinker ei palauta `access-control-allow-origin`-otsaketta
+   *    lainkaan, joten selain ei saa hakea sitä pelin origonista.
+   *
+   * Lisäksi `cont`-arvo on obfuskoitu merkkijono, joka on kaivettava
+   * sivun HTML:stä, eikä rainews.it:n JSON-polku anna mp4:ää.
+   */
+  /*
+   * RTVE:n tallenteet (8.8.2026). Espanja on Saksan jälkeen toinen
+   * maa, jolla on tv-nappi — ja samasta syystä: lähetys saadaan
+   * oikeana mp4-tiedostona, ei upotuksena.
+   *
+   * Haku menee ohjelman videolistaan (`api.rtve.es`, CORS `*`, uusin
+   * ensin), josta poimitaan tuoreimman jakson id. Tallenne on
+   * osoitteessa `ztnr.rtve.es/ztnr/<id>.mp4`.
+   *
+   * SE OSOITE EI MENE SELLAISENAAN VIDEO-ELEMENTTIIN: ztnr ohjaa
+   * `http://`-osoitteeseen, ja https:llä tarjoiltavassa pelissä se
+   * olisi sekasisältöä (mitattu; Origin-, Referer- eikä
+   * Upgrade-Insecure-Requests-otsake ei muuta sitä). Ohjaus
+   * selvitetään siksi workerissa, joka palauttaa saman osoitteen
+   * https:nä — ks. `?ohjaus=`-reitti tools/uutisproxy/worker.js:ssä.
+   * Video itse tulee suoraan RTVE:ltä selaimeen; worker välittää vain
+   * osoitteen.
+   *
+   * SÄÄ ON ENSIMMÄISENÄ TARKOITUKSELLA (omistajan päätös 8.8.2026):
+   * se on alle minuutin mittainen, kuvassa on Espanjan kartta eikä
+   * uutisaiheita, ja lehden avaava lapsi saa sen oletuksena. Kooste
+   * on toinen valinta samalla perusteella kuin tagesschau Saksassa.
+   *
+   * `kanava` on tässä otsikon tunnistin, ei kanavan nimi: RTVE nimeää
+   * saman ohjelman kahdella tavalla ("Telediario Matinal en 4'" ja
+   * "Telediario matinal en cuatro minutos"), joten molemmat on
+   * lueteltava pystyviivalla erotettuna. Ks. haeTallenne
+   * (js/uutiset.js).
+   *
+   * MITATTU 410 GONE, JA MIKSI SE EI ESTÄ TÄTÄ: mediapalvelin vastaa
+   * `410 Gone`, jos samasta osoitteesta haetaan monta tallennetta
+   * peräkkäin — kokeessa 17 jaksoa putkeen tuotti täsmälleen yhden
+   * onnistumisen. Yksittäisinä, tauon päässä toisistaan tehtyinä
+   * hakuina ketju antaa aina 206:n ja oikeat mp4-tavut
+   * (`ftypisom…moov`), myös workerin kautta. Rajoitus on siis
+   * ryöppysuoja, ja pelin käyttö on juuri päinvastaista: yksi
+   * napinpainallus kerrallaan. Jos haku silti epäonnistuu, nappi
+   * kertoo sen ("Ei saatu haettua") eikä jää mustaksi ruuduksi.
+   */
+  ESP: {
+    nimi: 'RTVE',
+    tallenteet: {
+      api: 'https://api.rtve.es/api/programas/135931/videos.json?size=20',
+      valinnat: [
+        { nappi: 'Sää tänään', kanava: 'el tiempo' },
+        { nappi: 'Uutiset neljässä minuutissa', kanava: "en 4'|cuatro minutos" },
+      ],
+    },
+  },
 };

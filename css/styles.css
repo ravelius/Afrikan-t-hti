@@ -8706,6 +8706,16 @@ body.vertailu-tila .pawns { display: none; }
   color: rgba(70, 51, 31, 0.66);
 }
 
+/* Lähdemaininta ilman fi.wikipedian artikkelia: pelkkä teksti, ei
+ * linkkiä eikä nappia (omistajan spesifikaatio 8.8.2026). */
+.nahtavyys-lahderivi {
+  margin: 0.6rem 0 0;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: rgba(70, 51, 31, 0.66);
+}
+
 /* Leveällä ruudulla juttu ei saa venyä liian pitkäksi riviksi. */
 @media (min-width: 700px) {
   .nahtavyys-kortti { padding: 1.5rem 2rem 1.2rem; }

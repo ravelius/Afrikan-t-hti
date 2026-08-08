@@ -171,19 +171,66 @@ export async function haeLiveTunniste(livesivu) {
 const tallenneMuisti = new Map();
 const TALLENNE_MUISTI_MS = 10 * 60 * 1000;
 
+/*
+ * RTVE:n lista on eri muotoa kuin tagesschaun, ja lähde tunnistetaan
+ * osoitteesta — näin kutsujan (ui.js) ei tarvitse tietää siitä mitään,
+ * vaan sama haeTallenne(api, kanava) palvelee molempia.
+ *
+ * Kolme eroa: lista on `page.items` eikä `channels`, jakso valitaan
+ * otsikon osumalla eikä kanavan nimellä (RTVE nimeää saman ohjelman
+ * kahdella tavalla, joten tunnistimia voi olla useita pystyviivalla
+ * erotettuna), ja soitettava osoite rakennetaan jakson id:stä.
+ *
+ * Osoite kulkee workerin kautta, koska ztnr ohjaa http:hen ja https:llä
+ * tarjoiltavassa pelissä se olisi sekasisältöä (ks. worker.js:n
+ * `?ohjaus=`-reitti). Jos workeria ei ole tai se ei vastaa kelvollista
+ * https-osoitetta, tallennetta EI tarjota lainkaan: silloin nappi
+ * kertoo, ettei sitä saatu haettua. Se on tarkoituksellista — mustaksi
+ * jäävä videoruutu olisi pahempi kuin rehellinen viesti, ja
+ * Chromen automaattiseen https-nostoon nojaaminen olisi juuri sitä
+ * arvausta, jota tässä vältetään.
+ */
+const RTVE_LISTA = 'api.rtve.es';
+const RTVE_TALLENNE = 'https://ztnr.rtve.es/ztnr/';
+
+async function rtveOsoite(id) {
+  if (!UUTISPROXY) return null;
+  try {
+    const kysely = `${UUTISPROXY}?ohjaus=${encodeURIComponent(`${RTVE_TALLENNE}${id}.mp4`)}`;
+    const vastaus = await fetch(kysely, { signal: AbortSignal.timeout(10000) });
+    if (!vastaus.ok) return null;
+    const osoite = (await vastaus.json())?.url;
+    return typeof osoite === 'string' && osoite.startsWith('https://') ? osoite : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function haeTallenne(api, kanava) {
   if (!api || !kanava) return null;
   const vanha = tallenneMuisti.get(api);
   let kanavat = vanha && Date.now() - vanha.aika < TALLENNE_MUISTI_MS ? vanha.kanavat : null;
+  const rtve = api.includes(RTVE_LISTA);
   if (!kanavat) {
     try {
       const vastaus = await fetch(api, { signal: AbortSignal.timeout(10000) });
       if (!vastaus.ok) return null;
-      kanavat = (await vastaus.json()).channels ?? [];
+      const data = await vastaus.json();
+      kanavat = (rtve ? data.page?.items : data.channels) ?? [];
       tallenneMuisti.set(api, { aika: Date.now(), kanavat });
     } catch {
       return null;
     }
+  }
+  if (rtve) {
+    const tunnistimet = kanava.toLowerCase().split('|');
+    const jakso = kanavat.find((v) => {
+      const otsikko = (v.longTitle ?? v.title ?? '').toLowerCase();
+      return tunnistimet.some((t) => otsikko.includes(t));
+    });
+    if (!jakso?.id) return null;
+    const url = await rtveOsoite(jakso.id);
+    return url ? { url, pvm: jakso.publicationDate ?? null } : null;
   }
   const osuma = kanavat.find((k) => k.title === kanava);
   const virrat = osuma?.streams ?? {};

@@ -28,45 +28,49 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Radio- ja tv-napit molempiin lehteihin. Valmiina: '
-        + 'v353 menovinkit kaikille viidelle maalle, v350 lehtijako '
-        + '(kaupunki- ja maalehti erikseen), Maiden tiedot -varuste, '
-        + 'Lontoon nähtävyysjutut.',
-      seuraavaksi: 'Loput Euroopan maalehdet.',
+      tehtava: 'Omistajan päätös 8.8.: menovinkkisivu kaikille 23 '
+        + 'maalle, joilta lehti puuttuu (2–3 erää, ~140 nostoa). '
+        + 'Valmiina: v357 radio- ja tv-napit, v353 menovinkit '
+        + 'lehtimaille, v350 lehtijako.',
+      seuraavaksi: 'Maalehtien syvyys päätetään vasta omistajan '
+        + 'testikierroksen jälkeen (Ranskan pilotti odottaa '
+        + 'haaralla).',
     },
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'tyossa',
-      tehtava: 'Espanjan korkokartta ja Madridin kaupunkikartta. '
-        + 'Valmiina: v351 Italia (korkokartta, Venetsian '
-        + 'kohdekartta, intro).',
-      seuraavaksi: 'Ruotsi/Tukholma; sen jälkeen '
-        + 'tv-tallennekandidaattien haku.',
+      tila: 'odottaa',
+      tehtava: 'Kaista tyhjä. Valmiina: v360 Espanjan tv-nappi '
+        + '(Sää tänään + Uutiset neljässä minuutissa, '
+        + 'worker-reitti #492), v359 Venetsian laguuni, '
+        + 'v351/v354/v355 kartat, tv-kartoitus.',
+      seuraavaksi: 'Uusi tehtävä pilottikatselmuksen ja '
+        + 'testikierroksen tarpeiden mukaan.',
     },
     {
       tekija: 'Sonnet 1',
       rooli: 'QA + työhuone',
       tila: 'tyossa',
-      tehtava: 'Työhuoneen kokonaisuudistus: 5 välilehteä (Tilanne, '
-        + 'Testaa, Kehitys, Kaupungit, Studio). Valmiina: v352 '
-        + 'Kehitys-välilehti kuuntelupaketteineen ja koko aineiston '
-        + 'QA (nolla oikeaa virhettä).',
-      seuraavaksi: 'Iso loppu-QA koko Euroopalle ennen omistajan '
-        + 'testiä.',
+      tehtava: 'Iso loppu-QA koko Euroopalle ennen omistajan '
+        + 'testiä. Valmiina: v356 työhuoneen kokonaisuudistus (5 '
+        + 'välilehteä, Testaa-välilehti pelilinkkeineen), v352 '
+        + 'Kehitys-välilehti.',
+      seuraavaksi: 'QA-raportti Fablelle; löydöt korjauslistaksi.',
     },
     {
       tekija: 'Sonnet 2',
       rooli: 'nähtävyysjutut',
-      tila: 'tyossa',
-      tehtava: 'Berliinin kuuden kohteen nähtävyysjutut '
-        + 'en-Wikipedian pohjalta (pilotti — omistaja katsoo jäljen '
-        + 'ennen jatkoa).',
-      seuraavaksi: 'Kairo ja uudet kartat Opus 2:n tahdissa, jos '
-        + 'pilotti kelpaa.',
+      tila: 'odottaa',
+      tehtava: 'Berliinin kuuden kohteen nähtävyysjutut valmiit '
+        + '(v358): omat jutut, 24 kuvaa tarkistettuina, lainauksia. '
+        + 'Odottaa omistajan katselmusta ennen jatkoa.',
+      seuraavaksi: 'Kairo ja uudet karttakaupungit, jos pilotti '
+        + 'kelpaa.',
     },
   ],
   odottaaPaatosta: [
+    'Berliinin nähtävyyspilotin katselmus (Sonnet 2 odottaa lupaa '
+      + 'jatkaa muihin kaupunkeihin)',
     'Kertoja- ja hahmoäänten valinta (kuuntele Kehitys-välilehden '
       + 'näytteet)',
     'Sateenvarjomiehen henkilöllisyys (ehdotus Kehitys-välilehden '
@@ -80,6 +84,39 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Espanjan tv-nappi — TESTAA IPADILLA (v360)',
+    ohje: 'Avaa Espanjan maalehti: tv-napissa kaksi valintaa, Sää '
+      + 'tänään (38 s) ja Uutiset neljässä minuutissa. Tämä on '
+      + 'juuri se laitetesti, jota kehitysympäristöstä ei voi '
+      + 'tehdä. Jos nappi sanoo "Ei saatu haettua", vika on '
+      + 'todennäköisesti Cloudflaren workerin päivitysviive — '
+      + 'kokeile hetken päästä uudestaan ennen kuin raportoit.',
+  },
+  {
+    otsikko: 'Berliinin nähtävyysjutut — PILOTTI (v358)',
+    ohje: 'Avaa Berliinin kaupunkikartta ja napauta numeroympyröitä: '
+      + 'kuusi kohdetta sai omat jutut kuvineen ja lainauksineen '
+      + '(mm. Reaganin muurinpuhe). Tämä on Sonnetin pilotti — '
+      + 'katso jälki ja päätä, jatketaanko muihin kaupunkeihin.',
+  },
+  {
+    otsikko: 'Radio ja tv molemmissa lehdissä (v357)',
+    ohje: 'Avaa mikä tahansa kaupunki- ja maalehti: radio- ja '
+      + 'videonapit näkyvät nyt kummassakin, ja viimeiset '
+      + 'live-lähetykset on korvattu tallenteilla tai poistettu.',
+  },
+  {
+    otsikko: 'Työhuone uusiksi (v356)',
+    ohje: 'Työhuoneessa on nyt viisi välilehteä: Tilanne (tämä '
+      + 'taulu + muutosloki), Testaa (tämä lista + pelilinkit '
+      + 'suoraan lautoihin), Kehitys, Kaupungit ja Studio.',
+  },
+  {
+    otsikko: 'Espanjan ja Ruotsin kartat (v354–v355)',
+    ohje: 'Matkusta Madridiin ja Tukholmaan: korkokartat, '
+      + 'kohdekartat ja maaintrot samaan tapaan kuin Italiassa.',
+  },
   {
     otsikko: 'Menovinkit kaikilla lehtimailla (v353)',
     ohje: 'Avaa minkä tahansa lehtimaan kaupunkilehti: viimeinen '
@@ -128,15 +165,5 @@ export const TESTATTAVAA = [
       + 'dekkarimerkintä ja luenta (23–30 s). Kuuntele ainakin '
       + 'Edinburgh (askeleet sumussa), Pariisi (messinkiavain) ja '
       + 'Pietari (sillat).',
-  },
-  {
-    otsikko: 'Kairon lehti (v348)',
-    ohje: 'Kairo: Egypti-osio, katukartta, Musiikki-sivu (Umm '
-      + 'Kulthum) ja Rakennukset-sivu (miten pyramidi tehtiin).',
-  },
-  {
-    otsikko: 'Valokuvaus-sivu (v341)',
-    ohje: 'Berliinin maalehti: Ottomar Anschützin haikarat ja Päivän '
-      + 'kuva maailmalta -palsta, joka vaihtuu keskiyöllä.',
   },
 ];
