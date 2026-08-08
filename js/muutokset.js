@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 350, teksti: 'Kaupunki- ja maalehti erikseen, kohtaaminen viimeisenä' },
+  { v: 350, teksti: 'Maiden tiedot -varuste: maan lehti suoraan kartalta' },
+  { v: 350, teksti: 'Menovinkit: parhaat kokoelmat nettimatkaajalle' },
+  { v: 350, teksti: 'Lontoon nähtävyyksille omat jutut kuvineen' },
   { v: 349, teksti: 'Lontoon aiheet Britannialle, kansi jää kaupungille' },
   { v: 349, teksti: 'Musiikkilinkki vie nyt suoraan kappaleeseen' },
   { v: 349, teksti: 'Kaupunkikartta miedommaksi: tausta, ei juliste' },

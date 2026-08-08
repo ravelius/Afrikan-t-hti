@@ -1194,6 +1194,140 @@ export const MAA_KATEGORIAT = {
         },
       ],
     },
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Britannian kokoelmat ovat verkossa niin täydellisinä, että matkan '
+        + 'voi tehdä selaimella: zoomattavia maalauksia, miljoona esinettä, '
+        + '300 vuoden oikeudenkäynnit, koko maa ilmasta ja suoria '
+        + 'pesäkameroita.',
+      nostot: [
+        {
+          otsikko: 'Auringonkukat siveltimenjälkiä myöten',
+          tiedosto: 'Giuseppe Gabrielli - The National Gallery, Interior of Room 32 - 1886.png',
+          teksti: 'National Galleryn kokoelmassa on yli 2 400 maalausta, ja '
+            + 'jokaisella on verkossa oma sivunsa. Van Goghin Auringonkukat '
+            + 'vuodelta 1888 aukeaa zoomattavana kuvana, jota voi suurentaa '
+            + 'niin pitkälle, että kankaan kudos ja paksut keltaiset '
+            + 'siveltimenvedot erottuvat — lähemmäs kuin salissa pääsee, '
+            + 'koska siellä on vaijeri edessä. Sivun alta löytyy teoksen '
+            + 'historia ja linkit muihin kokoelman töihin, joita voi selata '
+            + 'aikajanalla vuodesta 100 jaa. eteenpäin. Mitään ei tarvitse '
+            + 'kirjautua eikä maksaa.',
+          selite: 'National Galleryn sali vuonna 1886: seinät täynnä maalauksia '
+            + 'kolmessa rivissä, kävijät hatuissa ja pitkissä takeissa, '
+            + 'kattoikkuna valaisee salin.',
+          lahde: 'Giuseppe Gabrielli, Wikimedia Commons (public domain)',
+          linkki: 'https://www.nationalgallery.org.uk/paintings/vincent-van-gogh-sunflowers',
+          linkkiNimi: 'National Gallery — Auringonkukat zoomattavana',
+        },
+        {
+          otsikko: 'Miljoona esinettä, joista useimmat eivät mahdu esille',
+          tiedosto: 'PXL 20231218 155438181.MP Victoria and Albert Museum Artefacts 46 Ruddock Family Cast Court.jpg',
+          teksti: 'Victoria and Albert Museum on maailman suurin muotoilun ja '
+            + 'käsityön museo, ja sen hakukoneessa on yli 1,25 miljoonaa '
+            + 'esinettä. Näyttelysaleihin mahtuu murto-osa, joten '
+            + 'verkkokokoelma on se paikka, jossa loput ovat: japanilaisia '
+            + 'miekankahvoja, 1700-luvun tapetteja, Bowien lavapukuja, '
+            + 'kenkiä, kelloja, kokonaisia huoneita. Haun voi rajata niin, '
+            + 'että näkyviin tulevat vain kuvalliset kohteet, ja suodattaa '
+            + 'materiaalin, valmistuspaikan tai vuosisadan mukaan. Kuvat '
+            + 'aukeavat suurina.',
+          selite: 'V&A:n Cast Court: Trajanuksen pylvään kipsijäljennös ja rivi '
+            + 'hautapatsaiden kopioita punaisten seinien keskellä.',
+          lahde: 'Sourabh.biswas003, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://collections.vam.ac.uk/search/?images_exist=true',
+          linkkiNimi: 'V&A — Explore the Collections',
+        },
+        {
+          otsikko: '126 559 kuvaa, jotka saa ladata ja käyttää',
+          tiedosto: 'The Wellcome Building, Euston Road, London 2009-10-18.jpg',
+          teksti: 'Wellcome Collection kerää lääketieteen ja tieteen historiaa: '
+            + 'verkkokatalogissa on 1,17 miljoonaa teosta ja 126 559 kuvaa. '
+            + 'Suurin osa kuvista on julkaistu CC BY -lisenssillä, eli ne saa '
+            + 'ladata täysikokoisina ja käyttää vaikka koulutyössä, kunhan '
+            + 'lähteen mainitsee. Aineisto on hämmentävää ja hienoa yhtä '
+            + 'aikaa: anatomisia kaiverruksia, koleravaroituksia, kirurgin '
+            + 'instrumentteja, kiinalaisia rohdoskuvia, 1800-luvun '
+            + 'sairaalapiirustuksia. Talo Euston Roadilla on ilmainen, ja '
+            + 'niin on sen arkistokin.',
+          selite: 'Wellcome Collectionin talo Euston Roadilla — 1930-luvun '
+            + 'portlandinkivinen rakennus pylväineen, jonne on vapaa pääsy.',
+          lahde: 'ell brown, Wikimedia Commons (CC BY 2.0)',
+          linkki: 'https://wellcomecollection.org/collections',
+          linkkiNimi: 'Wellcome Collection — kokoelmat verkossa',
+        },
+        {
+          otsikko: '197 754 oikeudenkäyntiä sanasta sanaan',
+          tiedosto: 'Microcosm of London Plate 058 - Old Bailey (colour).jpg',
+          teksti: 'Old Bailey Online sisältää Lontoon keskusrikostuomioistuimen '
+            + 'painetut pöytäkirjat vuosilta 1674–1913: 197 754 '
+            + 'oikeudenkäyntiä sanatarkasti. Todistajat puhuvat omalla '
+            + 'suullaan, syytetyt selittävät, ja tuomio luetaan heti perään. '
+            + 'Vanhin istunto on 29. huhtikuuta 1674. Haku toimii rikoksen, '
+            + 'tuomion, iän tai vuoden mukaan, ja jokaisesta jutusta näkee '
+            + 'myös skannatun alkuperäissivun. Tämä on lähin asia tavallisen '
+            + '1700-luvun lontoolaisen ääneen, jonka verkosta voi löytää.',
+          selite: 'Old Baileyn sali vuonna 1809: peruukkipäiset asianajajat '
+            + 'pöytien ääressä, täysi yleisölehteri ja syytetty aitauksessa.',
+          lahde: 'Thomas Rowlandson ja Augustus Charles Pugin, Wikimedia Commons (public domain)',
+          linkki: 'https://www.oldbaileyonline.org/',
+          linkkiNimi: 'Old Bailey Online — pöytäkirjat 1674–1913',
+        },
+        {
+          otsikko: 'Shakespearen vuoden 1623 folio, sivu kerrallaan',
+          tiedosto: 'Duke Humfrey\'s Library Interior 4, Bodleian Library, Oxford, UK - Diliff.jpg',
+          teksti: 'Bodleianin kirjaston oma kappale Shakespearen ensimmäisestä '
+            + 'foliosta on skannattu kokonaan, ja sitä voi lukea verkossa '
+            + 'sivunkääntäjällä kuten oikeaa kirjaa. Vuoden 1623 nide kokosi '
+            + '36 näytelmää yksiin kansiin seitsemän vuotta kirjailijan '
+            + 'kuoleman jälkeen. Sivun vieressä on puhtaaksikirjoitettu '
+            + 'teksti, joten 400 vuotta vanhan painoasun s-kirjaimet eivät '
+            + 'kaada lukemista. Kuvat ja tekstit saa myös ladata. Digitointi '
+            + 'maksettiin vuonna 2012 yleisökeräyksellä.',
+          selite: 'Duke Humfrey\'s Library, Bodleianin vanhin lukusali: hyllyt '
+            + 'täynnä nahkaselkäisiä kirjoja ja maalattu kasettikatto.',
+          lahde: 'Diliff, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://firstfolio.bodleian.ox.ac.uk/book.html',
+          linkkiNimi: 'Bodleian First Folio — lue kirja sivu sivulta',
+        },
+        {
+          otsikko: '96 344 ilmakuvaa vuosilta 1919–1953',
+          tiedosto: 'Launceston from an Aeroplane - 23650 by Aerofilms. Aerial View. CORNWALL POSTCARD 1925 (50626799973).jpg',
+          teksti: 'Aerofilms-yhtiö nousi lentokoneella ilmaan ja valokuvasi '
+            + 'Britanniaa kaupunki kaupungilta, ja koko arkisto on nyt '
+            + 'verkossa: 96 344 kuvaa, joista 82 521 Englannista, 6 398 '
+            + 'Skotlannista ja 4 321 Walesista. Kuvia selataan kartalta, '
+            + 'joten voi zoomata omaan kotikulmaansa ja katsoa, mitä siinä '
+            + 'oli ennen. Kuvissa näkyy tehtaita, telakoita, '
+            + 'jalkapallostadioneita ja kokonaisia kortteleita, jotka '
+            + 'purettiin myöhemmin — monesta paikasta tämä on ainoa jäljellä '
+            + 'oleva kuva.',
+          selite: 'Aerofilmsin postikorttikuva Launcestonista Cornwallissa 1925: '
+            + 'kirkontorni keskellä, aidatut pellot kaupungin ympärillä.',
+          lahde: 'Aerofilms Ltd, kuvan tallentanut Mark Crombie, Wikimedia Commons (public domain)',
+          linkki: 'https://britainfromabove.org.uk/en/search',
+          linkkiNimi: 'Britain from Above — hae kartalta',
+        },
+        {
+          otsikko: 'Yli 25 kameraa, joissa tapahtuu juuri nyt',
+          tiedosto: 'Puffin on Skomer Island.jpg',
+          teksti: 'The Wildlife Trusts kokoaa yhdelle sivulle Britannian suorat '
+            + 'luontokamerat, ja niitä on yli 25. Lunnit kuoriutuvat Skomerin '
+            + 'saarella Walesissa, sääksi palaa pesälle Rutlandissa ja Dyfin '
+            + 'laaksossa, muuttohaukat asuvat Derbyn ja St Albansin '
+            + 'katedraalien torneissa, tornipöllöt Somersetissä, mäyrät '
+            + 'Gloucestershiressä ja delfiinit Cardigan Bayn edustalla. Kevät '
+            + 'ja alkukesä ovat vilkkainta aikaa, mutta osa kameroista käy '
+            + 'ympäri vuoden. Katselu ei vaadi kirjautumista.',
+          selite: 'Lunni levittää siipensä pesäkolon suulla Skomerin saarella; '
+            + 'taustalla toinen lintu ruohikossa.',
+          lahde: 'RewildingGirl5, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.wildlifetrusts.org/webcams',
+          linkkiNimi: 'The Wildlife Trusts — suorat luontokamerat',
+        },
+      ],
+    },
   ],
   EGY: [
     {

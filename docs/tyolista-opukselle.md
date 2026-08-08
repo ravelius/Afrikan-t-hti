@@ -5523,6 +5523,56 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v350 — Kaupunki- ja maalehti erilleen (8.8.2026)
+
+Omistajan tilaus: *"tehdään isompi muutos: erotetaan kaupunki ja maa
+lehti toisistaan ... maan sivuille pääsisi nyt suoraan kartalta."*
+
+### Mitä muuttui
+
+1. **Kaksi lehteä yhden pinon sijaan.** Kaupunkilehti on kansi ja
+   kaupungin omat aiheet; maalehti on oma näkymänsä, joka avataan
+   kartalta. `rakennaSivut` täyttää `tutkiSivut` (kaupunki) ja
+   `maanSivut` (maa) erikseen, `avaaMaalehti` rakentaa maalehden.
+2. **Navigointi alas.** `paivitaTutkiAlapalkki` piilottaa "Tapaa
+   henkilö X" -napin kaikkialta muualta kuin kaupunkilehden
+   viimeiseltä sivulta; muuten alapalkissa ovat Edellinen, Seuraava ja
+   Poistu. Maalehdellä kohtaamista ei ole lainkaan.
+3. **Maiden tiedot -varuste** (`js/linssit/maatiedot.js`): kartalla
+   jokainen maa on napautettava, ja nimen perässä oleva "i" avaa maan
+   lehden ilman että sinne pitää matkustaa. Ansaitaan kokemuspisteillä
+   (`manner: null`).
+4. **Menovinkit-sivu**: parhaat verkkokokoelmat nettimatkaajalle.
+   Sisältö asuu maapaketissa (`MAA_KATEGORIAT.<ISO>`) yhtenä
+   kappaleena ja lainataan kaupunkilehden viimeiseksi sivuksi — kaksi
+   kopiota ajautuisi erilleen. Uusi kenttäpari `linkki`/`linkkiNimi`.
+5. **Lontoon nähtävyysjutut**: julistekartan numeroympyrät avaavat
+   oman artikkelinsa (kuvat tekstin seassa, vuosilukukorostus,
+   lainausnostot).
+
+### Mitä kaappaukset paljastivat
+
+Kumpikaan ei olisi jäänyt testeistä kiinni:
+
+- **Nimiö ja kulmalinkki päällekkäin 390 pikselissä.** "Matkasanomat"
+  keskitettynä ulottui x-välille 15–375 ja "ISO-BRITANNIA-OSIO ›"
+  välille 204–378. Kapealla ruudulla nimiö on nyt vasemmassa reunassa.
+- **Sitaattinosto toisti sanasta sanaan yläpuolisen kappaleen.**
+  `poimiNostoVirke` haki virkkeen nostosta 0, vaikka sitaatti ladotaan
+  noston 1 eteen. Nyt se poimitaan siitä nostosta, jota se houkuttelee
+  lukemaan.
+- **Kulmalinkki oli kuollut.** Se etsi `maa-etusivu`-sivua
+  `tutkiSivut`-listasta, josta maan sivut olivat juuri lähteneet.
+  Nappi ei tehnyt mitään. Nyt se avaa maalehden kuten kartan "i".
+
+### Opittua
+
+**Rakennemuutos katkaisee myös sen, mikä ei näy diffissä.** Kulmalinkki
+oli yhden `findIndex`-rivin päässä siitä listasta, jonka sisältö
+muuttui — mikään testi ei koskenut siihen, eikä sitä olisi huomannut
+lukemalla muutettuja rivejä. Se löytyi vasta, kun kaappauksessa näkyi
+nappi, jota tuli painettua.
+
 ## v344 — Kuollut taustasoitin purkaa solmunsa (7.8.2026)
 
 v342:n "Mitä EI korjattu" -kohta. Omistaja: *"Hoida vain nyt."*

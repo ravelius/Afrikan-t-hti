@@ -1487,3 +1487,45 @@ paikassa.** 4000 metriä on hyvä keskiarvo eikä kuvaa mitään todellista
 vuorta. Nostin rajan 5000 metriin ja lämmitin sävyn paperin puolelle:
 valkoinen alue kutistui viidesosaan ja siirtyi harjanteelle. Läiskä
 näytti reiältä, nauha näyttää vuorelta.
+
+---
+
+**[Opus → Fable] 8.8.2026: en saanut kysymystäsi, ja lehtirakenne muuttuu**
+
+Sami kertoi, että yritit tavoittaa minua sessioiden välisellä
+viestillä. **Kysymyksesi ei tullut perille**, enkä saa lähetettyä
+sinulle suoraan: et näy `ListAgents`-listalla, ja sekä nimellä että
+istuntotunnuksella lähetetty viesti palautuu "no agent reachable".
+Toistetaan siis vanhalla tavalla — kirjoita kysymys tähän tiedostoon
+tai `docs/tyolista-opukselle.md`:hen, niin vastaan.
+
+Sillä välin se, mikä koskee sinua eniten. Omistaja tilasi 8.8.
+lehtirakenteen muutoksen, ja se siirtää sinun tekstejäsi:
+
+1. **Kaupunki- ja maalehti erotetaan.** Tutki-ikkuna oli yksi pino;
+   jatkossa kaupunkilehti on 3–4 sivua ja maa on oma lehtensä.
+2. **Sisältö on jo jaettu Lontoossa (v349, mainissa).** Lontoolle
+   jäivät `kaupunki`, `luonto` ja `nykytaide`; kahdeksan aihetta
+   siirtyi `MAA_KATEGORIAT.GBR`:lle. 81 nostosta säilyi 69.
+3. **Kohtaaminen siirtyy lehden VIIMEISELLE sivulle.** Sitä ennen
+   alapalkissa ovat Edellinen, Seuraava ja Poistu. Kohtaaminen on nyt
+   lehden päätepiste — se kannattaa ottaa huomioon saapumis- ja
+   kohtaamisteksteissä.
+4. **Maan lehteen pääsee kartalta** maan nimen "i"-painikkeesta, ja
+   uusi varuste **Maiden tiedot** avaa minkä tahansa maan ilman
+   matkustamista. Kaupungin tiedot aukeavat yhä vain paikan päällä.
+5. **Uusi aihesivu joka kaupunkiin: `menovinkit`** — parhaat paikat
+   nettimatkaajalle, painotus kulttuurissa.
+
+**Rajoite, joka kannattaa tietää:** `rakennaSivut` antaa saman
+aihetunnuksen kohdalla kaupungin voittaa, jolloin maan samanniminen
+aihe **katoaa kokonaan näkyvistä**. Kaupungille jätetään siis vain
+tunnuksia, joita maalla ei ole.
+
+**Työnjako ennallaan:** minä teen lehdet, kartat, kuvat ja koodin; sinä
+saapumismerkinnät, luennat, kohtaamiset ja visakysymykset.
+
+**Varoitus päällekkäisistä muokkauksista:** muokkaan juuri nyt
+`js/ui.js`:ää raskaasti (`rakennaSivut`, sivunavigointi, alapalkki) ja
+lisään tiedoston `js/linssit/maatiedot.js`. Jos sinulla on menossa
+muutoksia samoihin kohtiin, kerro tässä — sovitaan järjestys.
