@@ -74,3 +74,52 @@ export const TILANNE = {
       + 'Iso kaari -osiossa)',
   ],
 };
+
+/**
+ * Testattavaa juuri nyt: uusimmat ominaisuudet ja mistä ne löytää.
+ * Fable päivittää tätä julkaisujen tahdissa — Testaa-välilehti
+ * näyttää listan pelilinkkien vieressä. Uusin ensin.
+ */
+export const TESTATTAVAA = [
+  {
+    otsikko: 'Lehtijako ja kohtaaminen lopussa (v350)',
+    ohje: 'Avaa Lontoo: kaupunkilehti on nyt 5 sivua ja maalehti '
+      + 'erikseen (Iso-Britannia-osio). "Tapaa jokietsijä" näkyy '
+      + 'vasta viimeisellä sivulla. Katso myös nähtävyysjutut: '
+      + 'kaupunkikartan numeroympyrät avaavat artikkelin.',
+  },
+  {
+    otsikko: 'Maiden tiedot -varuste (v350)',
+    ohje: 'Ansaitse varuste kokemuspisteillä — sen jälkeen minkä '
+      + 'tahansa maan lehti aukeaa kartalta maan nimen i-napista, '
+      + 'matkustamatta.',
+  },
+  {
+    otsikko: 'Menovinkit (v350)',
+    ohje: 'Lontoon kaupunkilehden viimeinen aihesivu: seitsemän '
+      + 'kohdetta linkkeineen.',
+  },
+  {
+    otsikko: 'Aarrevihjeet matkalla (v346)',
+    ohje: 'Pysähdy nopalla kaupunkien väliin: isoisän taitettu sivu '
+      + 'nousee tietoruutuun kuiskattuna — ilmansuunta, ei kaupunki. '
+      + 'Kaupungissa vihje ei enää koskaan peitä merkintää.',
+  },
+  {
+    otsikko: 'Koko Eurooppa dekkarina (v345)',
+    ohje: 'Saavu mihin tahansa Euroopan kaupunkiin: lyhyt '
+      + 'dekkarimerkintä ja luenta (23–30 s). Kuuntele ainakin '
+      + 'Edinburgh (askeleet sumussa), Pariisi (messinkiavain) ja '
+      + 'Pietari (sillat).',
+  },
+  {
+    otsikko: 'Kairon lehti (v348)',
+    ohje: 'Kairo: Egypti-osio, katukartta, Musiikki-sivu (Umm '
+      + 'Kulthum) ja Rakennukset-sivu (miten pyramidi tehtiin).',
+  },
+  {
+    otsikko: 'Valokuvaus-sivu (v341)',
+    ohje: 'Berliinin maalehti: Ottomar Anschützin haikarat ja Päivän '
+      + 'kuva maailmalta -palsta, joka vaihtuu keskiyöllä.',
+  },
+];
