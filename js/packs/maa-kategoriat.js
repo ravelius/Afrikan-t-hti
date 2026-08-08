@@ -4556,13 +4556,13 @@ export const MAA_KATEGORIAT = {
     {
       id: 'menovinkit',
       nimi: 'Menovinkit',
-      johdanto: 'Ranska on avannut verkkoon sen, mihin ei muuten pääse: luolan '
-        + 'johon kukaan ei saa astua, museon varastot kokonaisuudessaan ja '
-        + 'ilmakuvat, joilla oman kylän voi katsoa seitsemänkymmentä vuotta '
-        + 'taaksepäin.',
+      johdanto: 'Ranska on avannut verkkoon sen, mihin ei muuten pääse: luolat '
+        + 'joihin kukaan ei saa astua, museoiden varastot kokonaisuudessaan '
+        + 'ja ilmakuvat, joilla oman kylän voi katsoa seitsemänkymmentä '
+        + 'vuotta taaksepäin.',
       lista: [
         {
-          otsikko: 'Museot ja luolat',
+          otsikko: 'Museot ja galleriat',
           kohteet: [
             {
               nimi: 'Louvren kokoelmat — koko kokoelma verkossa',
@@ -4574,18 +4574,6 @@ export const MAA_KATEGORIAT = {
                 + 'valaistuina.',
               lahde: 'Benh Lieu Song, Wikimedia Commons (CC BY 2.5)',
               linkki: 'https://collections.louvre.fr/',
-            },
-            {
-              nimi: 'Chauvet\'n luola — virtuaalikierros',
-              tiedosto: 'Lions painting, Chauvet Cave (museum replica).jpg',
-              teksti: 'Chauvet\'n luola löytyi vuonna 1994, ja sen maalaukset ovat '
-                + 'noin 36 000 vuotta vanhoja — kaksi kertaa vanhempia kuin '
-                + 'Lascaux\'n.',
-              selite: 'Luolamaalaus, jossa rivi leijonan päitä on piirretty '
-                + 'mustalla hiilellä vaaleaa kalkkikiveä vasten, katseet '
-                + 'samaan suuntaan.',
-              lahde: 'Wikimedia Commons (public domain)',
-              linkki: 'https://archeologie.culture.gouv.fr/chauvet/en',
             },
             {
               nimi: 'Centre Pompidou — nykytaiteen kokoelma',
@@ -4600,11 +4588,123 @@ export const MAA_KATEGORIAT = {
               lahde: 'DiscoA340, Wikimedia Commons (CC BY-SA 4.0)',
               linkki: 'https://www.centrepompidou.fr/en/',
             },
+            {
+              nimi: 'Musée Rodin — veistokset kokoelmaportaalissa',
+              tiedosto: 'Le Penseur Musée Rodin Paris S.1295.jpg',
+              teksti: 'Rodinin museon kokoelmahausta löytyy veistoksia, '
+                + 'piirroksia ja vanhoja valokuvia. Haun sivupalkista voi '
+                + 'rajata mukaan vain ne kohteet, joista on kuva.',
+              selite: 'Pronssinen Ajattelija istuu kivijalustalla kumarassa, '
+                + 'leuka nyrkin päällä; takana pilvinen taivas ja tumma '
+                + 'pensasaita.',
+              lahde: 'Auguste Rodin, Wikimedia Commons (CC0)',
+              linkki: 'https://collections.musee-rodin.fr/',
+            },
+            {
+              nimi: 'Paris Musées — kaupungin museot yhdessä haussa',
+              teksti: 'Carnavalet\'n, Petit Palais\'n ja kymmenkunnan muun Pariisin '
+                + 'kaupungin museon teokset ovat samassa haussa, ja isosta '
+                + 'osasta kuvia saa ladattua tarkan version ilmaiseksi.',
+              linkki: 'https://www.parismuseescollections.paris.fr/fr',
+            },
           ],
         },
         {
-          otsikko: 'Arkistot ja ilmakuvat',
+          otsikko: 'Historia ja muinaisuus',
           kohteet: [
+            {
+              nimi: 'Chauvet\'n luola — virtuaalikierros',
+              tiedosto: 'Lions painting, Chauvet Cave (museum replica).jpg',
+              teksti: 'Chauvet\'n luola löytyi vuonna 1994, ja sen maalaukset ovat '
+                + 'noin 36 000 vuotta vanhoja — kaksi kertaa vanhempia kuin '
+                + 'Lascaux\'n.',
+              selite: 'Luolamaalaus, jossa rivi leijonan päitä on piirretty '
+                + 'mustalla hiilellä vaaleaa kalkkikiveä vasten, katseet '
+                + 'samaan suuntaan.',
+              lahde: 'Wikimedia Commons (public domain)',
+              linkki: 'https://archeologie.culture.gouv.fr/chauvet/en',
+            },
+            {
+              nimi: 'Lascaux\'n luola — verkkoluola sali salilta',
+              tiedosto: 'Lascaux, Megaloceros.jpg',
+              teksti: 'Lascaux löytyi vuonna 1940, kun pojat etsivät kadonnutta '
+                + 'koiraa. Luola on ollut suljettuna vuodesta 1963, mutta '
+                + 'verkossa sen salit voi kiertää ja katsoa maalauksia aivan '
+                + 'läheltä.',
+              selite: 'Luolamaalaus jättiläishirvestä: musta pää ja valtavat '
+                + 'haarovat sarvet vaalealla kalliolla, alla rivi tummia '
+                + 'pisteitä.',
+              lahde: 'Wikimedia Commons (public domain)',
+              linkki: 'https://archeologie.culture.gouv.fr/lascaux/en',
+            },
+            {
+              nimi: 'Versailles\'n linna — 360 asteen kierrokset',
+              tiedosto: 'Versailles Bassin d\'Apollon 001.jpg',
+              teksti: 'Linnan omat 360 asteen kierrokset vievät peilisaliin, '
+                + 'kuninkaan makuuhuoneeseen ja näyttelysaleihin. Kuvaa voi '
+                + 'pyörittää joka suuntaan ja zoomata kattomaalauksiin asti.',
+              selite: 'Kullattu suihkulähde altaassa: Apollon vaunut ja neljä '
+                + 'hevosta nousevat vedestä, takana suora puukuja ja kanava.',
+              lahde: 'Moonik, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://en.chateauversailles.fr/discover/resources/360deg-virtual-tours',
+            },
+          ],
+        },
+        {
+          otsikko: 'Valokuvausnäyttelyt',
+          kohteet: [
+            {
+              nimi: 'Médiathèque du patrimoine — Ranskan valokuva-arkisto',
+              teksti: 'Valtion valokuva-arkiston sivuilla jokaisella kokoelmalla '
+                + 'on oma kuvasivunsa: Nadarin ateljee, ensimmäisen '
+                + 'maailmansodan rintama ja amatöörikuvaajien lomakuvat.',
+              linkki: 'https://mediatheque-patrimoine.culture.gouv.fr/collections',
+            },
+            {
+              nimi: 'Musée Albert-Kahn — maailman ensimmäiset värikuvat',
+              tiedosto: 'Serb women in festive dress, near Prizren. Autochrome by Auguste Léon, 9 May 1913 (Coll. Musée Albert-Kahn).jpg',
+              teksti: 'Pankkiiri Albert Kahn lähetti 1900-luvun alussa kuvaajansa '
+                + 'ympäri maailmaa. Kuvaportaalissa on yli 69 000 kuvaa, ja '
+                + 'autochrome-lasilevyt ovat aitoja värivalokuvia.',
+              selite: 'Värivalokuva vuodelta 1913: naisia ja tyttöjä istuu maassa '
+                + 'punaisissa hameissa ja valkoisissa huiveissa, vieressä '
+                + 'koreja ja puinen rakennus.',
+              lahde: 'Auguste Léon, Wikimedia Commons (public domain)',
+              linkki: 'https://collections.albert-kahn.hauts-de-seine.fr/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'Gallica — Ranskan kansalliskirjaston digikirjasto',
+              tiedosto: 'Bibliothèque nationale de France Salle Labrouste.jpg',
+              teksti: 'Gallicassa on miljoonia digitoituja kirjoja, karttoja, '
+                + 'sanomalehtiä, valokuvia ja nuotteja. Jokaista voi selata '
+                + 'sivu kerrallaan ja suurentaa yksityiskohtiin asti.',
+              selite: 'Kansalliskirjaston lukusali: vaaleita kupoleja katossa, '
+                + 'kaarevat kirjahyllyt seinillä ja vihreävarjostimiset '
+                + 'lamput pöytärivien päällä.',
+              lahde: 'Stefan Drößler, Wikimedia Commons (CC BY 4.0)',
+              linkki: 'https://gallica.bnf.fr/',
+            },
+            {
+              nimi: 'Angoulêmen sarjakuvamuseo — digitoidut sarjakuvat',
+              teksti: 'Angoulêmen Cité de la BD:llä on Euroopan suurin '
+                + 'sarjakuvakokoelma. Digitoitujen aineistojen sivulta pääsee '
+                + 'piirtäjien ja vanhojen sarjakuvalehtien sivuille, joilla '
+                + 'ruudut näkyvät kuvina.',
+              linkki: 'https://www.citebd.org/collections-numerisees',
+            },
+            {
+              nimi: 'POP — Ranskan kulttuuriperintö yhdessä haussa',
+              teksti: 'Kulttuuriministeriön avoin haku kokoaa neljä miljoonaa '
+                + 'kohdetta: museoesineet, muinaisjäännökset, vanhat '
+                + 'valokuvat ja tuhansien keskiaikaisten käsikirjoitusten '
+                + 'kuvitukset.',
+              linkki: 'https://www.pop.culture.gouv.fr/',
+            },
             {
               nimi: 'Remonter le temps — Ranska ilmasta ennen ja nyt',
               tiedosto: 'Vue aérienne de la région de Luxeuil-les-Bains - Froideconche - btv1b53237326r.jpg',
