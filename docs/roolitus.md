@@ -76,16 +76,26 @@ tämän ja ottaa roolinsa tästä. Omistaja ohjaa kaikkea Fablen kautta.)*
 
 ## Työjono (tilanne 8.8.2026 — päivitä isojen erien valmistuessa)
 
+**OMISTAJAN PRIORITEETTI 8.8.2026: Eurooppa tehdään ensin loppuun,
+sitten omistaja testaa sen itse. Afrikka ja muut maanosat alkavat
+vasta testauksen jälkeen.**
+
 - **Opus:** erä 2 (menovinkit + kuvakaappaukset) → haaran kolmen
   commitin julkaisu (lehtijako, nähtävyystekstit, Maiden tiedot) →
   lehtikaupungit Venetsia, Madrid, Tukholma, Berliini uudella
   kaupunki/maa-jaolla → muut Euroopan maa- ja kaupunkilehdet.
-- **Fable:** Afrikan laudan kaupunkijakotaulu raamattuun → ~35
-  merkintää dekkariksi luentoineen → kohtaamisluennat viiteen
-  muuhun lehtikaupunkiin (äänivalinnat per hahmo) → Lähi-itä ja
-  maailmankartta suunnitelmien mukaan.
-- **Sonnet:** QA-kierros jokaisen ison erän jälkeen; raportit
+- **Fable:** Euroopan tarinapuoli on tekstien osalta valmis (41
+  merkintää, vihjeet, kohtaamiset). Jäljellä: kohtaamisluennat
+  neljälle Euroopan lehtikaupunkihahmolle (Elsa, Rosa, Matteo,
+  Otto) + Farukille (Kairo kuuluu lehtikuusikkoon) — vaatii
+  omistajan avaimen JA naisäänet: tilin suomiäänet ovat kaikki
+  miehiä, joten Elsalle ja Rosalle tarvitaan 1–2 naisääntä lisää
+  ElevenLabs-kirjastosta (omistajan toimi) tai monikielinen
+  äänikoe. Testauksen jälkeen: Afrikan kaupunkijako + merkinnät.
+- **Sonnet:** QA-kierros jokaisen ison erän jälkeen; iso
+  loppu-QA koko Euroopalle ennen omistajan testiä; raportit
   Fablelle.
 - **Omistajalta odottaa päätöstä:** riisutaanko Italian ja Espanjan
   YouTube-livet (tv-tallenteet jäivät ITA/ESP/DEU:lle);
-  sateenvarjoseuraajan paljastuksen suunta (raamattu).
+  sateenvarjoseuraajan paljastuksen suunta (raamattu);
+  naisäänet ElevenLabs-kirjastoon Elsalle ja Rosalle.
