@@ -7484,12 +7484,15 @@ export class UI {
     edellinen.hidden = nyt <= 0;
     seuraava.hidden = viimeisella;
     /*
-     * Valikko molemmissa lehdissä. Aiemmin se oli vain maalehdessä,
-     * koska kaupunkilehdellä ei ole omaa sisällyssivua — mutta juuri
-     * siksi se tarvitsee valikon: ilman sitä maaosioon pääsi vain
-     * etusivun pienestä kulmalinkistä, jota omistaja ei löytänyt.
+     * Valikko vain maalehdessä (omistajan päätös 8.8.2026:
+     * *"Kaupunkilehdessä on niin vähän sivuja että se on turha."*).
+     *
+     * v382 kokeili valikkoa myös kaupunkilehdessä, jotta maaosioon
+     * olisi ollut sieltä rivi. Reitiksi riittävät etusivun kulmalinkki
+     * ja kartan Maiden lehdet -nappi, ja viiden sivun lehdessä valikko
+     * on enemmän nappi kuin oikotie.
      */
-    palkki.querySelector('.sisallysnappi').hidden = sivuja < 3;
+    palkki.querySelector('.sisallysnappi').hidden = !maalehti || sivuja < 3;
     palkki.hidden = sivuja < 2;
   }
 
@@ -7503,7 +7506,8 @@ export class UI {
   avaaSisallysvalikko() {
     const vanha = this.arrivalDialog.querySelector(':scope > .sisallys-levy');
     if (vanha) { vanha.remove(); return; }
-    const sisallys = this.sisallysRivit();
+    const sisallys = this.tutkiSivut?.find?.((s) => s.sisallys)?.sisallys
+      ?? this.tutkiSivut ?? [];
     const levy = html('div', 'sisallys-levy');
     const sulje = () => levy.remove();
     const otsikkoRivi = html('div', 'sisallys-levy-ylä');
@@ -8071,9 +8075,6 @@ export class UI {
    * ensimmäinen kuva on käytännössä aina sen paras kuva.
    */
   sisallysTiedot(osa) {
-    // Toimintorivi (esim. maaosio) kertoo itse mitä se on: sillä ei ole
-    // nostoja, joista ingressin voisi johtaa.
-    if (osa.toiminto) return { kuva: osa.kuva ?? null, ingressi: osa.ingressi ?? '' };
     if (osa.kartta) return { kuva: osa.kartta.tiedosto, ingressi: 'Kaupungit ja maasto kartalla.' };
     if (osa.numerot) return { kuva: null, ingressi: 'Väkiluku, pinta-ala ja muut tunnusluvut.' };
     const ensimmainen = osa.lista?.[0]?.kohteet?.[0] ?? osa.nostot?.[0] ?? null;
@@ -8100,42 +8101,6 @@ export class UI {
     kohde.appendChild(this.rakennaSisallysLista(kategoria.sisallys));
   }
 
-  /**
-   * Sisällysluettelon rivit sille lehdelle, joka on nyt auki.
-   *
-   * Maalehdellä on oma sisällyssivunsa, jonka rivit ovat valmiina.
-   * Kaupunkilehdellä ei ole — sen sisällys ON tämä lista, ja se
-   * kootaan sivupinosta.
-   *
-   * Viimeisenä maaosio omana rivinään (omistajan havainto 8.8.2026:
-   * *"En pääse Saksan lehteen mistään?"*). Etusivun kulmalinkki jäi
-   * löytymättä, koska se on pieni ja näkyy vain etusivulla; tässä se on
-   * samassa luettelossa kuin kaikki muukin, mistä sitä osataan etsiä.
-   */
-  sisallysRivit() {
-    const omaSisallys = this.tutkiSivut?.find?.((s) => s.sisallys)?.sisallys;
-    const rivit = [...(omaSisallys ?? this.tutkiSivut ?? [])];
-    // Vain kaupunkilehdessä: maalehti on oma lehtensä, eikä se voi
-    // linkittää itseensä.
-    if (this.tutkiTila !== 'maa' && this.tutkiMaaIso) {
-      const maa = this.arrivalMaaTiedot?.nimi ?? 'Maa';
-      const iso = this.tutkiMaaIso;
-      // Kuva samasta aineistosta kuin maalehden oma sisällys: kartta jos
-      // maalla on, muuten maan ensimmäinen aihekuva. Kuvaton rivi
-      // erottuisi muista, ja juuri tämän rivin pitää näyttää samalta.
-      const ensimmainen = (MAA_KATEGORIAT[iso] ?? [])
-        .flatMap((a) => [...(a.nostot ?? []), ...(a.lista ?? []).flatMap((r) => r.kohteet ?? [])])
-        .find((k) => k.tiedosto)?.tiedosto ?? null;
-      rivit.push({
-        nimi: `${maa}-osio`,
-        kuva: MAAKARTAT[iso]?.tiedosto ?? ensimmainen,
-        ingressi: 'Koko maan oma lehti: kartta, tunnusluvut ja menovinkit.',
-        toiminto: () => this.avaaMaalehti(iso),
-      });
-    }
-    return rivit;
-  }
-
   /** Sisällysluettelon rivit. Käytetään sekä etusivulla että valikossa. */
   rakennaSisallysLista(sisallys, { suljeValikko = null } = {}) {
     const lista = html('div', 'sisallys');
@@ -8156,12 +8121,6 @@ export class UI {
       if (ingressi) teksti.appendChild(html('span', 'sisallys-ingressi', ingressi));
       rivi.appendChild(teksti);
       rivi.addEventListener('click', () => {
-        /*
-         * Rivi vie joko lehden sivulle tai omaan toimintoonsa. Maaosio
-         * on jälkimmäinen: se avaa kokonaan toisen lehden, eikä sille
-         * ole sivunumeroa tässä pinossa.
-         */
-        if (osa.toiminto) { suljeValikko?.(); osa.toiminto(); return; }
         const i = (this.tutkiSivut ?? []).indexOf(osa);
         if (i >= 0) {
           suljeValikko?.();
