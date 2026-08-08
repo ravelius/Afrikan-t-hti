@@ -39,21 +39,22 @@ export const TILANNE = {
         + 'malli Lontoo+Praha+Wien; seuraavaksi Madrid, Berliini, '
         + 'Venetsia ja Tukholma täyteen malliin, sitten loput ~30 '
         + '(Ateena ja Amsterdam jo tekeillä).',
-      seuraavaksi: 'Omistajan testilöydöt ennen seuraavaa '
-        + 'kaupunkierää: maan i-nappi pysyvästi laudalle (avaa '
-        + 'maalehden) ja maalehden sisällyssivu pois — hampurilainen '
-        + 'aukeaa alareunan pop-upina.',
+      seuraavaksi: 'v390: maan i pysyvästi laudalla (koko lasketaan '
+        + 'kartan skaalasta) ja sisällys alareunan pop-upina. '
+        + 'Seuraavaksi Berliinin+Venetsian aihesivut, Tukholma, '
+        + 'sitten Ateena/Amsterdam/Egypti agenteilta.',
     },
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
       tila: 'tyossa',
-      tehtava: 'Loppukiri: maakartat + introt kaikille. Erä 1/4 '
-        + 'mainissa (v374: FRA, NLD, CZE, POL, AUT, CHE — 36 '
-        + 'pistettä todennettu, 2 faktavirhettä kiinni ennen '
-        + 'peliä). Erä 2 käynnissä (NOR, DNK, FIN, EST, LVA, '
-        + 'LTU); 18 maata jäljellä.',
-      seuraavaksi: 'Erät 2–4; eräraportit Fablelle.',
+      tehtava: 'Loppukiri: maakartat + introt. Mainissa erät 1–3 '
+        + '(v374, v391: 12 maata Islannista Turkkiin, nostot mm. '
+        + 'Jökulsárlón, Metéora, Nemrut). Erä 4 käynnissä: ROU, '
+        + 'BGR, HRV, BIH, UKR ja RUS — Venäjä sai luvan '
+        + 'laea-projektiohaaraan (ainoa tapa saada Euroopan '
+        + 'viimeinen maakartta, data pysyy rehellisenä).',
+      seuraavaksi: 'Erä 4 = koko Eurooppa kartoitettu.',
     },
     {
       tekija: 'Sonnet 1',
@@ -91,6 +92,15 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Maan i laudalla ja alareunan sisällys (v390)',
+    ohje: 'Kartalla nykyisen maan nimen perässä on nyt aina i, '
+      + 'joka avaa maalehden — ei enää erillistä tilaa. Maalehti '
+      + 'aukeaa suoraan sisältöön, ja hampurilainen nostaa '
+      + 'sisällyksen alalaidasta pop-upina niin että sivu jää '
+      + 'näkyviin. Mittakokeilut (lyhyt vs väli) ovat työhuoneen '
+      + 'Kehitys-välilehdellä.',
+  },
   {
     otsikko: 'Maalehteen kolme reittiä (v382)',
     ohje: 'Kartan oikeassa ylälaidassa on nyt Maiden lehdet -nappi '

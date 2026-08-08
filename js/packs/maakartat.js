@@ -896,6 +896,320 @@ export const MAAKARTAT = {
       wiki: 'Kaalin kraatteri',
     },
   },
+  ISL: {
+    /*
+     * Pelin toiseksi pienin kartta (1200 px, vain Egyptin 1055 px on
+     * pienempi). Isompaa ei ole: Commonsin koko Islanti-korkokarttojen
+     * luokassa on kolme tiedostoa eikä yhtään SVG:tä. Tschubbyn
+     * `Reliefkarte Island.png` on 3000 px ja kaunis, mutta sen
+     * tiedostosivu ei kerro reunakoordinaatteja lainkaan — sama
+     * hylkäysperuste kuin Liettuassa.
+     */
+    tiedosto: 'Iceland relief map.jpg',
+    lahde: 'Виктор В ja NordNordWest, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 66.8, etela: 63.1, lansi: -25.0, ita: -13.0 },
+    /*
+     * Islannissa asutaan rannoilla, joten kaikki kuusi pistettä ovat
+     * kehällä ja keskusta jää tyhjäksi — juuri se on kartan opetus.
+     * Ísafjörður merkitsee Länsivuonot, Höfn Vatnajökullin juuren.
+     */
+    kaupungit: [
+      { nimi: 'Reykjavík', lat: 64.135, lon: -21.895, paa: true },
+      { nimi: 'Ísafjörður', lat: 66.067, lon: -23.117 },
+      { nimi: 'Akureyri', lat: 65.683, lon: -18.1 },
+      { nimi: 'Egilsstaðir', lat: 65.283, lon: -14.383 },
+      { nimi: 'Höfn', lat: 64.25, lon: -15.217 },
+      { nimi: 'Selfoss', lat: 63.933, lon: -20.997 },
+    ],
+    // Intro päättyy siihen, että jäätiköt liikkuvat; nosto näyttää
+    // paikan, jonka liike synnytti sadassa vuodessa.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Jäävuoret odottavat järvessä vuoroaan mereen',
+      tiedosto: 'Striped iceberg at Jökulsárlón Glacier Lagoon.jpg',
+      teksti: 'Kartan suurimman valkoisen läiskän, Vatnajökullin, '
+        + 'eteläreunasta työntyy jääkieleke merta kohti. Sen edessä on '
+        + 'Jökulsárlón, järvi jota ei ollut olemassa sata vuotta '
+        + 'sitten: jäätikkö alkoi vetäytyä, ja 1930-luvulla jäljelle '
+        + 'jäänyt kuoppa täyttyi sulavedellä. Nyt se on Islannin syvin '
+        + 'järvi, yli 280 metriä, ja se on nelinkertaistunut '
+        + '1970-luvulta. Jäätikön reunasta lohkeaa jäävuoria, jotka '
+        + 'kelluvat järvessä vuosia, kunnes ovat tarpeeksi pieniä '
+        + 'mahtuakseen kapeasta uomasta mereen. Monessa on mustia '
+        + 'raitoja — tuhkaa tulivuorenpurkauksista, joka jäi jään '
+        + 'sisään.',
+      selite: 'Tuhkaraitainen jäävuori Jökulsárlónin jäätikköjärvessä. '
+        + 'Mustat juovat ovat vanhojen purkausten tuhkakerroksia.',
+      lahde: 'Snowolf, Wikimedia Commons (CC BY-SA 4.0)',
+      // Jökulsárlónista ei ole suomenkielistä artikkelia, joten linkki
+      // vie jäätikköön, jonka reunalla järvi on. Sama ratkaisu kuin
+      // Tanskan Grenen → Skagen.
+      wiki: 'Vatnajökull',
+    },
+  },
+  IRL: {
+    /*
+     * POIKKEUS: moduulin oma image1 `Ireland relief location map.png`
+     * haalistaa Pohjois-Irlannin pois muusta saaresta. Pelin
+     * Irlanti-sivu käsittelee koko saarta, joten haalistus olisi väärä
+     * viesti. Tämä on saman tekijän, saman lisenssin ja saman kokoinen
+     * kuva, jonka tiedostosivu ilmoittaa TÄSMÄLLEEN samat rajat kuin
+     * moduuli — vain kreivikuntien piirto on eri. Rajat eivät siis
+     * muutu. Sama poikkeuslaji kuin CZE, CHE ja LVA.
+     *
+     * Itäraja on −5,0°, joten kartan oikeaan laitaan osuu pala
+     * Skotlantia (Islay ja Kintyre). Mansaari (−4,5°) ei mahdu.
+     */
+    tiedosto: 'Island of Ireland relief location map.png',
+    lahde: 'Nilfanion, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 55.6, etela: 51.2, lansi: -11.0, ita: -5.0 },
+    /*
+     * Belfast on listalla tarkoituksella, vaikka se on jo Britannian
+     * kartalla: se on samalla saarella, ja se tekee kartan paksun
+     * rajaviivan ymmärrettäväksi. Limerick istuu Shannonin varrella,
+     * jonka kartta näyttää.
+     */
+    kaupungit: [
+      { nimi: 'Dublin', lat: 53.333, lon: -6.25, paa: true },
+      { nimi: 'Belfast', lat: 54.597, lon: -5.93 },
+      { nimi: 'Sligo', lat: 54.267, lon: -8.483 },
+      { nimi: 'Galway', lat: 53.273, lon: -9.039 },
+      { nimi: 'Limerick', lat: 52.666, lon: -8.624 },
+      { nimi: 'Cork', lat: 51.897, lon: -8.47 },
+    ],
+    // Intro päättyy Boyne-joen mutkan kumpuun; nosto avaa sen.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Kumpu, joka päästää auringon sisään kerran vuodessa',
+      tiedosto: 'Newgrange (52381348388).jpg',
+      teksti: 'Kartan itälaidalla, Boyne-joen mutkassa, on ruohoinen '
+        + 'kumpu, joka on vanhempi kuin Stonehenge ja Egyptin '
+        + 'pyramidit: Newgrange rakennettiin noin 3100 eaa. Siihen '
+        + 'ladottiin 200 000 tonnia maata ja kiveä, ja sisään johtaa 19 '
+        + 'metrin käytävä. Oven yläpuolella on kapea aukko, '
+        + 'kattolaatikko. Talvipäivänseisauksen aamuna nouseva aurinko '
+        + 'osuu siihen, ja valonjuova kulkee käytävää pitkin kammioon '
+        + 'noin 17 minuutiksi. Sisään ei pääse ostamalla lippua: paikat '
+        + 'arvotaan, ja kymmenistä tuhansista hakijoista valitaan '
+        + 'kuusikymmentä vuodessa.',
+      selite: 'Newgrangen sisäänkäynti: oven yläpuolella on '
+        + 'kattolaatikon aukko, ja edessä makaa kierrekuvioitu '
+        + 'porttikivi. Valkoinen kvartsiseinä on 1970-luvun '
+        + 'ennallistus.',
+      lahde: 'Marmontel, Wikimedia Commons (CC BY 2.0)',
+      wiki: 'Newgrangen käytävähauta',
+    },
+  },
+  PRT: {
+    /*
+     * Rajat EIVÄT ole tämän tiedoston omalla sivulla, vaan kahdesta
+     * riippumattomasta määrittelystä, jotka molemmat nimeävät juuri
+     * tämän tiedoston relief-versioksi samoille rajoille: en-wikin
+     * Module:Location map/data/Portugal (image1) ja de-wikin
+     * Vorlage:Positionskarte Portugal (relief). Perheen poliittinen
+     * kuva `Portugal location map.svg` dokumentoi samat rajat ja 130 %
+     * venytyksen. Kuvasuhde täsmää laskettuun 0,15 %:n tarkkuudella, ja
+     * kahdeksan kontrollipistettä osui oikein. Sama tilanne kuin EGY.
+     *
+     * Kuvassa on VAIN MANNER-PORTUGALI eikä Espanjan tapaan laatikkoa:
+     * Funchalia tai Ponta Delgadaa ei voi asemoida näillä rajoilla.
+     */
+    tiedosto: 'Reliefkarte Portugal.png',
+    lahde: 'Tschubby, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 42.3, etela: 36.7, lansi: -9.8, ita: -6.0 },
+    /*
+     * Bragança eikä Braga: Braga menisi lähes päällekkäin Porton
+     * kanssa, kun taas Bragança merkitsee koillisen vuoriston. Évora
+     * on ainoa piste Tejon eteläpuolisella lakeudella.
+     */
+    kaupungit: [
+      { nimi: 'Lissabon', lat: 38.707, lon: -9.136, paa: true },
+      { nimi: 'Porto', lat: 41.162, lon: -8.622 },
+      { nimi: 'Coimbra', lat: 40.211, lon: -8.429 },
+      { nimi: 'Bragança', lat: 41.8, lon: -6.75 },
+      { nimi: 'Évora', lat: 38.567, lon: -7.9 },
+      { nimi: 'Faro', lat: 37.033, lon: -7.917 },
+    ],
+    // Intro päättyy siihen, että sisämaan vuorilla sataa lunta.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Vuori, jolla Portugali laskee mäkeä',
+      tiedosto: 'Cântaros da Serra da Estrela.jpg',
+      teksti: 'Kartan keskeltä nousee tumma harjanne, Serra da '
+        + 'Estrela. Sen laella on Torre, Manner-Portugalin korkein '
+        + 'kohta 1 993 metrissä, ja huipulle pääsee asfalttitietä '
+        + 'pitkin. Täällä mitataan maan kylmimmät lämpötilat, pakkasta '
+        + 'voi olla parikymmentä astetta, ja lunta riittää joulukuusta '
+        + 'huhtikuuhun. Rinteessä toimii Portugalin ainoa '
+        + 'hiihtokeskus: yhdeksän rinnettä, yhteensä kuutisen '
+        + 'kilometriä. Jääkaudella vuoriston laella lepäsi jäätikkö, ja '
+        + 'se kaiversi Zêzere-joelle laakson, jonka U-kirjaimen muoto '
+        + 'on niin tarkka, että sitä käytetään oppikirjaesimerkkinä '
+        + 'siitä, mitä jää tekee maisemalle.',
+      selite: 'Cântaro-kalliot Serra da Estrelan luonnonpuistossa. '
+        + 'Alarinteet ovat kesäkuussa keltaisenaan kukkivia pensaita.',
+      lahde: 'Raquel Rosa, Wikimedia Commons (CC BY-SA 4.0)',
+      wiki: 'Serra da Estrela',
+    },
+  },
+  GRC: {
+    /*
+     * Moduulin oma image1. Vain 1003 px leveä, mutta pelin lehti
+     * piirtää maakartan enintään noin 680 fyysisen pikselin levyisenä,
+     * joten se riittää — sama peruste kuin EGY:n 1055 px:llä.
+     *
+     * ÄLÄ VAIHDA Tschubbyn `Reliefkarte Griechenland.png`:hen, vaikka
+     * se on 2943 px ja rajat on dokumentoitu senkin sivulla: sen
+     * merialueilla on ohuita tummia kaaria (hallintoalueiden
+     * merirajoja), jotka näyttävät naarmuilta. Vertailtu 760 px:ssä
+     * 8.8.2026 — tämä on siistimpi eikä sumene.
+     */
+    tiedosto: 'Greece relief location map.jpg',
+    lahde: 'Lencer ja Uwe Dedering, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 42.0, etela: 34.6, lansi: 19.1, ita: 29.9 },
+    /*
+     * Rajaus vetää mukaan koko saariston: Kreetan eteläkärki on 34,8°
+     * (raja 34,6) ja Rodos 28,2° (raja 29,9). Iraklion ja Rodos ovat
+     * listalla, jotta kartalta näkee, kuinka kauas etelään ja itään
+     * maa jatkuu meren yli. Nimet pelin arkimuodossa ilman aksentteja,
+     * kuten muuallakin pelissä.
+     */
+    kaupungit: [
+      { nimi: 'Ateena', lat: 37.967, lon: 23.717, paa: true },
+      { nimi: 'Thessaloniki', lat: 40.65, lon: 22.9 },
+      { nimi: 'Ioannina', lat: 39.667, lon: 20.85 },
+      { nimi: 'Patras', lat: 38.25, lon: 21.733 },
+      { nimi: 'Rodos', lat: 36.433, lon: 28.217 },
+      { nimi: 'Iraklion', lat: 35.333, lon: 25.133 },
+    ],
+    // Intro päättyy Thessalian laidan kalliopylväisiin.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Luostarit nostettiin kalliolle korissa',
+      tiedosto: 'Meteora, Greece (2016).jpg',
+      teksti: 'Thessalian tasangon länsilaidalla maasta nousee '
+        + 'kalliopylväitä: 24 suurta ja noin sata pienempää, '
+        + 'keskimäärin 300 metriä korkeita, korkein 628. Ne ovat '
+        + 'hiekkakiveä, jonka ympäriltä vesi ja maanjäristykset ovat '
+        + 'kuluttaneet loput pois. Ensimmäiset erakot muuttivat '
+        + 'pylväiden luoliin 1000-luvulla, ja 1300-luvulta alkaen '
+        + 'laelle rakennettiin luostareita — enimmillään niitä oli yli '
+        + 'kaksikymmentä. Portaita ei ollut: munkit ja kaikki '
+        + 'rakennustarpeet nostettiin ylös pitkillä tikkailla tai '
+        + 'vinssillä ja nostokorissa. Rappuset hakattiin kallioon vasta '
+        + '1920-luvulla. Kuusi luostaria toimii yhä.',
+      selite: 'Metéoran kalliopylväitä Thessaliassa. Kahden pylvään '
+        + 'laella näkyy luostari, alhaalla mutkittelee tie ja takana '
+        + 'kohoaa Píndos-vuoristo.',
+      lahde: 'Vipers10687, Wikimedia Commons (CC BY-SA 4.0)',
+      wiki: 'Metéora',
+    },
+  },
+  TUR: {
+    /*
+     * Moduulin oma image1. Tiedostosivu ilmoittaa rajat itse ja sanoo
+     * suoraan "Equirectangular projection, N/S stretching 120 %" —
+     * samat luvut kuin moduulissa. Tschubbyn `Reliefkarte Türkei.png`
+     * on isompi, mutta sen sivu ei dokumentoi koordinaatteja lainkaan.
+     *
+     * Kartta kattaa maan molemmilta mantereilta, ja Istanbul osuu
+     * 18,2 %:n kohdalle — laudan kohde mahtuu hyvin.
+     */
+    tiedosto: 'Turkey relief location map.jpg',
+    lahde: 'NordNordWest ja Uwe Dedering, Wikimedia Commons '
+      + '(CC BY-SA 3.0)',
+    rajat: { pohjoinen: 42.5, etela: 35.5, lansi: 25.4, ita: 45.0 },
+    /*
+     * Van on 91,7 %:n kohdalla eli tarkoituksella laidassa, kuten
+     * Kirkkoniemi Norjassa: ilman sitä kartalta ei näkisi, kuinka
+     * kauas itään maa jatkuu, eikä Vanjärveä huomaisi. İzmir
+     * kirjoitetaan pelin muun sisällön tapaan ilman pistettä.
+     */
+    kaupungit: [
+      { nimi: 'Ankara', lat: 39.927, lon: 32.864, paa: true },
+      { nimi: 'Istanbul', lat: 41.013, lon: 28.976 },
+      { nimi: 'Izmir', lat: 38.433, lon: 27.15 },
+      { nimi: 'Antalya', lat: 36.9, lon: 30.683 },
+      { nimi: 'Trabzon', lat: 41.0, lon: 39.733 },
+      { nimi: 'Van', lat: 38.494, lon: 43.38 },
+    ],
+    // Intro päättyy kaakkoisrajan vuoren jättiläispatsaisiin.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Kuninkaan pää putosi jumalten seurasta',
+      tiedosto: 'Mount Nemrut sunrise.jpg',
+      teksti: 'Kaakkois-Turkissa, Taurusvuorten itäpäässä, kohoaa '
+        + 'Nemrut 2 150 metriin. Sen huipulle kuningas Antiokhos '
+        + 'rakennutti vuonna 62 eaa. hautapyhäkön: kaksi terassia, '
+        + 'itään ja länteen, ja niille rivi kahdeksan–yhdeksänmetrisiä '
+        + 'istuvia patsaita. Ne esittävät kreikkalaisia ja '
+        + 'persialaisia jumalia sekä kuningasta itseään, aivan yhtä '
+        + 'suurena. Jossain vaiheessa patsailta katkottiin päät, eikä '
+        + 'niitä ole nostettu takaisin: kivikasvot makaavat maassa '
+        + 'omilla paikoillaan. Patsaiden takana kohoaa 49 metriä korkea '
+        + 'kivikumpu, jonka sisään ei ole päästy — irtonainen sora '
+        + 'valuu takaisin jokaiseen kaivantoon.',
+      selite: 'Nemrutin huippu aamuauringossa: kivikummun juurella '
+        + 'istuu rivi päättömiä jumalpatsaita, ja irronneet kivipäät '
+        + 'on aseteltu niiden eteen.',
+      lahde: 'Liselottediehl, Wikimedia Commons (CC BY-SA 4.0)',
+      wiki: 'Nemrut (vuori)',
+    },
+  },
+  HUN: {
+    /*
+     * Moduulin oma image1 ja SVG, joten se skaalautuu pelin pyytämään
+     * kokoon pienestä kanvaasista (852 px) huolimatta.
+     *
+     * Rajat ovat yhden hypyn takana kuten Tanskalla ja Suomella:
+     * tiedostosivu sanoo "parameters equal to
+     * File:Hungary location map.svg", ja sen sivu ilmoittaa
+     * N 48.8 / S 45.5 / W 15.7 / E 23.2 ja 140 %:n venytyksen. Nämä
+     * ovat samat kuin moduulissa, ja pistetarkistus vahvisti ne.
+     *
+     * Oikeassa alakulmassa on korkeusselitelaatikko (kuten Tanskan
+     * kartalla): älä vie pistettä alueelle x > 85 % ja y > 62 %.
+     */
+    tiedosto: 'Hungary physical map.svg',
+    lahde: 'Urutseg, Wikimedia Commons (CC0)',
+    rajat: { pohjoinen: 48.8, etela: 45.5, lansi: 15.7, ita: 23.2 },
+    /*
+     * Kuusi pistettä kartan kulmiin ja Budapest keskelle. Balaton jää
+     * tarkoituksella merkitsemättä: se on kartalla iso sininen juova,
+     * jonka lapsi löytää itse, eikä yksikään sen rantakaupunki ole
+     * tunnettu.
+     */
+    kaupungit: [
+      { nimi: 'Budapest', lat: 47.493, lon: 19.051, paa: true },
+      { nimi: 'Győr', lat: 47.684, lon: 17.635 },
+      { nimi: 'Miskolc', lat: 48.104, lon: 20.791 },
+      { nimi: 'Debrecen', lat: 47.53, lon: 21.639 },
+      { nimi: 'Szeged', lat: 46.254, lon: 20.146 },
+      { nimi: 'Pécs', lat: 46.071, lon: 18.233 },
+    ],
+    // Intro päättyy idän ruohotasankoon ja sen kivisiltaan.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Yhdeksän kaaren silta keskellä ruohomerta',
+      tiedosto: 'Hortobágy, 4071 Hungary - panoramio (1).jpg',
+      teksti: 'Kartan itäpuoli on niin tasainen, ettei siellä näy '
+        + 'yhtään kohoumaa. Siinä on Hortobágy, Euroopan laajin '
+        + 'yhtenäinen ruohotasanko: kansallispuistoa on 800 '
+        + 'neliökilometriä, ja Unescon listalle se otettiin ennen '
+        + 'kaikkea paimenten takia. Laumoja on kaitsettu täällä yli '
+        + 'neljätuhatta vuotta, ja harmaata karjaa vartioidaan yhä '
+        + 'hevosen selästä. Tasangon maamerkkejä ovat vinttikaivot, '
+        + 'joiden pitkät vipuvarret törröttävät taivasta vasten, ja '
+        + 'Yhdeksänkaarinen silta: 167 metriä kiveä, valmiina 1833. '
+        + 'Helteellä pustalla näkee kangastuksia, joissa puut '
+        + 'näyttävät kelluvan ilmassa.',
+      selite: 'Yhdeksänkaarinen kivisilta Hortobágyn pustalla: '
+        + 'valkoinen kaide jatkuu kaaresta toiseen, alla kasvaa '
+        + 'ruovikko ja ympärillä maa on tasaista joka suuntaan.',
+      lahde: 'Michal Gorski, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'Hortobágyn kansallispuisto',
+    },
+  },
 };
 
 /*

@@ -544,148 +544,6 @@ export const KULTTUURI_KATEGORIAT = {
       ],
     },
   ],
-  venetsia: [
-    {
-      id: 'kaupunki',
-      nimi: 'Venetsia',
-      johdanto: 'Kaupunki, joka päätti rakentaa itsensä veteen — ja '
-        + 'teki mahdottomasta tunnusmerkkinsä.',
-      /*
-       * Lehden etusivun kuvat (omistajan toive 5.8.2026): oma,
-       * tarkistettu valinta wikin satunnaiskarusellin sijaan.
-       * Ensimmäinen on iso pääkuva maston alla, loput pienempien
-       * kuvien rivissä esittelyn jälkeen. Napautus avaa selattavan
-       * suurennoksen.
-       */
-      kansikuvat: [
-        {
-          tiedosto: 'Aerial photographs of Venice 2013, Anton Nossik, 045.jpg',
-          selite: 'Markuksentori ja dogen palatsi ilmasta — koko '
-            + 'kaupunki seisoo keskellä laguunia.',
-          lahde: 'Anton Nosik, Wikimedia Commons (CC BY 3.0)',
-        },
-        {
-          tiedosto: 'Canal Grande Chiesa della Salute e Dogana dal ponte dell Accademia.jpg',
-          selite: 'Canal Grande ja Santa Maria della Saluten kupolit '
-            + 'Accademian sillalta.',
-          lahde: 'Wolfgang Moroder, Wikimedia Commons (CC BY-SA 3.0)',
-        },
-        {
-          tiedosto: 'Rialto Gondoliers.jpg',
-          selite: 'Rialton silta on ylittänyt pääkanavan yli '
-            + 'neljäsataa vuotta.',
-          lahde: 'Saffron Blaze, Wikimedia Commons (CC BY-SA 3.0)',
-        },
-      ],
-      nostot: [
-        {
-          otsikko: 'Canaletto maalasi kaupunkinsa',
-          tiedosto: 'Canal, Giovanni Antonio (Canaletto) - Return of the Bucentoro to the Molo on Ascension Day, c. 1733-4. Royal Collection Buckingham Palace.jpg',
-          teksti: 'Venetsialainen Canaletto maalasi 1700-luvulla '
-            + 'kaupunkinsa näkymiä niin tarkasti, että tutkijat '
-            + 'käyttävät niitä yhä lähteinä. Maalauksia ostivat etenkin '
-            + 'englantilaiset matkailijat muistoksi suurelta '
-            + 'Euroopan-kiertueeltaan.',
-          selite: 'Bucintoron paluu Molon rantaan helatorstaina '
-            + '(n. 1733): dogen kullattu juhlalaiva palaa seremoniasta, '
-            + 'jossa Venetsia "vihittiin" merensä kanssa heittämällä '
-            + 'sormus aaltoihin. Taustalla dogen palatsi ja kellotorni '
-            + '— näkymä on sama tänäänkin.',
-          lahde: 'Canaletto, Wikimedia Commons (PD)',
-          wiki: 'Canaletto',
-          /*
-           * Selattava galleria (omistajan toive 5.8.2026): lisää
-           * Canaletton vedutoja saman noston nuolista. Ensimmäinen teos
-           * on noston oma tiedosto; selite ja lähderivi vaihtuvat
-           * teoksen mukana. Kaikki maalaukset ovat PD — lähderivi
-           * nimeää valokuvaajan, kun museokuva on CC-lisensoitu.
-           */
-          galleria: [
-            {
-              otsikko: 'Kivenhakkaajien piha',
-              tiedosto: 'Canaletto - The Stonemason\'s Yard.jpg',
-              selite: 'Kivenhakkaajien piha (n. 1725): Campo San '
-                + 'Vidalilla veistetään kiveä kirkon korjaustöihin. '
-                + 'Harvinainen näkymä arjen Venetsiasta — ei juhlaa '
-                + 'vaan työtä, pyykkinaruja ja leikkiviä lapsia.',
-              lahde: 'Canaletto, Wikimedia Commons (PD)',
-            },
-            {
-              otsikko: 'Markuksentori',
-              tiedosto: 'Canaletto - The Piazza San Marco in Venice - Google Art Project.jpg',
-              selite: 'Markuksentori (n. 1724): basilika ja kellotorni '
-                + 'nuoren Canaletton siveltimellä. Kauppiaiden kojut '
-                + 'täyttävät torin — se oli silloinkin kaupungin '
-                + 'olohuone.',
-              lahde: 'Canaletto, Wikimedia Commons (PD)',
-            },
-            {
-              otsikko: 'Canal Granden suu',
-              tiedosto: 'Canaletto - The Entrance to the Grand Canal, Venice - Google Art Project.jpg',
-              selite: 'Canal Granden suu ja Santa Maria della Saluten '
-                + 'kupolikirkko (n. 1730). Kirkko rakennettiin '
-                + 'kiitokseksi ruton väistymisestä, ja sen portaille '
-                + 'kuljetaan yhä joka marraskuu siltaa pitkin juhlimaan.',
-              lahde: 'Canaletto, Wikimedia Commons (PD)',
-            },
-            {
-              otsikko: 'Regatta Canal Grandella',
-              tiedosto: 'Canal, Giovanni Antonio Canal - Venice, A Regatta on the Grand Canal - National Gallery NG938.jpg',
-              selite: 'Regatta Canal Grandella (n. 1740): kevyet '
-                + 'kilpagondolat kiitävät väkijoukon editse, ja '
-                + 'parvekkeet on verhoiltu juhlakankain. Sama '
-                + 'soutukilpailu soudetaan Venetsiassa yhä joka syksy.',
-              lahde: 'Canaletto, Wikimedia Commons (PD)',
-            },
-            {
-              otsikko: 'Rio dei Mendicanti',
-              tiedosto: 'Ca\' Rezzonico - Il rio dei Mendicanti - Canaletto.jpg',
-              selite: 'Rio dei Mendicanti (n. 1723): varhainen '
-                + 'Canaletto sivukanavan varrelta. Ikkunoissa kuivuu '
-                + 'pyykkiä ja rannassa korjataan veneitä — tavallista '
-                + 'Venetsiaa ilman juhlapukua.',
-              lahde: 'Didier Descouens, Wikimedia Commons (CC BY-SA 4.0)',
-            },
-          ],
-        },
-        {
-          otsikko: 'Cicchetti ja Rialton tori',
-          tiedosto: 'Pescaria Rialto Venice.jpg',
-          teksti: 'Venetsialaiset syövät cicchettejä — pieniä suupaloja '
-            + '— seisten bacaro-baarien tiskillä, ja viinilasillista '
-            + 'kutsutaan nimellä ombra, varjo. Raaka-aineet tulevat '
-            + 'Rialton torilta, jossa laguunin kalaa on myyty satojen '
-            + 'vuosien ajan.',
-          selite: 'Rialton kalatorin pylväshalli Canal Granden '
-            + 'varrella. Kauppa käy aamuisin: laguunin ja Adrianmeren '
-            + 'kalat ja äyriäiset tuodaan suoraan veneillä hallin '
-            + 'laituriin.',
-          lahde: 'Wolfgang Moroder, Wikimedia Commons (CC BY-SA 3.0)',
-        },
-        {
-          otsikko: 'Vivaldi, punainen pappi',
-          tiedosto: 'Antonio Vivaldi.jpg',
-          teksti: 'Antonio Vivaldi — punatukkainen pappi, il Prete '
-            + 'Rosso — opetti viulunsoittoa venetsialaisessa tyttöjen '
-            + 'orpokodissa ja sävelsi sen orkesterille satoja '
-            + 'konserttoja. Kuuluisin on Neljä vuodenaikaa, jossa '
-            + 'musiikista voi kuulla linnunlaulun ja ukkosmyrskyn.',
-          selite: 'Ainoa varma Vivaldin muotokuva: François Morellon '
-            + 'la Caven kaiverrus vuodelta 1725. Säveltäjä pitelee '
-            + 'nuottivihkoa — peruukin alla hehkui lempinimen antanut '
-            + 'punainen tukka.',
-          lahde: 'François Morellon la Cave, Wikimedia Commons (PD)',
-          wiki: 'Antonio Vivaldi',
-          musiikki: 'https://music.apple.com/fi/artist/antonio-vivaldi/242604',
-          musiikkiNimi: 'Antonio Vivaldi Apple Musicissa',
-          // Juuri se konsertto, jonka teksti mainitsee — Commonsin
-          // mp3-transkoodi soi myös iPadilla.
-          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/f/ff/Vivaldi_-_Four_Seasons_1_Spring_mvt_1_Allegro_-_John_Harrison_violin.oga/Vivaldi_-_Four_Seasons_1_Spring_mvt_1_Allegro_-_John_Harrison_violin.oga.mp3',
-          musiikkiNayteNimi: 'Vivaldi: Kevät, 1. osa — John Harrison, viulu (CC BY-SA)',
-        },
-      ],
-    },
-  ],
   /*
    * Madridin KANSISIVU (lehtimaa 4: Espanja, 6.8.2026). Espanjan
    * yhteiset aiheet tulevat perään js/packs/maa-kategoriat.js:stä
@@ -843,153 +701,6 @@ export const KULTTUURI_KATEGORIAT = {
     },
   ],
 
-  berliini: [
-    {
-      id: 'kaupunki',
-      nimi: 'Berliini',
-      johdanto: 'Suolle rakennettu kaupunki, joka jaettiin muurilla '
-        + 'kahtia ja kasvoi yhteen uudelleen — historia näkyy täällä '
-        + 'joka kadunkulmassa.',
-      /*
-       * Lehden etusivun kuvat: iso vaakakuva pääkuvaksi ja kaksi
-       * pienempää sen alle. Sama malli kuin Venetsiassa, Kairossa,
-       * Lontoossa ja Madridissa.
-       */
-      kansikuvat: [
-        {
-          tiedosto: 'Brandenburger Tor abends.jpg',
-          selite: 'Brandenburgin portti iltavalossa. Portin päällä ajaa '
-            + 'voitonjumalatar nelivaljakollaan — Napoleon vei sen '
-            + 'sotasaaliiksi Pariisiin 1806, mutta se haettiin takaisin.',
-          lahde: 'Thomas Wolf (foto-tw.de), Wikimedia Commons (CC BY-SA 3.0 DE)',
-        },
-        {
-          tiedosto: 'Fernsehturm, Berlín, Alemania, 2016-04-22, DD 40-42 HDR.jpg',
-          selite: 'Tv-torni Alexanderplatzilla on 368-metrisenä Saksan '
-            + 'korkein rakennus. Itä-Saksa rakensi sen 1969 näkymään '
-            + 'kaikkialle kaupunkiin.',
-          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
-        },
-        {
-          tiedosto: 'East side gallery, Berlin Wall (Ank Kumar, Infosys Limited) 07.jpg',
-          selite: 'East Side Gallery: 1,3 kilometriä muuria jätettiin '
-            + 'pystyyn, ja 118 taiteilijaa 21 maasta maalasi siihen '
-            + 'maailman pisimmän ulkoilmagallerian vuonna 1990.',
-          lahde: 'Ank Kumar, Wikimedia Commons (CC BY-SA 4.0)',
-        },
-      ],
-      nostot: [
-        {
-          otsikko: 'Gaertner maalasi Berliinin talo talolta',
-          tiedosto: '1856 Gaertner Unter den Linden anagoria.JPG',
-          teksti: 'Kun valokuvaa ei vielä ollut, Eduard Gaertner oli '
-            + 'Berliinin kamera. Entinen posliininmaalari kiersi katuja '
-            + 'ja maalasi ne niin tarkasti, että taloista voi laskea '
-            + 'ikkunaruudut ja kylttien tekstit voi lukea. Kuningas osti '
-            + 'hänen töitään, mutta Gaertner ei maalannut vain '
-            + 'paraatinäkymiä: hänen kaduillaan korjataan kiveystä, '
-            + 'koirat nuuskivat toisiaan ja pyykki kuivuu ikkunoissa. '
-            + 'Juuri siksi hänen taulunsa ovat nyt tutkijoiden aarre — '
-            + 'niistä nähdään, miltä kadonnut Berliini oikeasti näytti.',
-          selite: 'Unter den Linden (1856): paraatikadun perällä '
-            + 'häämöttää kuninkaanlinnan kupoli, oikealla Fredrik '
-            + 'Suuren ratsastajapatsas.',
-          lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
-          wiki: 'Unter den Linden',
-          galleria: [
-            {
-              otsikko: 'Klosterstraße',
-              tiedosto: 'Eduard Gaertner Berlin Klosterstrasse 1830.jpg',
-              selite: 'Klosterstraße (1830). Ukkospilvet kasaantuvat '
-                + 'vanhankaupungin ylle; kadun perällä kohoaa '
-                + 'Parochialkirchen torni.',
-              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Parochialstraße',
-              tiedosto: 'Eduard Gaertner - Die Parochialstraße - Google Art Project.jpg',
-              selite: 'Parochialstraße (1831). Katutyömaa käynnissä: '
-                + 'miehet latovat kiveystä, kauppiaan kupariastiat '
-                + 'roikkuvat kylttinä ja koirat hoitavat omia asioitaan.',
-              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Schloßfreiheit',
-              tiedosto: 'Eduard Gaertner - Rear view of the Houses at Schloßfreiheit - Google Art Project.jpg',
-              selite: 'Talojen takapihat Schloßfreiheitin rannassa '
-                + '(1855) — arkinen puoli, jota varten kukaan muu ei '
-                + 'pystyttänyt maalaustelinettä. Takana kuninkaanlinnan '
-                + 'kappelin kupoli.',
-              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Friedrichsgracht',
-              tiedosto: 'Eduard Gaertner (1801-1877) - The Friedrichsgracht, Berlin - NG6524 - National Gallery.jpg',
-              selite: 'Friedrichsgracht kattojen yli nähtynä: proomut '
-                + 'lastaavat kanavassa. Berliini oli 1800-luvulla myös '
-                + 'satamakaupunki.',
-              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Kuninkaallinen ooppera',
-              tiedosto: 'Eduard Gaertner - Ansicht der Königlichen Oper und Unter den Linden, Berlin (1845).jpg',
-              selite: 'Kuninkaallinen ooppera iltahämärässä (1845). '
-                + 'Sama talo seisoo Unter den Lindenillä yhä, ja siellä '
-                + 'lauletaan edelleen.',
-              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
-            },
-          ],
-        },
-        /*
-         * Ampelmännchen siirtyi tänne mantereen kulttuuripaketin
-         * litteistä nostoista (europe-kulttuuri.js) — lehden visa
-         * kysyy siitä, joten aiheen pitää näkyä kannessa.
-         */
-        {
-          otsikko: 'Hattupäinen ukkeli sai jäädä',
-          tiedosto: 'Ampelmännchen go.jpg',
-          teksti: 'Liikennepsykologi Karl Peglau piirsi vuonna 1961 '
-            + 'Itä-Saksalle oman jalankulkuvalon: leveä hahmo '
-            + 'hattuineen erottuu kauas, koska valopintaa on paljon. '
-            + 'Ensimmäiset syttyivät Itä-Berliinissä 1969. Kun Saksat '
-            + 'yhdistyivät, ukkelia alettiin vaihtaa lännen '
-            + 'tikku-ukkoon — kunnes kansalaiskampanja "Pelastakaa '
-            + 'Ampelmännchen" nousi vastaan ja voitti. Nykyään '
-            + 'hattupäinen ukkeli ohjaa kulkijoita myös monessa '
-            + 'Länsi-Berliinin risteyksessä, ja siitä on tullut koko '
-            + 'kaupungin maskotti, jota myydään matkamuistona.',
-          selite: 'Vihreä Ampelmännchen Berliinissä. Taustalla Keisari '
-            + 'Vilhelmin muistokirkon torso, joka jätettiin '
-            + 'pommituksissa saamaansa asuun muistutukseksi sodasta.',
-          lahde: 'Wikimedia Commons (CC0)',
-          wiki: 'Ampelmännchen',
-        },
-        {
-          otsikko: 'Tyttö Schönebergistä lauloi maailman ympäri',
-          tiedosto: 'My Child Speaks Marlene Dietrich 1930, Erich Salomon.jpg',
-          teksti: 'Marlene Dietrich syntyi 1901 Schönebergin '
-            + 'kaupunginosassa ja nousi maailmantähdeksi berliiniläisen '
-            + 'elokuvan Sininen enkeli (1930) myötä — samana vuonna hän '
-            + 'muutti Hollywoodiin. Kun natsihallinto houkutteli häntä '
-            + 'takaisin mainoskasvokseen, hän kieltäytyi, otti '
-            + 'Yhdysvaltain kansalaisuuden ja lauloi sen sijaan '
-            + 'rintamalla sotilaille — tunnetuimpana laulun Lili '
-            + 'Marleen, jota kuunneltiin juoksuhaudoissa molemmin '
-            + 'puolin. Berliiniin hän palasi viimeisen kerran arkussa: '
-            + 'hauta on Schönebergissä, äidin haudan vieressä.',
-          selite: 'Marlene Dietrich soittaa Hollywoodista Berliiniin '
-            + 'tyttärelleen 1930. Yöpöydällä tyttären valokuva — Erich '
-            + 'Salomonin kuuluisa otos.',
-          lahde: 'Erich Salomon, Wikimedia Commons (Public domain)',
-          wiki: 'Marlene Dietrich',
-          musiikki: 'https://music.apple.com/fi/album/lili-marleen/724182416?i=724182571',
-          musiikkiNimi: 'Marlene Dietrichin lauluja Apple Musicissa',
-          // Juuri se laulu, josta teksti kertoo.
-          esikuuntelu: 'Marlene Dietrich Lili Marleen',
-        },
-      ],
-    },
-  ],
   praha: [
     {
       id: 'kaupunki',
@@ -1583,6 +1294,511 @@ export const KULTTUURI_KATEGORIAT = {
             + 'jäljellä mitään.',
           lahde: 'Wikimedia Commons (PD)',
           wiki: 'Palacio Real de Madrid',
+        },
+      ],
+    },
+  ],
+  berliini: [
+    {
+      id: 'kaupunki',
+      nimi: 'Berliini',
+      johdanto: 'Suolle rakennettu kaupunki, joka jaettiin muurilla kahtia ja '
+        + 'kasvoi yhteen uudelleen — historia näkyy täällä joka '
+        + 'kadunkulmassa.',
+      kansikuvat: [
+        {
+          tiedosto: 'Brandenburger Tor abends.jpg',
+          selite: 'Brandenburgin portti iltavalossa. Portin päällä ajaa '
+            + 'voitonjumalatar nelivaljakollaan — Napoleon vei sen '
+            + 'sotasaaliiksi Pariisiin 1806, mutta se haettiin takaisin.',
+          lahde: 'Thomas Wolf (foto-tw.de), Wikimedia Commons (CC BY-SA 3.0 DE)',
+        },
+        {
+          tiedosto: 'Fernsehturm, Berlín, Alemania, 2016-04-22, DD 40-42 HDR.jpg',
+          selite: 'Tv-torni Alexanderplatzilla on 368-metrisenä Saksan korkein '
+            + 'rakennus. Itä-Saksa rakensi sen 1969 näkymään kaikkialle '
+            + 'kaupunkiin.',
+          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'East side gallery, Berlin Wall (Ank Kumar, Infosys Limited) 07.jpg',
+          selite: 'East Side Gallery: 1,3 kilometriä muuria jätettiin pystyyn, ja '
+            + '118 taiteilijaa 21 maasta maalasi siihen maailman pisimmän '
+            + 'ulkoilmagallerian vuonna 1990.',
+          lahde: 'Ank Kumar, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Gaertner maalasi Berliinin talo talolta',
+          tiedosto: '1856 Gaertner Unter den Linden anagoria.JPG',
+          teksti: 'Kun valokuvaa ei vielä ollut, Eduard Gaertner oli Berliinin '
+            + 'kamera. Entinen posliininmaalari kiersi katuja ja maalasi ne '
+            + 'niin tarkasti, että taloista voi laskea ikkunaruudut ja '
+            + 'kylttien tekstit voi lukea. Kuningas osti hänen töitään, mutta '
+            + 'Gaertner ei maalannut vain paraatinäkymiä: hänen kaduillaan '
+            + 'korjataan kiveystä, koirat nuuskivat toisiaan ja pyykki kuivuu '
+            + 'ikkunoissa. Juuri siksi hänen taulunsa ovat nyt tutkijoiden '
+            + 'aarre — niistä nähdään, miltä kadonnut Berliini oikeasti '
+            + 'näytti.',
+          selite: 'Unter den Linden (1856): paraatikadun perällä häämöttää '
+            + 'kuninkaanlinnan kupoli, oikealla Fredrik Suuren '
+            + 'ratsastajapatsas.',
+          lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+          wiki: 'Unter den Linden',
+          galleria: [
+            {
+              otsikko: 'Klosterstraße',
+              tiedosto: 'Eduard Gaertner Berlin Klosterstrasse 1830.jpg',
+              selite: 'Klosterstraße (1830). Ukkospilvet kasaantuvat '
+                + 'vanhankaupungin ylle; kadun perällä kohoaa '
+                + 'Parochialkirchen torni.',
+              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Parochialstraße',
+              tiedosto: 'Eduard Gaertner - Die Parochialstraße - Google Art Project.jpg',
+              selite: 'Parochialstraße (1831). Katutyömaa käynnissä: miehet '
+                + 'latovat kiveystä, kauppiaan kupariastiat roikkuvat '
+                + 'kylttinä ja koirat hoitavat omia asioitaan.',
+              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Schloßfreiheit',
+              tiedosto: 'Eduard Gaertner - Rear view of the Houses at Schloßfreiheit - Google Art Project.jpg',
+              selite: 'Talojen takapihat Schloßfreiheitin rannassa (1855) — '
+                + 'arkinen puoli, jota varten kukaan muu ei pystyttänyt '
+                + 'maalaustelinettä. Takana kuninkaanlinnan kappelin kupoli.',
+              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Friedrichsgracht',
+              tiedosto: 'Eduard Gaertner (1801-1877) - The Friedrichsgracht, Berlin - NG6524 - National Gallery.jpg',
+              selite: 'Friedrichsgracht kattojen yli nähtynä: proomut lastaavat '
+                + 'kanavassa. Berliini oli 1800-luvulla myös satamakaupunki.',
+              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Kuninkaallinen ooppera',
+              tiedosto: 'Eduard Gaertner - Ansicht der Königlichen Oper und Unter den Linden, Berlin (1845).jpg',
+              selite: 'Kuninkaallinen ooppera iltahämärässä (1845). Sama talo '
+                + 'seisoo Unter den Lindenillä yhä, ja siellä lauletaan '
+                + 'edelleen.',
+              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Hattupäinen ukkeli sai jäädä',
+          tiedosto: 'Ampelmännchen go.jpg',
+          teksti: 'Liikennepsykologi Karl Peglau piirsi vuonna 1961 Itä-Saksalle '
+            + 'oman jalankulkuvalon: leveä hahmo hattuineen erottuu kauas, '
+            + 'koska valopintaa on paljon. Ensimmäiset syttyivät '
+            + 'Itä-Berliinissä 1969. Kun Saksat yhdistyivät, ukkelia alettiin '
+            + 'vaihtaa lännen tikku-ukkoon — kunnes kansalaiskampanja '
+            + '"Pelastakaa Ampelmännchen" nousi vastaan ja voitti. Nykyään '
+            + 'hattupäinen ukkeli ohjaa kulkijoita myös monessa '
+            + 'Länsi-Berliinin risteyksessä, ja siitä on tullut koko '
+            + 'kaupungin maskotti, jota myydään matkamuistona.',
+          selite: 'Vihreä Ampelmännchen Berliinissä. Taustalla Keisari Vilhelmin '
+            + 'muistokirkon torso, joka jätettiin pommituksissa saamaansa '
+            + 'asuun muistutukseksi sodasta.',
+          lahde: 'Wikimedia Commons (CC0)',
+          wiki: 'Ampelmännchen',
+        },
+        {
+          otsikko: 'Tyttö Schönebergistä lauloi maailman ympäri',
+          tiedosto: 'My Child Speaks Marlene Dietrich 1930, Erich Salomon.jpg',
+          teksti: 'Marlene Dietrich syntyi 1901 Schönebergin kaupunginosassa ja '
+            + 'nousi maailmantähdeksi berliiniläisen elokuvan Sininen enkeli '
+            + '(1930) myötä — samana vuonna hän muutti Hollywoodiin. Kun '
+            + 'natsihallinto houkutteli häntä takaisin mainoskasvokseen, hän '
+            + 'kieltäytyi, otti Yhdysvaltain kansalaisuuden ja lauloi sen '
+            + 'sijaan rintamalla sotilaille — tunnetuimpana laulun Lili '
+            + 'Marleen, jota kuunneltiin juoksuhaudoissa molemmin puolin. '
+            + 'Berliiniin hän palasi viimeisen kerran arkussa: hauta on '
+            + 'Schönebergissä, äidin haudan vieressä.',
+          selite: 'Marlene Dietrich soittaa Hollywoodista Berliiniin tyttärelleen '
+            + '1930. Yöpöydällä tyttären valokuva — Erich Salomonin kuuluisa '
+            + 'otos.',
+          lahde: 'Erich Salomon, Wikimedia Commons (Public domain)',
+          wiki: 'Marlene Dietrich',
+          musiikki: 'https://music.apple.com/fi/album/lili-marleen/724182416?i=724182571',
+          musiikkiNimi: 'Marlene Dietrichin lauluja Apple Musicissa',
+          esikuuntelu: 'Marlene Dietrich Lili Marleen',
+        },
+      ],
+    },
+    {
+      id: 'rakennukset',
+      nimi: 'Tornit ja torit',
+      johdanto: 'Syksyllä 1969 Alexanderplatzille valmistui neljän päivän välein '
+        + 'kaksi asiaa: kello, joka näyttää maailman ajat, ja torni, joka '
+        + 'näkyy kaikkialle kaupunkiin.',
+      nostot: [
+        {
+          otsikko: 'Aurinko piirsi torniin ristin',
+          tiedosto: 'The Pope\'s Revenge.jpg',
+          teksti: 'Itä-Saksa rakensi televisiotornin vuosina 1965–1969 ja vihki '
+            + 'sen käyttöön 3. lokakuuta 1969. Tornin pallo koottiin maassa '
+            + '120 teräslohkosta ja nostettiin vasta sitten betonipylvään '
+            + 'päähän. Sen jälkeen tapahtui jotain, mitä kukaan ei ollut '
+            + 'piirtänyt kuviin: kun aurinko osuu kiiltävään palloon, '
+            + 'heijastus muodostaa ristin. Valtio oli virallisesti '
+            + 'uskonnoton, joten muurin länsipuolella keksittiin ilmiölle '
+            + 'nimi — paavin kosto. Nimi jäi.',
+          selite: 'Tornin pallo läheltä. Auringonvalo heijastuu teräslevyistä '
+            + 'niin, että pintaan syttyy vaalea risti: pystyjuova ylhäältä '
+            + 'alas ja sen poikki leveämpi vaakanauha.',
+          lahde: 'Tobi85, Wikimedia Commons (Public domain)',
+          wiki: 'Berliinin televisiotorni',
+          galleria: [
+            {
+              otsikko: 'Työmaa toukokuussa 1968',
+              tiedosto: 'Bundesarchiv Bild 183-G0521-0005-001, Berlin, Fernsehturm, Bau.jpg',
+              selite: 'Kaksi kypäräpäistä miestä työskentelee tornin rungon '
+                + 'reunalla. Alhaalla mutkittelee Spree ja kaupungin kattoja; '
+                + 'miesten välissä on teräspalkki ja köysi.',
+              lahde: 'Hans-Joachim Spremberg, Bundesarchiv / Wikimedia Commons (CC BY-SA 3.0 DE)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kelloa pyöritti Trabantin vaihteisto',
+          tiedosto: 'Urania-Weltzeituhr auf dem Alexanderplatz in Berlin 2015.jpg',
+          teksti: 'Muutama päivä ennen tornia, 30. syyskuuta 1969, samalle '
+            + 'aukiolle pystytettiin kymmenmetrinen maailmankello. Erich '
+            + 'Johnin suunnittelemassa alumiinirummussa on 24 sivua, yksi '
+            + 'jokaista aikavyöhykettä kohti, ja niihin on jyrsitty 146 '
+            + 'paikannimeä Reykjavíkista Kinshasaan. Rummun ympäri kiertää '
+            + 'tuntirengas, ja katolla pyörii kerran minuutissa pieni '
+            + 'aurinkokunta. Koneisto on kadun alla kellarissa, ja '
+            + 'tuntirengasta pyöritti Trabantista purettu vaihteisto.',
+          selite: 'Maailmankello aukiolla. Rummun kylkiin on jyrsitty kaupunkien '
+            + 'nimiä, sen ympäri kiertää värillinen tuntirengas ja päällä '
+            + 'pyörii teräsrenkaista koottu aurinkokunta pikkupalloineen. '
+            + 'Alhaalla ohittaa pyöräilijöitä.',
+          lahde: 'Christian Wolf (www.c-w-design.de), Wikimedia Commons (CC BY-SA 3.0 DE)',
+          wiki: 'Alexanderplatz',
+          galleria: [
+            {
+              otsikko: 'Nimet lähietäisyydeltä',
+              tiedosto: 'Weltzeituhr Detail Alexanderplatz.jpg',
+              selite: 'Rummun kylki lähikuvassa: nimirivejä kuten REYKJAVIK, '
+                + 'DUBLIN, LONDON ja OSLO, KOPENHAGEN, WIEN, ROM, TUNIS, '
+                + 'KINSHASA, ja niiden alla isot oranssit tuntinumerot 10–17.',
+              lahde: 'Gryffindor, Wikimedia Commons (Public domain)',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'arki',
+      nimi: 'Arki ja kadut',
+      johdanto: 'Kaupungin oma katuruoka syntyi ketsupista, jota idän puolella ei '
+        + 'saanut — ja kaupasta, jonka valo palaa, kun kaikki muut ovat '
+        + 'kiinni.',
+      nostot: [
+        {
+          otsikko: 'Currywurst keksittiin kadunkulmassa',
+          tiedosto: 'Currywurst-1.jpg',
+          teksti: 'Herta Heuwer piti kioskia Charlottenburgissa Kantstraßen ja '
+            + 'Kaiser-Friedrich-Straßen kulmassa. Hän kertoi sekoittaneensa '
+            + '4. syyskuuta 1949 tomaatista ja mausteista kastikkeen, '
+            + 'kaataneensa sen paistetun makkaran päälle ja ripotelleensa '
+            + 'vielä currya pinnalle. Ainekset hän oli saanut '
+            + 'brittisotilailta. Kastikkeen hän rekisteröi 1959 nimellä '
+            + 'Chillup — chilistä ja ketsupista. Kulmassa on nykyään hänen '
+            + 'muistolaattansa.',
+          selite: 'Berliiniläinen currywurst pahvivadissa: paloiteltu makkara, '
+            + 'punaista kastiketta, päällä currymaustetta ja pystyssä pieni '
+            + 'sininen muovihaarukka.',
+          lahde: 'Rainer Zenz, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Currywurst',
+          galleria: [
+            {
+              otsikko: 'Idän puolella keitettiin oma kastike',
+              tiedosto: 'MitteKonnopke.jpg',
+              selite: 'Jono Konnopken kioskin luukulla metrosillan alla. Kyltissä '
+                + 'lukee Konnopke’s Imbiß ja "über 80 Jahre". Kioski aloitti '
+                + 'samassa kulmassa 1930; idässä ketsuppia ei saanut, joten '
+                + 'perhe keitti kastikkeensa itse.',
+              lahde: 'Fridolin freudenfett (Peter Kuley), Wikimedia Commons (CC BY-SA 3.0)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Puoti, joka on auki kun muut ovat kiinni',
+          tiedosto: 'Spätkauf Late Night Shop.jpg',
+          teksti: 'Saksassa kaupat sulkeutuvat illalla aikaisin ja sunnuntaisin '
+            + 'kokonaan. Berliinissä on silti melkein joka korttelissa pieni '
+            + 'puoti, jonka valo palaa myöhään: Späti. Nimi tulee sanasta '
+            + 'spät, myöhään. Itä-Berliinissä avattiin 1950-luvulla '
+            + 'vuorotyöläisiä varten spätverkaufsstelle-kauppoja, ja '
+            + 'länsipuolella samanlaisia alettiin 1980-luvulla kutsua nimellä '
+            + 'Spätkauf. Lyhennys Späti otettiin Duden-sanakirjaan vuonna '
+            + '2017.',
+          selite: 'Keltainen kilpi talon seinässä. Siinä lukee isoin punaisin '
+            + 'kirjaimin SPÄTKAUF ja sen alla pienemmällä LATE NIGHT SHOP.',
+          lahde: 'ChickSR, Wikimedia Commons (CC BY-SA 4.0)',
+          galleria: [
+            {
+              otsikko: 'Puoti Kaiserdammilla',
+              tiedosto: 'Späti Berlin-Kaiserdamm.jpg',
+              selite: 'Spätin ovi ja näyteikkuna. Kyltissä lukee SPÄTI, ikkunan '
+                + 'reunassa on lista tavaroista — juomia, jäätelöä, makeisia, '
+                + 'lehtiä — ja hyllyt ovat täynnä purkkeja.',
+              lahde: 'Jeuwre, Wikimedia Commons (CC BY-SA 4.0)',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  venetsia: [
+    {
+      id: 'kaupunki',
+      nimi: 'Venetsia',
+      johdanto: 'Kaupunki, joka päätti rakentaa itsensä veteen — ja teki '
+        + 'mahdottomasta tunnusmerkkinsä.',
+      kansikuvat: [
+        {
+          tiedosto: 'Aerial photographs of Venice 2013, Anton Nossik, 045.jpg',
+          selite: 'Markuksentori ja dogen palatsi ilmasta — koko kaupunki seisoo '
+            + 'keskellä laguunia.',
+          lahde: 'Anton Nosik, Wikimedia Commons (CC BY 3.0)',
+        },
+        {
+          tiedosto: 'Canal Grande Chiesa della Salute e Dogana dal ponte dell Accademia.jpg',
+          selite: 'Canal Grande ja Santa Maria della Saluten kupolit Accademian '
+            + 'sillalta.',
+          lahde: 'Wolfgang Moroder, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Rialto Gondoliers.jpg',
+          selite: 'Rialton silta on ylittänyt pääkanavan yli neljäsataa vuotta.',
+          lahde: 'Saffron Blaze, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Canaletto maalasi kaupunkinsa',
+          tiedosto: 'Canal, Giovanni Antonio (Canaletto) - Return of the Bucentoro to the Molo on Ascension Day, c. 1733-4. Royal Collection Buckingham Palace.jpg',
+          teksti: 'Venetsialainen Canaletto maalasi 1700-luvulla kaupunkinsa '
+            + 'näkymiä niin tarkasti, että tutkijat käyttävät niitä yhä '
+            + 'lähteinä. Maalauksia ostivat etenkin englantilaiset '
+            + 'matkailijat muistoksi suurelta Euroopan-kiertueeltaan.',
+          selite: 'Bucintoron paluu Molon rantaan helatorstaina (n. 1733): dogen '
+            + 'kullattu juhlalaiva palaa seremoniasta, jossa Venetsia '
+            + '"vihittiin" merensä kanssa heittämällä sormus aaltoihin. '
+            + 'Taustalla dogen palatsi ja kellotorni — näkymä on sama '
+            + 'tänäänkin.',
+          lahde: 'Canaletto, Wikimedia Commons (PD)',
+          wiki: 'Canaletto',
+          galleria: [
+            {
+              otsikko: 'Kivenhakkaajien piha',
+              tiedosto: 'Canaletto - The Stonemason\'s Yard.jpg',
+              selite: 'Kivenhakkaajien piha (n. 1725): Campo San Vidalilla '
+                + 'veistetään kiveä kirkon korjaustöihin. Harvinainen näkymä '
+                + 'arjen Venetsiasta — ei juhlaa vaan työtä, pyykkinaruja ja '
+                + 'leikkiviä lapsia.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Markuksentori',
+              tiedosto: 'Canaletto - The Piazza San Marco in Venice - Google Art Project.jpg',
+              selite: 'Markuksentori (n. 1724): basilika ja kellotorni nuoren '
+                + 'Canaletton siveltimellä. Kauppiaiden kojut täyttävät torin '
+                + '— se oli silloinkin kaupungin olohuone.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Canal Granden suu',
+              tiedosto: 'Canaletto - The Entrance to the Grand Canal, Venice - Google Art Project.jpg',
+              selite: 'Canal Granden suu ja Santa Maria della Saluten '
+                + 'kupolikirkko (n. 1730). Kirkko rakennettiin kiitokseksi '
+                + 'ruton väistymisestä, ja sen portaille kuljetaan yhä joka '
+                + 'marraskuu siltaa pitkin juhlimaan.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Regatta Canal Grandella',
+              tiedosto: 'Canal, Giovanni Antonio Canal - Venice, A Regatta on the Grand Canal - National Gallery NG938.jpg',
+              selite: 'Regatta Canal Grandella (n. 1740): kevyet kilpagondolat '
+                + 'kiitävät väkijoukon editse, ja parvekkeet on verhoiltu '
+                + 'juhlakankain. Sama soutukilpailu soudetaan Venetsiassa yhä '
+                + 'joka syksy.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Rio dei Mendicanti',
+              tiedosto: 'Ca\' Rezzonico - Il rio dei Mendicanti - Canaletto.jpg',
+              selite: 'Rio dei Mendicanti (n. 1723): varhainen Canaletto '
+                + 'sivukanavan varrelta. Ikkunoissa kuivuu pyykkiä ja '
+                + 'rannassa korjataan veneitä — tavallista Venetsiaa ilman '
+                + 'juhlapukua.',
+              lahde: 'Didier Descouens, Wikimedia Commons (CC BY-SA 4.0)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Cicchetti ja Rialton tori',
+          tiedosto: 'Pescaria Rialto Venice.jpg',
+          teksti: 'Venetsialaiset syövät cicchettejä — pieniä suupaloja — seisten '
+            + 'bacaro-baarien tiskillä, ja viinilasillista kutsutaan nimellä '
+            + 'ombra, varjo. Raaka-aineet tulevat Rialton torilta, jossa '
+            + 'laguunin kalaa on myyty satojen vuosien ajan.',
+          selite: 'Rialton kalatorin pylväshalli Canal Granden varrella. Kauppa '
+            + 'käy aamuisin: laguunin ja Adrianmeren kalat ja äyriäiset '
+            + 'tuodaan suoraan veneillä hallin laituriin.',
+          lahde: 'Wolfgang Moroder, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          otsikko: 'Vivaldi, punainen pappi',
+          tiedosto: 'Antonio Vivaldi.jpg',
+          teksti: 'Antonio Vivaldi — punatukkainen pappi, il Prete Rosso — opetti '
+            + 'viulunsoittoa venetsialaisessa tyttöjen orpokodissa ja sävelsi '
+            + 'sen orkesterille satoja konserttoja. Kuuluisin on Neljä '
+            + 'vuodenaikaa, jossa musiikista voi kuulla linnunlaulun ja '
+            + 'ukkosmyrskyn.',
+          selite: 'Ainoa varma Vivaldin muotokuva: François Morellon la Caven '
+            + 'kaiverrus vuodelta 1725. Säveltäjä pitelee nuottivihkoa — '
+            + 'peruukin alla hehkui lempinimen antanut punainen tukka.',
+          lahde: 'François Morellon la Cave, Wikimedia Commons (PD)',
+          wiki: 'Antonio Vivaldi',
+          musiikki: 'https://music.apple.com/fi/artist/antonio-vivaldi/242604',
+          musiikkiNimi: 'Antonio Vivaldi Apple Musicissa',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/f/ff/Vivaldi_-_Four_Seasons_1_Spring_mvt_1_Allegro_-_John_Harrison_violin.oga/Vivaldi_-_Four_Seasons_1_Spring_mvt_1_Allegro_-_John_Harrison_violin.oga.mp3',
+          musiikkiNayteNimi: 'Vivaldi: Kevät, 1. osa — John Harrison, viulu (CC BY-SA)',
+        },
+      ],
+    },
+    {
+      id: 'rakennukset',
+      nimi: 'Kaupunki veden varassa',
+      johdanto: 'Talot eivät seiso kalliolla vaan miljoonien puunrunkojen päällä — '
+        + 'ja meri käy joka syksy tarkistamassa, pitävätkö ne yhä.',
+      nostot: [
+        {
+          otsikko: 'Kaupunki seisoo puunrunkojen päällä',
+          tiedosto: 'A canal in Venice being drained and cleaned using a Decauville railway.jpg',
+          teksti: 'Venetsian talot eivät seiso kalliolla vaan puussa. Rakentajat '
+            + 'löivät laguunin mutaan tiheät rivit lepän runkoja, kunnes '
+            + 'paalut ylsivät alla olevaan kovaan savikerrokseen. Paalujen '
+            + 'päälle ladottiin istrialaisia kalkkikivilaattoja ja vasta '
+            + 'niiden päälle tiilet. Mudassa ei ole happea, joten puu ei '
+            + 'lahoa vaan kovettuu vuosisatojen kuluessa. Santa Maria della '
+            + 'Saluten kirkkoa varten mutaan lyötiin yli miljoona paalua.',
+          selite: 'Venetsialainen kanava vuonna 1956: molemmat päät on padottu, '
+            + 'vesi pumpattu pois ja miehet lapioivat pohjan mutaa vaunuihin. '
+            + 'Oikeassa reunassa kulkee kapearaiteinen kisko, jota pitkin '
+            + 'vaunut työnnetään pois, ja takana kaartuu kivisilta. Kanavia '
+            + 'tyhjennetään yhä, sillä vain kuivalla pohjalla talojen '
+            + 'perustuksia pääsee korjaamaan.',
+          lahde: 'Tuntematon valokuvaaja 1956, Wikimedia Commons (PD-Italy)',
+          wiki: 'Venetsia',
+        },
+        {
+          otsikko: 'Portit nousevat merenpohjasta',
+          tiedosto: 'Venedig Acqua alta-4496.jpg',
+          teksti: 'Kun syksyn tuuli työntää Adrianmerta laguunia kohti, vesi '
+            + 'nousee kaduille. Ilmiön nimi on acqua alta, korkea vesi. '
+            + 'Korkein mitattu oli 194 senttiä 4. marraskuuta 1966, ja '
+            + 'kaupunki varoittaa siitä sireeneillä: mitä useamman kerran '
+            + 'sireeni soi, sitä korkeammalle vesi nousee. Lokakuusta 2020 '
+            + 'alkaen suojana on ollut MOSE, 78 terästulvaporttia laguunin '
+            + 'kolmen suuaukon pohjassa.',
+          selite: 'Mies kävelee märkää kujaa pitkin reisisaappaissa marraskuussa '
+            + '2019: mustassa takissa, sateenvarjo kädessä ja vihreä '
+            + 'verkkokassi olalla. Vieressä on tiiliseinä, jonka alaosan '
+            + 'rappaus on lohkeillut suolaisen veden syövyttämänä. Acqua '
+            + 'altan aikaan saappaat ovat venetsialaisen tavallinen työasu.',
+          lahde: 'GodeNehler, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Venetsian laguuni',
+          galleria: [
+            {
+              otsikko: 'Näin portti nousee',
+              tiedosto: '03 movimento paratoie.jpg',
+              selite: 'Kolme piirrosta MOSE-portin liikkeestä. Ylinnä portti '
+                + 'makaa merenpohjan betonikotelossa vedellä täytettynä. '
+                + 'Keskellä siihen puhalletaan paineilmaa (musta nuoli), vesi '
+                + 'työntyy ulos (valkoinen nuoli) ja portti kääntyy saranansa '
+                + 'varassa ylös. Alinna portti seisoo pystyssä ja erottaa '
+                + 'laguunin (laguna) merestä (mare). Nousuun menee noin puoli '
+                + 'tuntia.',
+              lahde: 'Magistrato alle Acque di Venezia — Consorzio Venezia Nuova, Wikimedia Commons (CC BY-SA 3.0)',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'kasityo',
+      nimi: 'Käsityö',
+      johdanto: 'Saari, jonne lasinpuhaltajat karkotettiin tulipalon pelossa, ja '
+        + 'vene, joka on tahallaan vino.',
+      nostot: [
+        {
+          otsikko: 'Lasinpuhaltajat karkotettiin saarelle',
+          tiedosto: 'Glass blowing in the Murano island (14023312236).jpg',
+          teksti: 'Vuonna 1291 Venetsian tasavalta määräsi kaikki lasinpuhaltajat '
+            + 'siirtämään uuninsa Muranon saarelle. Syy oli pelko: lasi sulaa '
+            + 'vasta yli tuhannen asteen kuumuudessa, ja uunit paloivat '
+            + 'keskellä kaupunkia, jonka talot olivat suureksi osaksi puuta. '
+            + 'Muranossa mestarit saivat erikoisoikeuksia — jopa luvan kantaa '
+            + 'miekkaa — mutta tasavallasta heidän ei ollut lupa lähteä. '
+            + 'Lasin valmistustapa oli valtionsalaisuus.',
+          selite: 'Lasimestari istuu työpenkin ääressä ja muotoilee raudan päässä '
+            + 'hehkuvaa oranssia lasia pieneksi hevoseksi. Penkin reunalla on '
+            + 'rivi pihtejä ja saksia, edessä lattialla puinen '
+            + 'muotoilupölkky. Muranossa esineet tehdään yhä käsin ilman '
+            + 'muotteja.',
+          lahde: 'Miguel Mendez, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Murano',
+          galleria: [
+            {
+              otsikko: 'Uunin suu',
+              tiedosto: 'Italy-1453 - Murano Glass (5228946002).jpg',
+              selite: 'Muranolaisen uunin aukko hehkuu keltaisena kuin pieni '
+                + 'aurinko. Aukon keskellä näkyy pyörivän raudan päässä '
+                + 'lasimalja, jota kuumennetaan uudelleen pehmeäksi. Alhaalla '
+                + 'lepää kolme punahehkuista lasitankoa.',
+              lahde: 'Dennis G. Jarvis, Wikimedia Commons (CC BY-SA 2.0)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Gondoli on tahallaan vino',
+          tiedosto: 'Forcola da pope su gondola.jpg',
+          teksti: 'Gondoli ei ole symmetrinen: sen vasen kylki on oikeaa '
+            + 'leveämpi. Vinous on tarkoituksellista. Soutaja seisoo perässä '
+            + 'ja soutaa yhdellä airolla veneen oikealta puolelta, ja vino '
+            + 'runko kumoaa kaarron, jonka yksi airo muuten aiheuttaisi. Vene '
+            + 'on noin 10,85 metriä pitkä, painaa 350 kiloa ja kootaan 280 '
+            + 'osasta kahdeksaa eri puulajia. Näin jyrkäksi vinous kehittyi '
+            + 'vasta 1900-luvun alussa.',
+          selite: 'Veistetty puinen forcola eli hankain nousee veneen laidalta, '
+            + 'ja airo lepää sen ylimmässä lovessa. Lovia on useita eri '
+            + 'soutuotteita varten, eikä forcolaa ole kiinnitetty mihinkään — '
+            + 'se nostetaan pois soudun jälkeen. Kuvan vene on kirkkaan '
+            + 'sininen: tavallinen gondoli on musta, ja vain kilpaveneet ovat '
+            + 'värikkäitä.',
+          lahde: 'Kevin Lucich, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Gondoli',
+          galleria: [
+            {
+              otsikko: 'Keulan kampa',
+              tiedosto: 'Gondola ferro di prua.jpg',
+              selite: 'Gondolin keulan metallinen ferro vihreää kanavavettä '
+                + 'vasten: leveä kaareva terä, jonka alla on kuusi eteenpäin '
+                + 'osoittavaa piikkiä. Ferro ei ole pelkkä koriste vaan '
+                + 'raskas vastapaino perässä seisovalle soutajalle, jotta '
+                + 'veneen litteä pohja pysyisi vaakasuorassa.',
+              lahde: 'Adriano, Wikimedia Commons (CC BY-SA 3.0)',
+            },
+          ],
         },
       ],
     },

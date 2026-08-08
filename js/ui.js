@@ -6061,6 +6061,9 @@ export class UI {
     this.arrivalKuvat = [];
     this.arrivalKuvaKohdalla = 0;
     this.paivitaKuvaLaskuri();
+    // Maalehti piilottaa esittelyrivin (ks. avaaMaalehti); kaupunkiin
+    // palattaessa se on palautettava, tai se jäisi piiloon lopullisesti.
+    this.arrivalIntro.hidden = false;
     this.arrivalIntro.textContent = 'Isoisä on merkinnyt tämän paikan karttaansa.';
     this.arrivalWiki.hidden = true;
     // Oma lyhytnosto (pilottikaupungit) näkyy heti ja toimii ilman
@@ -7460,6 +7463,15 @@ export class UI {
     this.piirraLehtiKuvat(null);
     this.arrivalPalstat.hidden = true;
     this.arrivalKulttuuri.hidden = true;
+    /*
+     * Saapumisen vakiolause pois maalehdestä (omistajan päätös
+     * 8.8.2026): "Isoisä on merkinnyt tämän paikan karttaansa" on
+     * oikein kaupunkilehdessä mutta ei maalehdessä — isoisä merkitsee
+     * karttaansa PAIKKOJA, ei valtioita. Lause jää edelleen
+     * kaupunkilehteen, jossa se on kirjoitettu.
+     */
+    this.arrivalIntro.textContent = '';
+    this.arrivalIntro.hidden = true;
     this.arrivalLehtiYla.hidden = false;
     this.arrivalCity.textContent = otsikko;
     this.arrivalLehtiAla.textContent = 'Maan oma lehti';
