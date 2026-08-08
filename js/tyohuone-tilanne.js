@@ -27,13 +27,14 @@ export const TILANNE = {
     {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
-      tila: 'odottaa',
-      tehtava: 'Kartoitti loput maalehdet: Euroopan laudalla 29 '
-        + 'maata, lehti vain kuudella. Ranskan pilotti valmiina '
-        + 'haaralla. Valmiina: v357 radio- ja tv-napit, v353 '
-        + 'menovinkit, v350 lehtijako.',
-      seuraavaksi: 'Odottaa omistajan päätöstä maalehtien '
-        + 'laajuudesta (katso päätösjono).',
+      tila: 'tyossa',
+      tehtava: 'Omistajan päätös 8.8.: menovinkkisivu kaikille 23 '
+        + 'maalle, joilta lehti puuttuu (2–3 erää, ~140 nostoa). '
+        + 'Valmiina: v357 radio- ja tv-napit, v353 menovinkit '
+        + 'lehtimaille, v350 lehtijako.',
+      seuraavaksi: 'Maalehtien syvyys päätetään vasta omistajan '
+        + 'testikierroksen jälkeen (Ranskan pilotti odottaa '
+        + 'haaralla).',
     },
     {
       tekija: 'Opus 2',
@@ -67,11 +68,6 @@ export const TILANNE = {
     },
   ],
   odottaaPaatosta: [
-    'Euroopan maalehtien laajuus: 23 maalta puuttuu lehti (~700 '
-      + 'nostoa Berliinin tasolla). Vaihtoehdot: kapea lehti '
-      + 'kaikille / täysi harvoille / menovinkit ensin kaikille. '
-      + 'Suositus: menovinkit kaikille nyt, syvyys vasta omistajan '
-      + 'testikierroksen jälkeen.',
     'Berliinin nähtävyyspilotin katselmus (Sonnet 2 odottaa lupaa '
       + 'jatkaa muihin kaupunkeihin)',
     'Kertoja- ja hahmoäänten valinta (kuuntele Kehitys-välilehden '
