@@ -1,9 +1,12 @@
 {
   "permissions": {
+    "defaultMode": "dontAsk",
     "allow": [
       "Workflow",
       "Agent",
-      "Task"
+      "Task",
+      "mcp__Claude_Code_Remote",
+      "mcp__github"
     ]
   }
 }
