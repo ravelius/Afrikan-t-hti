@@ -4239,6 +4239,17 @@ export const MAA_KATEGORIAT = {
               linkki: 'https://sammlung.staedelmuseum.de/en',
             },
             {
+              nimi: 'Pinakothekit München — Baijerin maalaukset yhdessä haussa',
+              tiedosto: 'Dürer - Selbstbildnis im Pelzrock - Alte Pinakothek.jpg',
+              teksti: 'Baijerin valtion taidekokoelmien 17 museota ja yli 27 000 '
+                + 'teosta ovat samassa haussa. Mukana on Dürerin omakuva '
+                + 'vuodelta 1500, jossa hän katsoo suoraan katsojaa silmiin.',
+              selite: 'Omakuva tummaa taustaa vasten: pitkät kiharat hiukset, '
+                + 'turkiskauluksinen takki ja käsi rinnan päällä.',
+              lahde: 'Albrecht Dürer, Wikimedia Commons (public domain)',
+              linkki: 'https://www.sammlung.pinakothek.de/en',
+            },
+            {
               nimi: 'Dresdenin taidekokoelmat — Zwingerin aarteet verkossa',
               tiedosto: 'Jean-Etienne Liotard - The Chocolate Girl - Google Art Project.jpg',
               teksti: 'Dresdenin viidentoista museon esineet ovat yhdessä haussa: '
@@ -4249,6 +4260,18 @@ export const MAA_KATEGORIAT = {
                 + 'esiliina ja myssy.',
               lahde: 'Jean-Étienne Liotard, Wikimedia Commons (public domain)',
               linkki: 'https://skd-online-collection.skd.museum/',
+            },
+            {
+              nimi: 'Germanisches Nationalmuseum — Nürnbergin esineluettelo',
+              tiedosto: 'Erdglobus, sogenannter Behaim-Globus.jpg',
+              teksti: 'Saksan suurimman kulttuurihistoriallisen museon '
+                + 'luettelossa on maailman vanhin säilynyt maapallo vuodelta '
+                + '1492. Siitä puuttuu Amerikka, koska sitä ei vielä '
+                + 'tunnettu.',
+              selite: 'Vanha maapallo rautajalustalla: sininen meri, kellertävät '
+                + 'maat ja messinkinen vanne pallon ympärillä.',
+              lahde: 'Germanisches Nationalmuseum, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://objektkatalog.gnm.de/',
             },
             {
               nimi: 'Berliinin valtionmuseot — kokoelmahaku',
@@ -4264,11 +4287,32 @@ export const MAA_KATEGORIAT = {
               lahde: 'José Luiz, Wikimedia Commons (CC BY-SA 4.0)',
               linkki: 'https://recherche.smb.museum/',
             },
+            {
+              nimi: 'Bauhaus Kooperation — koulun oma arkisto',
+              tiedosto: 'Außenansichten des Bauhaus-Gebäudes in Dessau 01.jpg',
+              teksti: 'Bauhaus oli taidekoulu, joka toimi Saksassa vain vuodesta '
+                + '1919 vuoteen 1933. Silti sen ajatus siitä, miltä tuoli, '
+                + 'lamppu, talo tai kirjasin saa näyttää, näkyy yhä lähes '
+                + 'kaikkialla.',
+              selite: 'Dessaun Bauhaus-rakennus ulkoa: pitkä lasiseinä nurkasta '
+                + 'katsottuna ja pystysuora betonipinta, jossa lukee alhaalta '
+                + 'ylös BAUHAUS.',
+              lahde: 'JensKunstfreund, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://bauhauskooperation.de/',
+            },
           ],
         },
         {
           otsikko: 'Valokuvausnäyttelyt',
           kohteet: [
+            {
+              nimi: 'Münchner Stadtmuseum — valokuva-albumit verkossa',
+              teksti: 'Museon verkkokokoelmassa on kymmeniä valokuvanäyttelyitä '
+                + 'albumeina: käsin väritettyjä matkakuvia 1800-luvun '
+                + 'Japanista, fotoform-ryhmän kokeiluja ja Otto Steinertin '
+                + 'töitä.',
+              linkki: 'https://sammlungonline.muenchner-stadtmuseum.de/',
+            },
             {
               nimi: 'Die Photographische Sammlung Köln — valokuvaajat aakkosissa',
               tiedosto: 'Karl Blossfeldt. Cucurbita, 1928.jpg',
@@ -4282,12 +4326,12 @@ export const MAA_KATEGORIAT = {
               linkki: 'https://photographie-stiftungkultur.de/bestaende',
             },
             {
-              nimi: 'Münchner Stadtmuseum — valokuva-albumit verkossa',
-              teksti: 'Museon verkkokokoelmassa on kymmeniä valokuvanäyttelyitä '
-                + 'albumeina: käsin väritettyjä matkakuvia 1800-luvun '
-                + 'Japanista, fotoform-ryhmän kokeiluja ja Otto Steinertin '
-                + 'töitä.',
-              linkki: 'https://sammlungonline.muenchner-stadtmuseum.de/',
+              nimi: 'Museum Folkwang Essen — valokuvakokoelma',
+              teksti: 'Essenin Folkwang on yksi Saksan tärkeimmistä '
+                + 'valokuvamuseoista. Se säilyttää kokonaisia valokuvaajien '
+                + 'jäämistöjä negatiiveineen, ja kuvat selataan museon '
+                + 'verkkohaussa.',
+              linkki: 'https://www.museum-folkwang.de/de/sammlung/fotografische-sammlung',
             },
             {
               nimi: 'Bundesarchiv Wikimedia Commonsissa',
@@ -4329,6 +4373,47 @@ export const MAA_KATEGORIAT = {
               lahde: 'Johann Sebastian Bach, Wikimedia Commons (public domain)',
               linkki: 'https://digital.staatsbibliothek-berlin.de/',
             },
+            {
+              nimi: 'Münchener DigitalisierungsZentrum — kolme miljoonaa niteen sivua',
+              teksti: 'Baijerin valtionkirjaston digitointikeskuksessa on yli '
+                + 'kolme miljoonaa digitoitua käsikirjoitusta, karttaa, '
+                + 'nuottia ja sanomalehteä, kaikki selattavissa sivu '
+                + 'kerrallaan.',
+              linkki: 'https://www.digitale-sammlungen.de/en/',
+            },
+            {
+              nimi: 'Wolfenbüttelin herttuakirjasto — keskiajan käsikirjoitukset',
+              tiedosto: 'Gospels1.jpg',
+              teksti: 'Käsikirjoitustietokannassa selataan keskiaikaisia '
+                + 'koodekseja aukeama kerrallaan. Talon kuuluisin aarre on '
+                + 'Heinrich Leijonan kultaisin kirjaimin kirjoitettu '
+                + 'evankeliumikirja.',
+              selite: 'Keskiaikainen käsikirjoitussivu: ylhäällä kruunattu hahmo '
+                + 'ympyrän sisällä, alhaalla neljä juhla-asuista henkilöä, '
+                + 'reunoissa punaista, vihreää ja kultaa.',
+              lahde: 'Wikimedia Commons (public domain)',
+              linkki: 'https://diglib.hab.de/?db=mss',
+            },
+            {
+              nimi: 'LeMO — Saksan historia aikajanana',
+              teksti: 'Deutsches Historisches Museumin verkkomuseo kulkee '
+                + 'vuodesta 1815 nykypäivään. Aikajanalta pääsee esineisiin, '
+                + 'valokuviin, silminnäkijävideoihin ja 360 asteen '
+                + 'kohteisiin.',
+              linkki: 'https://www.dhm.de/lemo/',
+            },
+            {
+              nimi: 'Beethoven-Haus Bonn — säveltäjän oma arkisto',
+              tiedosto: 'Beethoven.jpg',
+              teksti: 'Beethovenin syntymätalon digitaalisessa arkistossa on '
+                + 'nuottikäsikirjoituksia, kirjeitä ja kuvia. Osassa '
+                + 'käsikirjoituksia musiikki soi samaan aikaan kuin sivua '
+                + 'selaa.',
+              selite: 'Muotokuva Beethovenista: harmaa tukka pörröllä, punainen '
+                + 'kaulahuivi ja käsissä nuottivihko ja kynä.',
+              lahde: 'Joseph Karl Stieler, Wikimedia Commons (public domain)',
+              linkki: 'https://www.beethoven.de/en/archive',
+            },
           ],
         },
         {
@@ -4358,6 +4443,30 @@ export const MAA_KATEGORIAT = {
                 + 'sivuille.',
               lahde: 'H. Raab (User: Vesta), Wikimedia Commons (CC BY-SA 3.0)',
               linkki: 'https://www.museumfuernaturkunde.berlin/en',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja retket',
+          kohteet: [
+            {
+              nimi: 'NABU-webkamerat — pesäkuvaa suorana',
+              tiedosto: 'Heidekrug Münster Storch mit Jungen.jpg',
+              teksti: 'Saksan luonnonsuojeluliiton kamerat näyttävät suorana '
+                + 'kattohaikaran pesän, tornipöllöt ja muuttohaukat. Keväällä '
+                + 'poikaset kuoriutuvat ja kasvavat kameran edessä.',
+              selite: 'Kattohaikara seisoo risupesässä katon yläpuolella nokka '
+                + 'auki, ja pesän reunan takaa pilkistää poikasen pää.',
+              lahde: 'Daydove, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://www.nabu.de/wir-ueber-uns/infothek/webcams/index.html',
+            },
+            {
+              nimi: 'Zugspitze — Saksan korkein huippu kameran takaa',
+              teksti: 'Kamera kuvaa Saksan korkeinta vuorta muutaman minuutin '
+                + 'välein. Kuvat jäävät arkistoon, joten samasta paikasta voi '
+                + 'katsoa aikalapsun tai vertailla eilistä säätä tähän '
+                + 'päivään.',
+              linkki: 'https://www.foto-webcam.eu/webcam/zugspitze/',
             },
           ],
         },
@@ -6754,6 +6863,405 @@ export const MAA_KATEGORIAT = {
                 + 'ruokintapaikka. Aavikkohaukka on maan harvinaisimpia '
                 + 'pesiviä lintuja.',
               linkki: 'https://www.wildliferomania.com/live/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  BGR: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Bulgariassa moni museo on skannattu kolmiulotteiseksi, joten '
+        + 'kirkon holviin ja arkeologian saliin pääsee kotoa käsin. Verkossa '
+        + 'on myös vanhoja valokuvia, traakialaisten kultaa ja suoria '
+        + 'kameroita lintujen pesillä.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'Kansallisgalleria Sofiassa — kokoelmat kuvasivuina',
+              tiedosto: 'Ivan Milev - Gadular.jpg',
+              teksti: 'Bulgarian kansallisgalleria on avannut kokoelmansa '
+                + 'verkkoon osasto kerrallaan. Jokainen sivu on kuvalistaus, '
+                + 'jossa teoksen vieressä lukee tekijä, vuosi ja koko.',
+              selite: 'Tyylitelty maalaus soittajista: vasemmalla valkoviittainen '
+                + 'tanssija kädet ylhäällä, keskellä nuori mies jousi '
+                + 'kädessään ja oikealla mies puhaltamassa säkkipilliin.',
+              lahde: 'Ivan Milev, Wikimedia Commons (public domain)',
+              linkki: 'https://nationalgallery.bg/collections/',
+            },
+            {
+              nimi: 'Google Arts & Culture — Bulgarian museot yhdessä haussa',
+              teksti: 'Neljä bulgarialaista museota on vienyt esineensä Google '
+                + 'Arts & Cultureen. Yli 800 kohdetta voi suurentaa '
+                + 'lähikuvaksi, ja mukana on verkkonäyttelyitä kansanpuvuista '
+                + 'ja vanhoista kelloista.',
+              linkki: 'https://artsandculture.google.com/entity/bulgaria/m015qh',
+            },
+            {
+              nimi: 'Virtuaalinen Bulgaria — museokierroksia kolmiulotteisina',
+              teksti: 'Sivustolle on koottu bulgarialaisten museoiden, '
+                + 'gallerioiden ja luostarien virtuaalikierroksia. '
+                + 'Kierroksella liikutaan salista toiseen ja voi pysähtyä '
+                + 'katsomaan vitriineitä läheltä.',
+              linkki: 'https://virtualbulgaria.bg/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Historia ja muinaisuus',
+          kohteet: [
+            {
+              nimi: 'Arkeologinen museo — 3D-kierros entisessä moskeijassa',
+              tiedosto: 'Vulchitrun Treasure all.jpg',
+              teksti: 'Bulgarian kansallinen arkeologinen museo toimii 1400-luvun '
+                + 'moskeijassa. Kierroksella kävellään kupolin alla '
+                + 'vitriinien lomassa, ja samalta sivustolta löytyy kymmeniä '
+                + 'muitakin 3D-näyttelyitä.',
+              selite: 'Kultaisia astioita harmaalla alustalla: suuri '
+                + 'kaksikorvainen malja, kannuja ja litteitä kansia, joiden '
+                + 'pintaan on upotettu kierteisiä koristekuvioita.',
+              lahde: 'Nikolay Genov, Wikimedia Commons (CC BY 3.0)',
+              linkki: 'https://naim.bg/en/tour/',
+            },
+            {
+              nimi: 'Bojanan kirkko — 360 asteen kierros maalausten keskellä',
+              tiedosto: 'Boyana-church-Young-Jesus-in-the-Temple.jpg',
+              teksti: 'Sofian laidalla oleva Bojanan kirkko on Unescon '
+                + 'maailmanperintökohde. Panoraamakierroksella pääsee pieneen '
+                + 'kirkkosaliin, jonka seinät maalattiin täyteen kuvia vuonna '
+                + '1259.',
+              selite: 'Seinämaalaus nuoresta miehestä keltaisessa viitassa: hän '
+                + 'istuu pyöreällä istuimella kultainen sädekehä päänsä '
+                + 'takana, ja taustalla on tummansininen holvi ja ohuita '
+                + 'pylväitä.',
+              lahde: 'Bojanan mestari, Wikimedia Commons (public domain)',
+              linkki: 'https://historymuseum.org/tours/boyanska/BOYANSKA.html',
+            },
+            {
+              nimi: 'Sotahistorian museo — virtuaalimuseo ja pelit',
+              teksti: 'Sofian sotahistoriallisen museon virtuaalimuseossa on 360 '
+                + 'asteen kierros neljässä kerroksessa, kokoelmat kuvina, '
+                + 'verkkonäyttelyitä ja omat pelisivut lapsille.',
+              linkki: 'https://militarymuseum.bg/en/virtual-museum/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'Valtionarkiston valokuva-arkisto — vanhat kuvat selattavina',
+              tiedosto: 'BASA-600K-1-1865-15-Vasil Levski-retouched.jpeg',
+              teksti: 'Kuvia voi selata vuosikymmenen, aiheen tai paikan mukaan: '
+                + 'juhlia, kouluja, katunäkymiä, tuntemattomia ihmisiä ja '
+                + 'kokonaisia albumeita 1800-luvulta nykypäivään.',
+              selite: 'Vanha soikeaan kehykseen rajattu studiokuva nuoresta '
+                + 'miehestä: tummat aaltoilevat hiukset, viikset, valkoinen '
+                + 'paita ja tumma rusetti.',
+              lahde: 'Bulgarian valtionarkisto, Wikimedia Commons (public domain)',
+              linkki: 'https://photoarchives.archives.bg/',
+            },
+            {
+              nimi: 'Arkistojen taidekokoelma — maalauksia ja veistoksia',
+              teksti: 'Saman arkiston toinen sivusto on jaettu maalauksiin, '
+                + 'grafiikkaan, veistoksiin ja käyttötaiteeseen. Jokaisesta '
+                + 'ryhmästä aukeaa kuvalistaus, jossa teoksia voi suurentaa.',
+              linkki: 'https://art.archives.bg/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja retket',
+          kohteet: [
+            {
+              nimi: 'Lintukamerat pesillä — haikaroita, pöllö ja korppikotka',
+              tiedosto: 'White stork (Ciconia ciconia) Yastrebets.jpg',
+              teksti: 'Bulgarian lintuyhdistys näyttää yhdellä sivulla neljä '
+                + 'suoraa lähetystä pesiltä: kaksi kattohaikaran pesää, '
+                + 'kyhmypöllön pöntön sisältä kuvattuna ja pikkukorppikotkan '
+                + 'kalliopesän.',
+              selite: 'Kaksi kattohaikaraa seisoo risupesän päällä sinistä '
+                + 'taivasta vasten. Nokat ovat punaiset ja siipien kärjet '
+                + 'mustat.',
+              lahde: 'Charles J. Sharp, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://bspb.org/%d0%b7%d0%b0-%d0%bf%d1%82%d0%b8%d1%86%d0%b8%d1%82%d0%b5/%d0%ba%d0%b0%d0%bc%d0%b5%d1%80%d0%b8/',
+            },
+            {
+              nimi: 'Musalan huipun kamera — Balkanin korkein kohta',
+              teksti: 'Rilan vuoristossa kohoava Musala on 2925 metriä korkea ja '
+                + 'koko Balkanin niemimaan korkein huippu. Kuva päivittyy '
+                + 'muutaman sekunnin välein, joten sumu ja lumi näkyvät heti.',
+              linkki: 'https://www.webcams.bg/6/musala/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  HRV: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Kroatia on pieni maa, mutta sen museot ja kirjastot ovat vieneet '
+        + 'verkkoon yllättävän paljon: 4500 vuotta vanhoja saviesineitä '
+        + '3D-malleina, glagoliittisia käsikirjoituksia ja virtuaalikävelyn '
+        + 'vesiputouksille.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'Tehnički muzej Nikola Tesla — kokoelmat esine kerrallaan',
+              tiedosto: 'Nikola Tesla around 1890.jpg',
+              teksti: 'Zagrebin tekniikan museon kokoelmatietokannassa voi selata '
+                + 'höyrykoneita, vanhoja radioita ja Penkalan kynää. '
+                + 'Jokaisesta esineestä on valokuva, mitat ja selitys siitä, '
+                + 'miten se toimii.',
+              selite: 'Seepianruskea studiovalokuva nuorehkosta miehestä '
+                + 'puolisivuttain: tumma kammattu tukka, viikset ja paksu '
+                + 'villakangastakki valkoisen kauluksen päällä.',
+              lahde: 'The Nikola Tesla Museum, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://tmnt.hr/hr-hr/zbirke',
+            },
+            {
+              nimi: 'Muzej za umjetnost i obrt — virtuaaliset näyttelyt',
+              teksti: 'Zagrebin taide- ja käsityömuseo on siirtänyt näyttelyitään '
+                + 'verkkoon. Yhteen pääsee 3D-tilana: museon salien läpi voi '
+                + 'kävellä ja pysähtyä katsomaan esineitä kuin paikan päällä.',
+              linkki: 'https://www.muo.hr/virtualne-izlozbe/',
+            },
+            {
+              nimi: 'Museum of Broken Relationships — särkyneiden suhteiden esineet',
+              teksti: 'Zagrebilaisen museon verkkokokoelmassa on tavaroita, jotka '
+                + 'ihmiset ovat lahjoittaneet rakkaustarinansa päätyttyä: '
+                + 'hiustenkuivaaja, posliininukke, tyhjä keksipussi. Mukana '
+                + 'on suomalaistenkin lähetyksiä.',
+              linkki: 'https://brokenships.com/explore',
+            },
+          ],
+        },
+        {
+          otsikko: 'Historia ja muinaisuus',
+          kohteet: [
+            {
+              nimi: 'Zagrebin arkeologinen museo — löydöt 3D-malleina',
+              tiedosto: 'Vucedol Culture ceramic dove maximized.jpg',
+              teksti: 'Museon virtuaalisivulla parikymmentä löytöä on skannattu '
+                + '3D-malleiksi, joita voi pyörittää hiirellä joka suuntaan. '
+                + 'Mukana on Vučedolin kyyhky, noin 4500 vuotta vanha '
+                + 'lintuastia.',
+              selite: 'Ruskeanpunainen saviastia linnun muodossa: se seisoo '
+                + 'kolmella lyhyellä jalalla, kaula kurkottaa ylös ja kylkiä '
+                + 'kiertävät kaiverretut viivarivit.',
+              lahde: 'LZMK, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.amz.hr/hr/virtualni-muzej/3d-modeli-arheoloskih-predmeta/',
+            },
+            {
+              nimi: 'Krapinan neandertalilaismuseo — digitoitu aineisto',
+              tiedosto: 'Krapina 3. Homo neanderthalensis.jpg',
+              teksti: 'Krapinan kalliosuojasta on löydetty yli 900 '
+                + 'neandertalilaisen luuta. Museon digitoitu aineisto avautuu '
+                + 'kuvasarjana: ammoniitteja, mammutin hammas, hain hammas ja '
+                + 'ametisti.',
+              selite: 'Neandertalilaisen kallon jäljennös tummaa taustaa vasten: '
+                + 'vaaleankeltaista luuta, iso silmäkuoppa, paksu kulmakaari '
+                + 'ja halkeamia pitkin lakea.',
+              lahde: 'Ryan Somma, Wikimedia Commons (CC BY-SA 2.0)',
+              linkki: 'https://mkn.mhz.hr/hr/digitalizirana-grada/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'NSK digitalna — kansalliskirjaston digitaaliset kokoelmat',
+              teksti: 'Yksi haku kattaa kirjaston vanhat kirjat, kartat, nuotit, '
+                + 'käsikirjoitukset ja kuvat. Aineisto aukeaa selaimeen sivu '
+                + 'kerrallaan, ja portaalin saa vaihdettua englanniksi.',
+              linkki: 'https://digitalna.nsk.hr/',
+            },
+            {
+              nimi: 'Glagoljica.hr — oma kirjaimisto verkossa',
+              teksti: 'Kroatiassa kirjoitettiin vuosisatoja glagoliittisilla '
+                + 'kirjaimilla, jotka eivät muistuta mitään muuta. '
+                + 'Portaalilla voi selata käsikirjoituksia, kivikaiverruksia '
+                + 'ja aikajanaa.',
+              linkki: 'https://glagoljica.hr/',
+            },
+            {
+              nimi: 'Zagrebin kirjastojen digitaaliset kokoelmat',
+              tiedosto: 'Ivana Brlić-Mažuranić 1912.jpg',
+              teksti: 'Zagrebiläistä perintöä teemoittain: vanhoja postikortteja, '
+                + 'muotokuvavalokuvia, lastenkirjoja ja kuvia vuoden 1880 '
+                + 'maanjäristyksestä. Mukana Ivana Brlić-Mažuranićin satujen '
+                + 'käännöksiä.',
+              selite: 'Vanha mustavalkokuva: nainen istuu vaalealla puupenkillä '
+                + 'pitkässä kuvioidussa puvussa, tukka nostettuna ylös, ja '
+                + 'alakulmassa on käsin kirjoitettu nimikirjoitus.',
+              lahde: 'Tuntematon tekijä, Wikimedia Commons (public domain)',
+              linkki: 'https://digitalnezbirke.kgz.hr/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja retket',
+          kohteet: [
+            {
+              nimi: 'Plitvicen järvet — virtuaalikävely puistossa',
+              tiedosto: 'A close-up view of Veliki Slap Waterfall in Plitvice Lakes National Park, Croatia (48670489432).jpg',
+              teksti: 'Kansallispuiston oma 360-kierros vie pitkospuille aivan '
+                + 'vesiputousten viereen. Kuvasta toiseen siirrytään '
+                + 'nuolista, ja mukaan pääsee myös puiston juniin ja '
+                + 'veneisiin.',
+              selite: 'Korkea kalliojyrkänne, jota pitkin valuu useita ohuita '
+                + 'vesiputouksia alla olevaan altaaseen; reunoilla kasvaa '
+                + 'tiheää vihreää kasvillisuutta.',
+              lahde: 'dronepicr, Wikimedia Commons (CC BY 2.0)',
+              linkki: 'https://virtualtours.virtualno360.hr/F1X89mKsXm',
+            },
+            {
+              nimi: 'Kroatian luonnontieteellinen museo — digitaalinen arkisto',
+              teksti: 'Museon virtuaaliherbaariossa on valokuvat kuivatuista '
+                + 'kasvinäytteistä etiketteineen. Samasta hausta löytyvät '
+                + 'myös fossiili-, mineraali- ja hyönteiskokoelmat '
+                + 'osastoittain.',
+              linkki: 'https://www.hpm.hr/digitalna-arhiva/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  BIH: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Bosnia ja Hertsegovina on pieni maa, mutta sen aarteet on viety '
+        + 'verkkoon kolmiulotteisina: museosaleissa voi kävellä, '
+        + 'keskiaikaisia hautakiviä kääntää kädessä ja Mostarin siltaa katsoa '
+        + 'suorana.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'Bosnian kansallisgalleria — kokoelma zoomattavana',
+              teksti: 'Sarajevon kansallisgalleria on vienyt teoksensa Google '
+                + 'Arts & Culture -palveluun: 139 Ferdinand Hodlerin työtä, '
+                + 'Đoko Mazalićin maalauksia ja satakunta piirustusta, joita '
+                + 'voi suurentaa siveltimenvetoon asti.',
+              linkki: 'https://artsandculture.google.com/partner/national-gallery-of-bosnia-and-herzegovina',
+            },
+            {
+              nimi: 'Zemaljski muzej — kävele museosaliin 3D-kierroksella',
+              tiedosto: 'Dvorana odsjeka za prethistoriju iz 1927.png',
+              teksti: 'Bosnian kansallismuseon esihistorian saleissa liikutaan '
+                + 'näppäimillä kuin pelissä: ympärille voi katsella, '
+                + 'vitriineihin mennä lähelle ja etsiä esineitä, joista '
+                + 'aukeaa lisää tietoa.',
+              selite: 'Mustavalkokuva museon kaksikerroksisesta pylvässalista '
+                + 'vuodelta 1927: kaariholveja, kaidekäytävä, kattoikkuna ja '
+                + 'alhaalla vitriinejä.',
+              lahde: 'Dr Ars et historia de Patria Bosnia, Wikimedia Commons (CC0)',
+              linkki: 'https://tapestry.cyark.org/content/national-museum-bosnia-herzegovina',
+            },
+          ],
+        },
+        {
+          otsikko: 'Historia ja muinaisuus',
+          kohteet: [
+            {
+              nimi: 'Kansallismuseon aarteet käännettävinä 3D-malleina',
+              tiedosto: 'Butmirska vaza.jpg',
+              teksti: 'Kahdeksankymmentä museoesinettä on skannattu '
+                + 'kolmiulotteisiksi, ja niitä voi pyörittää hiirellä joka '
+                + 'puolelta: kuningas Tvrtkon kultasormus, hopeadiadeemi, '
+                + 'Butmirin savikasvot ja roomalaisia hautakiviä.',
+              selite: 'Pyöreä ruskeanvihreä savimalja, jonka kylkeen on '
+                + 'kaiverrettu leveitä spiraalikuvioita. Butmirin '
+                + 'kivikautista keramiikkaa.',
+              lahde: 'Prof saxx, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://sketchfab.com/GlobalDigitalHeritage/collections/national-museum-of-bosnia-and-herzegovina-3dd104cf43834a728f31317518bf7057',
+            },
+            {
+              nimi: 'Stećci — 153 keskiaikaista hautakiveä 3D:nä',
+              tiedosto: 'Radimlja 6 ,Bosnia and Herzegovina.jpg',
+              teksti: 'Bosnian omalaatuiset stećak-hautakivet on skannattu '
+                + 'malleiksi, joita voi kääntää ja zoomata. Kivien kyljistä '
+                + 'löytyy käsi kädessä tanssivia ihmisiä, hirviä, miekkoja ja '
+                + 'kohotettuja kämmeniä.',
+              selite: 'Valkoinen kalkkikivinen hautakivi nurmikolla. Kylkeen on '
+                + 'hakattu rivi ihmishahmoja, jotka pitävät käsiään ylhäällä.',
+              lahde: 'Senad.sabovic, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://sketchfab.com/GlobalDigitalHeritage/collections/stecci-medieval-tombstone-graveyards-65bc4890ba454202a56283ecaa5cd8e9',
+            },
+            {
+              nimi: 'Stećci-maailmanperintökohteet — virallinen kuvagalleria',
+              teksti: 'Unescon maailmanperintöluetteloon kuuluvien '
+                + 'hautakiviniittyjen oma kuvagalleria. Kymmeniä valokuvia '
+                + 'Bosnian kalmistoista Bijačasta Boljuniin, paikka paikalta.',
+              linkki: 'https://www.stecciwh.org/gallery/bih/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'NUBBiH:n digitaaliset kokoelmat — kirjaston aarteet skannattuina',
+              tiedosto: 'Sarajevo Vijećnica Interior 1.JPG',
+              teksti: 'Bosnian kansalliskirjasto on digitoinut vanhimpia '
+                + 'aarteitaan: julisteita, postikortteja, valokuva-albumeita, '
+                + 'karttoja ja atlaksia, käsikirjoituksia ja 1400-luvulta '
+                + 'alkaen painettuja kirjoja.',
+              selite: 'Vijećnican valoisa sisäpiha Sarajevossa: kaksi kerrosta '
+                + 'suippokaaria pylväiden päällä ja punavalkoraidalliset '
+                + 'seinät. Talossa toimi kansalliskirjasto vuoteen 1992.',
+              lahde: 'Julian Nyča, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://kolekcije.nub.ba/',
+            },
+            {
+              nimi: 'Sarajevon kirjaston digitoidut kuvat',
+              teksti: 'Kaupunginkirjasto on skannannut vanhaa Sarajevoa: 70 '
+                + 'postikorttia, katukuvia, panoraamoja ja vuorimaisemia. '
+                + 'Samasta kokoelmasta löytyy myös kaupungin karttoja '
+                + 'vuosilta 1877–1949.',
+              linkki: 'https://digital.bgs.ba/category/fotografije/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja retket',
+          kohteet: [
+            {
+              nimi: 'Naše ptice — Bosnian linnut aakkosissa',
+              tiedosto: 'Buteo buteo in BiH.jpg',
+              teksti: 'Lintuyhdistyksen lajihakemistossa on maan linnut '
+                + 'aakkosjärjestyksessä afrikankäestä mustapääkerttuun. '
+                + 'Jokaisella lajilla on omat valokuvansa ja kuvaus siitä, '
+                + 'missä lintu Bosniassa näkyy.',
+              selite: 'Hiirihaukka istuu paljaalla oksalla syvänsinistä taivasta '
+                + 'vasten ja kääntää päätään sivulle.',
+              lahde: 'Brian Eager, Wikimedia Commons (CC BY 2.0)',
+              linkki: 'https://www.ptice.ba/ptice',
+            },
+            {
+              nimi: 'Mostarin Vanha silta suorana lähetyksenä',
+              tiedosto: 'Mostar Stari Most diver 2010.jpg',
+              teksti: 'Kamera osoittaa 1500-luvulla rakennettua kaarisiltaa ja '
+                + 'Neretva-joen turkoosia vettä. Kesäisin ruutuun osuu '
+                + 'hyppääjiä, jotka syöksyvät kaiteelta yli kahdenkymmenen '
+                + 'metrin korkeudesta jokeen.',
+              selite: 'Uimahousuinen mies hyppää Mostarin kivisillalta kädet '
+                + 'levällään. Kaiteella seisoo katsojia, ja kaaren alta näkyy '
+                + 'valkoinen minareetti.',
+              lahde: 'MichaelBueker, Wikimedia Commons (CC BY 3.0)',
+              linkki: 'https://www.skylinewebcams.com/en/webcam/bosnia-and-herzegovina/herzegovina-neretva-canton/mostar/old-bridge.html',
             },
           ],
         },
