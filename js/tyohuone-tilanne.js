@@ -32,9 +32,10 @@ export const TILANNE = {
         + '8.8.): selvät yläotsikot, pikkukuva + lyhyt selitys + '
         + 'linkki, jopa ~20 linkkiä per maa. Ensin 23 uutta maata, '
         + 'lopuksi kuusi lehtimaata samaan malliin.',
-      seuraavaksi: 'Maalehtien syvyys päätetään vasta omistajan '
-        + 'testikierroksen jälkeen (Ranskan pilotti odottaa '
-        + 'haaralla).',
+      seuraavaksi: 'Lehden alavalikon järjestys (Poistu vasen, '
+        + 'Seuraava/Tapaa oikea) ja tietovisan iloisempi ulkoasu '
+        + '(omistajan ohjeet 8.8.). Maalehtien syvyys päätetään '
+        + 'vasta omistajan testikierroksen jälkeen.',
     },
     {
       tekija: 'Opus 2',
