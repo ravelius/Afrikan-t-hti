@@ -407,17 +407,28 @@
         }),
       },
       {
-        otsikko: 'Lyhyet versiot (kokeilu 8.8.)',
+        otsikko: 'Mittakokeilut: lyhyt ja väli (8.8.)',
         maara: `${LYHYT_KOKEILUT.kohteet.length} kpl`,
         rakenna: () => {
           const johdanto = el('div', 'kortti');
           johdanto.append(el('h3', '', 'Miksi nämä ovat olemassa'));
           johdanto.append(el('p', '', LYHYT_KOKEILUT.johdanto));
+          const nimio = (teksti) => {
+            const b = el('p', 'pieni');
+            b.append(el('b', null, teksti));
+            return b;
+          };
           return [johdanto, ...LYHYT_KOKEILUT.kohteet.map((m) => {
             const k = el('div', 'kortti');
             k.append(el('h3', '', m.otsikko));
+            k.append(nimio('Lyhyt'));
             k.append(el('p', '', m.kuvaus));
             if (m.nosto) k.append(el('p', '', m.nosto));
+            if (m.vali) {
+              k.append(nimio('Väli'));
+              k.append(el('p', '', m.vali));
+              if (m.valiNosto) k.append(el('p', '', m.valiNosto));
+            }
             /* Äänirivi ilmestyy, kun luenta on generoitu omistajan
              * valitsemalla äänellä — ilman tiedostoa ei rikkinäistä
              * soitinta. */
