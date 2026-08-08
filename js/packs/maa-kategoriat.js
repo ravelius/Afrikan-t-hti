@@ -988,6 +988,170 @@ export const MAA_KATEGORIAT = {
         },
       ],
     },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Laulaja, jonka konsertti tyhjensi kadut kerran kuussa, soitin '
+        + 'jolla on oma koulunsa, ja hautakammion seinälle veistetty harpisti '
+        + '3 300 vuoden takaa.',
+      nostot: [
+        {
+          otsikko: 'Kerran kuussa kadut hiljenivät',
+          tiedosto: 'Oum Kaltoum à Rabat.jpg',
+          teksti: 'Umm Kulthum lauloi radiossa joka kuukauden ensimmäisenä '
+            + 'torstaina, ja koko arabimaailma pysähtyi kuuntelemaan: '
+            + 'kahvilat täyttyivät, kadut tyhjenivät ja taksit jäivät '
+            + 'odottamaan. Konsertti saattoi kestää kuusi tuntia, koska hän '
+            + 'lauloi saman säkeen uudestaan ja uudestaan hieman eri tavalla '
+            + '— niin kauan kuin yleisö huusi lisää. Kädessä oli aina '
+            + 'nenäliina, jota hän puristi laulaessaan. Hänen hautajaisissaan '
+            + '1975 Kairon kaduilla oli arviolta neljä miljoonaa ihmistä.',
+          selite: 'Umm Kulthum lavalla Rabatissa 1968, nenäliina kädessä. Takana '
+            + 'orkesteri, oikealla qanun-kanteleen soittaja.',
+          lahde: 'Mmaradji, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Umm Kulthum',
+          musiikki: 'https://music.apple.com/fi/album/enta-oumry-remastered/922753882?i=922753943',
+          musiikkiNimi: 'Umm Kulthum: Enta Omri',
+          esikuuntelu: 'Umm Kulthum Enta Omri',
+        },
+        {
+          otsikko: 'Koulu, jossa opetetaan yhtä ainoaa soitinta',
+          tiedosto: 'Oud class at Cairo\'s Beit el-Oud (House of Oud).jpg',
+          teksti: 'Ud on arabialaisen musiikin pääsoitin: päärynänmuotoinen '
+            + 'kaikukoppa, taaksepäin taittuva viritinlapa ja otelauta ilman '
+            + 'nauhoja. Juuri nauhattomuus on olennaista — sävelten väliin '
+            + 'mahtuu ääniä, joita pianolla ei voi soittaa, ja niistä '
+            + 'arabialainen sävelasteikko rakentuu. Kairossa toimii Beit '
+            + 'el-Oud, oudin talo, jossa opetetaan vain tätä soitinta. Sana '
+            + 'ud tarkoittaa puuta, ja siitä tuli mutkan kautta myös '
+            + 'eurooppalaisen luutun nimi: al-ud muuttui espanjaksi laúdiksi '
+            + 'ja englanniksi luteksi.',
+          selite: 'Oppilas soittaa udia Kairon Beit el-Oudissa. Otelaudassa ei '
+            + 'ole nauhoja, joten sormi voi hakea sävelen väliltä.',
+          lahde: 'Enas El Masry, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Ud',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Oud_music_by_Andy_R._Jordan_1V2_long.mp3',
+          musiikkiNayteNimi: 'Ud-soolo — Andy R. Jordan (CC BY-SA 3.0)',
+        },
+        {
+          otsikko: 'Harpisti soittaa silmät kiinni',
+          tiedosto: 'Tomb chapel of paätenemheb (RMO Leiden egypt saqqara 1333-1307bc) (3970065130).jpg',
+          teksti: 'Muinaisen Egyptin haudoissa on satoja kuvia muusikoista, ja '
+            + 'niistä tiedetään mitä soittimia oli: kaarevia harppuja, '
+            + 'huiluja, pitkäkaulaisia luuttuja, kehärumpuja ja '
+            + 'sistrum-helistin. Nuotteja ei sen sijaan ole yhtään — kukaan '
+            + 'ei tiedä, miltä musiikki kuulosti. Harpistit on kuvattu usein '
+            + 'silmät suljettuina, ja monet tutkijat arvelevat heidän olleen '
+            + 'sokeita: soittajan ammatti oli yksi harvoista, joka sopi '
+            + 'näkövammaiselle. Kuvien soittimista on rakennettu '
+            + 'jäljennöksiä, mutta sävelmät ovat kadonneet lopullisesti.',
+          selite: 'Harpisti ja huilunsoittaja Paatenemhebin hautakappelin '
+            + 'reliefissä Sakkarasta, n. 1330 eaa. Harpun kielet erottuvat '
+            + 'kiveen veistettyinä.',
+          lahde: 'Rob Koopman, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Harppu',
+        },
+        {
+          otsikko: 'Hame muuttuu pyöriessä väripyöräksi',
+          tiedosto: 'Tanoura Dance, Egypt.jpg',
+          teksti: 'Tanoura on egyptiläinen pyörivä tanssi, joka periytyy '
+            + 'sufilaisten dervissien hartausmenoista: pyöriminen on niissä '
+            + 'rukouksen muoto, ei esitys. Tanssija pyörii samaan suuntaan '
+            + 'kymmeniä minuutteja pysähtymättä, ja painava monivärinen hame '
+            + 'nousee ilmaan vaakasuoraksi kiekoksi. Salaisuus on katseessa — '
+            + 'tanssija pitää katseen omassa kädessään, joka kiertää mukana, '
+            + 'jolloin pää ei saa huimausta. Musiikin pitää rytmiä kehärumpu '
+            + 'riqq, jonka reunoissa helisevät pienet metallilautaset.',
+          selite: 'Kaksi tanoura-tanssijaa pyörii niin nopeasti, että hameet ovat '
+            + 'suoristuneet kiekoiksi. Oikealla riqq-kehärummun soittaja.',
+          lahde: 'Tsidoti, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Dervissit',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/cc/Ala_fi_Sabil_Allah.ogg/Ala_fi_Sabil_Allah.ogg.mp3',
+          musiikkiNayteNimi: 'Ala fi Sabil Allah — Sheikh Sayed El-Safti (PD)',
+        },
+      ],
+    },
+    {
+      id: 'rakennukset',
+      nimi: 'Rakennukset',
+      johdanto: 'Egyptiläiset eivät rakentaneet vain isosti vaan tarkasti — ja '
+        + 'jättivät jälkeensä keskeneräisiä työmaita, joista näkee '
+        + 'tarkalleen, miten se tehtiin.',
+      nostot: [
+        {
+          otsikko: 'Kaksi miljoonaa kiveä, ei yhtään orjaa',
+          aika: 'n. 2560 eaa.',
+          tiedosto: 'Giseh 13.jpg',
+          teksti: 'Kheopsin pyramidiin meni noin 2,3 miljoonaa kivilohkaretta, '
+            + 'keskimäärin 2,5 tonnia kappale, ja se oli maailman korkein '
+            + 'rakennus lähes neljätuhatta vuotta. Pyramidin viereltä on '
+            + 'kaivettu esiin rakentajien kylä: leipomoita, olutpanimo, '
+            + 'ruokaloita ja nukkumaparakkeja. Luurangoissa näkyy '
+            + 'parantuneita luunmurtumia, eli loukkaantuneita hoidettiin. '
+            + 'Työläiset olivat palkattuja ryhmiä eivätkä orjia — ryhmillä '
+            + 'oli jopa omat nimensä, kuten Kheopsin ystävät.',
+          selite: 'Kheopsin pyramidin kylki läheltä. Vaakasuorat kivikerrokset '
+            + 'nousevat portaikkona, ja yksittäiset lohkareet erottuvat.',
+          lahde: 'Olaf Tausch, Wikimedia Commons (CC BY 3.0)',
+          wiki: 'Kheopsin pyramidi',
+        },
+        {
+          otsikko: 'Työmaa, joka jäi kesken 3 500 vuotta sitten',
+          aika: 'n. 1500 eaa.',
+          tiedosto: 'Obelisco inacabado, Asuán, Egipto, 2022-04-01, DD 167.jpg',
+          teksti: 'Assuanin louhoksessa makaa obeliski, joka olisi ollut 42 '
+            + 'metriä pitkä ja painanut yli tuhat tonnia — suurin koskaan '
+            + 'tehty. Kiveen ilmestyi halkeama, ja työ jätettiin kesken. '
+            + 'Juuri siksi se on arvokas: se on ainoa paikka maailmassa, '
+            + 'jossa näkee, miten graniittia irrotettiin. Graniitti on niin '
+            + 'kovaa, ettei pronssitaltta pure siihen, joten kiveä hakattiin '
+            + 'doleriittipalloilla — käsissä pidellyillä kivipalloilla, jotka '
+            + 'ovat graniittia kovempia. Ura hakattiin senttimetri kerrallaan '
+            + 'koko obeliskin ympäri.',
+          selite: 'Keskeneräinen obeliski yhä kiinni kalliossa. Kourun seinämässä '
+            + 'näkyy rivi kupinmuotoisia jälkiä doleriittipallojen iskuista.',
+          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Obeliski',
+        },
+        {
+          otsikko: 'Ensimmäinen arkkitehti, jonka nimi tiedetään',
+          aika: 'n. 2650 eaa.',
+          tiedosto: 'Saqqara, Pyramid of Djoser, Ancient Egypt.jpg',
+          teksti: 'Sakkaran porraspyramidi on maailman vanhin suuri kivirakennus, '
+            + 'ja sen suunnittelija Imhotep on ensimmäinen ihminen, jonka '
+            + 'tiedämme nimeltä arkkitehdiksi. Kivilohkareet ovat pieniä, '
+            + 'savitiilen kokoisia: rakentajat eivät vielä uskaltaneet '
+            + 'luottaa isoihin kiviin vaan tekivät kivestä sitä, minkä '
+            + 'osasivat tehdä savesta. Pyramidi ei myöskään ollut valmis '
+            + 'suunnitelma vaan sarja muutoksia — matalaa hautaa '
+            + 'laajennettiin ja korotettiin kerta toisensa jälkeen, kunnes '
+            + 'portaita oli kuusi ja korkeutta 62 metriä.',
+          selite: 'Djoserin porraspyramidi Sakkarassa. Kuusi kapenevaa tasoa '
+            + 'erottuvat selvästi; oikealla kulkevat ihmiset kertovat '
+            + 'mittakaavan.',
+          lahde: 'Vyacheslav Argenberg, Wikimedia Commons (CC BY 4.0)',
+          wiki: 'Sakkaran porraspyramidi',
+        },
+        {
+          otsikko: 'Minareetti, jonka portaat kiertävät ulkopuolella',
+          aika: '879',
+          tiedosto: 'Kairo Ibn Tulun Moschee BW 4.jpg',
+          teksti: 'Ibn Tulunin moskeija on Kairon vanhin alkuperäisessä asussaan '
+            + 'säilynyt rakennus ja pinta-alaltaan kaupungin suurin. Se on '
+            + 'tehty poltetusta tiilestä eikä kivestä: perimätiedon mukaan '
+            + 'rakennuttaja halusi tiiltä siksi, ettei rakennus voisi palaa. '
+            + 'Pihaa kiertävät kaaret ovat suippokaaria — samaa muotoa, jolla '
+            + 'Euroopan katedraalit nousivat vasta kolmesataa vuotta '
+            + 'myöhemmin. Suippo kaari johtaa painon alaspäin pilareille, '
+            + 'joten sillä voi tehdä korkeampia ja kevyempiä holveja kuin '
+            + 'pyöreällä.',
+          selite: 'Ibn Tulunin moskeijan piha. Vasemmalla minareetti, jonka '
+            + 'portaat kiertävät tornin ulkopuolella; kaaret ovat suippoja.',
+          lahde: 'Berthold Werner, Wikimedia Commons (CC BY 3.0)',
+          wiki: 'Ibn Tulunin moskeija',
+        },
+      ],
+    },
   ],
   ITA: [
     {
