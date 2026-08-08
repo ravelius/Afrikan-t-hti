@@ -28,6 +28,59 @@
  * kaupungit Piirrettävät pisteet; paa merkitsee pääkaupungin.
  */
 export const MAAKARTAT = {
+  EGY: {
+    tiedosto: 'Egypt relief location map.jpg',
+    lahde: 'Eric Gaba ja NordNordWest, Wikimedia Commons (CC BY-SA 3.0)',
+    /*
+     * Rajat sijaintikarttaperheen omasta määrittelystä (Wikipedian
+     * Module:Location map/data/Egypt), jossa tämä tiedosto on nimetty
+     * relief-versioksi.
+     *
+     * Kuva on 1055 px leveä — pienin pelin korkokartoista. Suurempaa
+     * ei ole: koko sijaintikarttaperheessä Egyptistä on vain tämä yksi
+     * relief-versio (etsitty 7.8.2026). Riittää lehden leveydelle,
+     * mutta jos Commonsiin joskus ilmestyy isompi, se kannattaa vaihtaa.
+     */
+    rajat: { pohjoinen: 32.1, etela: 21.3, lansi: 24.2, ita: 37.3 },
+    /*
+     * Viisi paikkaa, jotka kertovat maan muodon: delta (Aleksandria),
+     * deltan kärki (Kairo), Niilin laakso (Luxor, Assuan) ja Siinai
+     * (Sharm el-Sheikh). Kartalta näkee heti, että kaikki asutus on
+     * joen varressa ja muu on aavikkoa.
+     */
+    kaupungit: [
+      { nimi: 'Kairo', lat: 30.044, lon: 31.236, paa: true },
+      { nimi: 'Aleksandria', lat: 31.2, lon: 29.92 },
+      { nimi: 'Luxor', lat: 25.7, lon: 32.64 },
+      { nimi: 'Assuan', lat: 24.09, lon: 32.9 },
+      { nimi: 'Sharm el-Sheikh', lat: 27.91, lon: 34.33 },
+    ],
+    /*
+     * Kuvanosto Siinailta: kartta näyttää niemimaan, mutta yksikään
+     * Egyptin aihesivu ei kerro siitä mitään — kaikki katsovat Niilin
+     * vartta. Aihe ei myöskään osu mihinkään olemassa olevaan nostoon
+     * (tarkistettu kaikki 21). Kuva silmätarkistettu 480 px:ssä.
+     */
+    nosto: {
+      otsikko: 'Luostari, joka ei ole koskaan sulkenut oviaan',
+      tiedosto: 'Katharinenkloster Sinai BW 2.jpg',
+      teksti: 'Siinain vuorten juurella toimii Pyhän Katariinan '
+        + 'luostari, joka on ollut yhtäjaksoisesti käytössä 500-luvulta '
+        + 'asti — pidempään kuin mikään muu kristitty luostari '
+        + 'maailmassa. Muurien sisällä kasvaa karhunvatukkapensas, jota '
+        + 'munkit pitävät Raamatun palavana pensaana, ja kirjastossa on '
+        + 'maailman toiseksi suurin vanhojen käsikirjoitusten kokoelma '
+        + 'Vatikaanin jälkeen. Luostari säilyi valloitusten läpi osin '
+        + 'siksi, että sen hallussa on suojelukirje, jonka kerrotaan '
+        + 'olevan profeetta Muhammadin antama — pihalla on myös '
+        + 'moskeija.',
+      selite: 'Pyhän Katariinan luostari Siinain paljaiden vuorten '
+        + 'kainalossa. Muurit ovat 500-luvulta, keisari Justinianuksen '
+        + 'rakennuttamat.',
+      lahde: 'Berthold Werner, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'Pyhän Katariinan luostari',
+    },
+  },
   GBR: {
     tiedosto: 'United Kingdom relief location map.jpg',
     lahde: 'Alexrk2, Wikimedia Commons (CC BY-SA 3.0)',
@@ -123,6 +176,40 @@ export const MAAKARTAT = {
  * vasemmalle puolelle, kun oikealla olisi ahdasta.
  */
 export const KAUPUNKIKARTAT = {
+  kairo: {
+    // Sama työkalu kuin muissa (tools/piirra-kaupunkikartta.mjs).
+    // Rajaus tehtiin kahdesti: ensimmäisessä Niili jäi kuvan vasempaan
+    // reunaan ja kohteet alalaitaan. Nyt joki kulkee keskeltä, Geziran
+    // saari näkyy ja kohteet jakautuvat koko kuvalle.
+    polku: 'assets/kartat/kairo-keskusta.png',
+    lahde: '© OpenStreetMap-tekijät (ODbL)',
+    rajat: { pohjoinen: 30.068, etela: 30.018, lansi: 31.198, ita: 31.278 },
+    esittely: 'Kairo on Afrikan suurin kaupunki ja kasvoi kahdesta '
+      + 'suunnasta: etelässä oli arabien perustama Fustat, pohjoisessa '
+      + 'fatimidien 900-luvulla rakentama linnoituskaupunki al-Qahira, '
+      + 'jonka nimestä tuli Kairo. Vasta 1800-luvulla väliin '
+      + 'rakennettiin leveäkatuinen keskusta Pariisin malliin.\n\n'
+      + 'Niili jakaa kaupungin, ja sen keskellä on Geziran saari. '
+      + 'Idässä kadut kapenevat kujiksi — se osa on Unescon '
+      + 'maailmanperintökohde, jossa on yli 600 suojeltua rakennusta. '
+      + 'Kartan kohteista pääsee lukemaan lisää napauttamalla.',
+    kohteet: [
+      /*
+       * Lännestä itään, jotta numerot etenevät kartalla luontevasti.
+       * Wikit tarkistettu fi.wikipediasta (action=query&redirects=1);
+       * Kairon tornilla ja Egyptin museolla ei ole suomenkielistä
+       * artikkelia, joten ne ovat pelkkiä merkkejä — se on sallittua.
+       * Al-Azharin moskeija jätettiin pois, koska se osuu käytännössä
+       * samaan pisteeseen Khan el-Khalilin kanssa.
+       */
+      { nimi: 'Kairon torni', lat: 30.0459, lon: 31.2243 },
+      { nimi: 'Egyptin museo', lat: 30.0478, lon: 31.2336 },
+      { nimi: 'Tahririn aukio', lat: 30.0444, lon: 31.2357, wiki: 'Tahririn aukio' },
+      { nimi: 'Ibn Tulunin moskeija', lat: 30.0288, lon: 31.2497, wiki: 'Ibn Tulunin moskeija' },
+      { nimi: 'Saladinin linnoitus', lat: 30.0287, lon: 31.2599, wiki: 'Saladinin linnoitus' },
+      { nimi: 'Khan el-Khalili', lat: 30.0477, lon: 31.2622, wiki: 'Khan el-Khalili' },
+    ],
+  },
   lontoo: {
     // Ydinkeskustan julistekartta samalla työkalulla kuin Berliinin
     // (tools/piirra-kaupunkikartta.mjs). Rajaus Hyde Parkin itälaidalta

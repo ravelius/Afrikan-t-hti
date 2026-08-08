@@ -40,6 +40,15 @@ const KAUPUNGIT = {
     // Checkpoint Charlie, East Side Gallery) osuvat alueelle.
     rajat: { pohjoinen: 52.54, etela: 52.485, lansi: 13.34, ita: 13.46 },
   },
+  kairo: {
+    // Niilin molemmat rannat Tahrir-aukiolta Islamilaiseen Kairoon:
+    // Geziran saari lännessä, Khan el-Khalilin kujat ja sitadelli
+    // idässä. Ensimmäinen rajaus jätti Niilin kuvan vasempaan reunaan
+    // ja kohteet alalaitaan — tämä keskittää joen ja kohteet.
+    // Pyramidit jäävät ulkopuolelle: ne ovat 15 km lännessä eivätkä
+    // mahdu ydinkeskustaan ilman että kartta muuttuu puuroksi.
+    rajat: { pohjoinen: 30.068, etela: 30.018, lansi: 31.198, ita: 31.278 },
+  },
   lontoo: {
     // Hyde Parkin itälaidalta Tower Bridgelle, Regent's Parkin
     // eteläpuolelta Thamesin etelärannalle. Kaikki kuusi kohdetta

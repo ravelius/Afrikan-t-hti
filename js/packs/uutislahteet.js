@@ -125,15 +125,13 @@ export const TV_KANAVAT = {
    * jäävät ennalleen. Jos BBC joskus avaa mp4-rajapinnan, tähän
    * kirjoitetaan tallenteet DEU:n malliin.
    */
-  // Al Qahera News on Egyptin uutiskanava, joka lähettää YouTubeen
-  // ympäri vuorokauden ilman aluerajausta (kanavatunnus varmistettu
-  // live-sivun canonical-linkistä 5.8.2026).
-  EGY: {
-    nimi: 'Al Qahera News',
-    livesivu: 'https://www.youtube.com/@AlQaheraNews/live',
-    upotus: 'https://www.youtube.com/embed/live_stream'
-      + '?channel=UCi97xPhaYMe9HAzLCh8CC9g&autoplay=1',
-  },
+  /*
+   * EGYPTILLÄ EI OLE TV-NAPPIA (v348), samasta syystä kuin
+   * Britannialla: Al Qahera Newsin YouTube-live poistettiin omistajan
+   * päätöksen mukaisesti, eikä tallennetta löytynyt tilalle. Youm7:n
+   * videosyöte ohjaa 403:een ja Egypt Todayn syöte on botti-eston
+   * takana; avointa mp4-rajapintaa ei ole (tarkistettu 7.8.2026).
+   */
   ITA: {
     nimi: 'euronews italiano',
     // Live-sivulta luetaan kulloisenkin lähetyksen tunniste workerin
