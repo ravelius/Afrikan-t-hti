@@ -4957,4 +4957,124 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  GRC: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Kreikan aarteet ovat auki selaimessa: Akropoliille pääsee '
+        + 'paikkoihin, joihin kävijää ei päästetä, marmoripatsaita saa '
+        + 'pyörittää käsissään, ja maanjäristykset piirtyvät kartalle sitä '
+        + 'mukaa kuin maa tärisee.',
+      nostot: [
+        {
+          otsikko: '35 panoraamaa, osa Parthenonin sisältä',
+          tiedosto: 'Athens Acropolis Propylaea (28411780906).jpg',
+          teksti: 'Akropoliin monumenttien suojelupalvelu ΥΣΜΑ kuvasi kukkulan '
+            + '360 asteen panoraamoina, ja kierros aukeaa suoraan selaimessa. '
+            + 'Näkymiä on 35, ja osa niistä on paikoista, joihin tavallista '
+            + 'kävijää ei päästetä: Parthenonin etuhalli ja sisäsali, '
+            + 'Erekhtheionin sisusta, Nike-temppelin sisäkammio, Propylaian '
+            + 'länsisalin katto. Kuvaa voi pyörittää joka suuntaan ja '
+            + 'zoomata. Mukana on yhdeksän videota. Tekstit ovat kreikaksi, '
+            + 'mutta näkymät eivät kaipaa käännöstä.',
+          selite: 'Akropoliin porttirakennus Propylaia alhaalta kuvattuna: '
+            + 'pylväiden kapiteelit, marmoriset kattopalkit ja pilviä '
+            + 'sinisellä taivaalla.',
+          lahde: 'Gary Todd, Wikimedia Commons (CC0)',
+          linkki: 'https://www.acropolisvirtualtour.gr/',
+          linkkiNimi: 'Acropolis Virtual Tour — 360°-kierros Akropoliilla',
+        },
+        {
+          otsikko: '20 esinettä, joita saa käännellä käsissä',
+          tiedosto: 'EC II schematic male figurine of the Chalandriani variety by the Goulandris Hunter-Warrior Sculptor from Spedos - Athens MCA NG 308 - 01.jpg',
+          teksti: 'Ateenan Kykladisen taiteen museo on tehnyt 20 esineestään '
+            + 'kolmiulotteiset mallit. Niitä voi kääntää, kallistaa ja katsoa '
+            + 'takaapäin — sitä museosalissa ei saa tehdä. Joukossa on '
+            + 'kykladisia marmori-ihmisiä, punakuvioinen vesiruukku ja '
+            + 'metsästäjä-soturi olkanauhoineen. Vanhimmat ovat noin 4500 '
+            + 'vuotta vanhoja, mutta niin pelkistettyjä, että 1900-luvun '
+            + 'taiteilijat matkivat niitä. Koko kokoelmassa on 3000 esinettä.',
+          selite: 'Kykladinen marmoripatsas lähikuvassa: pää ja ylävartalo, kädet '
+            + 'vatsan päällä ja rinnan yli kulkeva viiltokoristeltu '
+            + 'olkanauha. Kasvoista on veistetty vain nenä.',
+          lahde: 'ArchaiOptix, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://cycladic.gr/en/experience-category/objects360-en/',
+          linkkiNimi: 'Museum of Cycladic Art — Objects 360°',
+        },
+        {
+          otsikko: 'Platonin herätyskello ja Arkhytaan lentävä kyyhky',
+          tiedosto: 'Antikythera Mechanism - National Archaeological Museum, Athens by Joy of Museum.jpg',
+          teksti: 'Kotsanaksen museo rakentaa toimivia kopioita antiikin '
+            + 'kreikkalaisista koneista, ja jokaisella on verkossa oma '
+            + 'sivunsa: yli 90 keksintöä yli 30 aihepiirissä. Sieltä löytyvät '
+            + 'Platonin vesikäyttöinen herätyskello, Arkhytaan lentävä '
+            + 'puukyyhky, Filonin automaattinen palvelija, Aineiaan '
+            + 'vesilennätin ja Antikytheran laskumekanismi. Teksti kertoo, '
+            + 'miten laite toimi ja mikä antiikin kirjoittaja siitä kertoi. '
+            + 'Robottiosuus alkaa Talosista, Kreetan pronssijättiläisestä.',
+          selite: 'Antikytheran mekanismin vihertäviä pronssinpaloja vitriinissä. '
+            + 'Keskimmäisessä palassa erottuu iso hammasratas ja sen '
+            + 'ympärillä pienempiä rattaita.',
+          lahde: 'Joyofmuseums, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://kotsanas.com/exhibits/',
+          linkkiNimi: 'Kotsanas Museum — antiikin keksinnöt',
+        },
+        {
+          otsikko: '1 085 547 kohdetta yhdestä hakukentästä',
+          tiedosto: 'Karaghiozis1.JPG',
+          teksti: 'SearchCulture.gr kokoaa kreikkalaisten museoiden, arkistojen '
+            + 'ja kirjastojen digitoinnit samaan hakuun: 1 085 547 kohdetta '
+            + '163 kokoelmasta. Haun voi rajata lisenssin mukaan, jolloin '
+            + 'jäljelle jäävät vain vapaasti käytettävät kuvat, tai '
+            + 'tiedostotyypin mukaan — 981 kohdetta on pyöriteltäviä '
+            + '3D-malleja. Tuloksia voi katsoa myös kartalta. Mukana on 450 '
+            + 'varjoteatterihahmoa Spatharisin museosta ja 31 248 '
+            + 'postimerkkiä ja postiesinettä.',
+          selite: 'Puinen Karagiozis-hahmo talon oven vieressä Ateenassa: '
+            + 'varjoteatterin kujeilija paljain jaloin, iso nenä ja paikattu '
+            + 'takki.',
+          lahde: 'Aeleftherios, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://www.searchculture.gr/aggregator/portal/?language=en_US',
+          linkkiNimi: 'SearchCulture.gr — koko Kreikka yhdessä haussa',
+        },
+        {
+          otsikko: 'Knossoksen kaivajien muistikirjat, 747 osumaa',
+          tiedosto: 'Knossos Throne-room 20230604 110755.jpg',
+          teksti: 'Britannian Ateenan-instituutti on kaivanut Kreikassa '
+            + '1880-luvulta asti, ja sen arkisto on nyt verkossa: 36 048 '
+            + 'kuvallista kohdetta. Mukana on Knossoksen tutkimuskeskuksen '
+            + 'aineistoa, Mykenen kaivauspöytäkirjoja, vanhoja '
+            + 'lasinegatiiveja, karttoja, ilmakuvia sekä kaivajien omia '
+            + 'kirjeitä ja muistikirjoja. Hakusanalla knossos tulee 747 '
+            + 'kuvallista osumaa. Tuloksia voi selata myös kartalta. '
+            + 'Kirjautumista ei tarvita.',
+          selite: 'Knossoksen valtaistuinsalin seinämaalaus, joka entistettiin '
+            + '1900-luvun alussa: makaava aarnikotka punaisella pohjalla ja '
+            + 'valkoisia ruokokasveja ympärillä.',
+          lahde: 'Rigorius, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://digital.bsa.ac.uk/',
+          linkkiNimi: 'BSA Digital Collections — hae kaivausarkistosta',
+        },
+        {
+          otsikko: 'Kaikki viime vuorokauden järistykset kartalla',
+          tiedosto: 'Raised beach western Crete.jpg',
+          teksti: 'Kreikassa maa tärisee lähes päivittäin, ja Ateenan '
+            + 'observatorion geodynaaminen instituutti seuraa sitä ympäri '
+            + 'vuorokauden. Etusivulla on kartta, joka näyttää viimeisen 24 '
+            + 'tunnin järistykset, ja jokaisesta kerrotaan kellonaika, '
+            + 'magnitudi ja syvyys kilometreinä. Näkymän voi vaihtaa 48 '
+            + 'tuntiin tai viikkoon. Laitos perustettiin 1893, ensimmäinen '
+            + 'seismografi tuli Ateenaan 1897, ja vuonna 1900 asemia oli '
+            + 'viisi.',
+          selite: 'Länsi-Kreetan rannikkoa Paleochoran lähellä: kallioseinämän '
+            + 'meriluolat ja aallon syömä lovi ovat nyt noin yhdeksän metriä '
+            + 'merenpinnan yläpuolella, sillä vuoden 365 maanjäristys nosti '
+            + 'rantaa.',
+          lahde: 'Mikenorton, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://www.gein.noa.gr/en/',
+          linkkiNimi: 'Geodynamic Institute — järistyskartta reaaliajassa',
+        },
+      ],
+    },
+  ],
 };
