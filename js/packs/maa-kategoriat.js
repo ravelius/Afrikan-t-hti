@@ -4548,4 +4548,85 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  FRA: [
+    {
+      id: 'historia',
+      nimi: 'Historia',
+      johdanto: 'Ranskan historia on jäänyt talteen poikkeuksellisen konkreettisina '
+        + 'esineinä: luolan seinään, seitsemänkymmenmetriseen kirjontaan, '
+        + 'linnoituksen raunioihin ja saliin, joka rakennettiin pelkästä '
+        + 'valosta.',
+      nostot: [
+        {
+          otsikko: 'Neljä poikaa ja koira löysivät luolan',
+          aika: 'n. 17 000 vuotta sitten',
+          tiedosto: 'Lascaux painting.jpg',
+          teksti: 'Syyskuussa 1940 neljä teini-ikäistä poikaa etsi koiraansa '
+            + 'Dordognen metsässä ja putosi kuoppaan. Alta paljastui '
+            + 'luolasto, jonka seinät olivat täynnä maalattuja hevosia, '
+            + 'hirviä ja alkuhärkiä. Maalaukset ovat noin 17 000 vuotta '
+            + 'vanhoja. Luola avattiin yleisölle sodan jälkeen, mutta '
+            + 'kävijöiden hengitys alkoi tuhota värejä, ja se suljettiin '
+            + 'vuonna 1963. Viereen rakennettiin tarkka jäljennös, jossa '
+            + 'käydään yhä.',
+          selite: 'Luolan seinä, jolle on maalattu suuria alkuhärkiä mustin '
+            + 'ääriviivoin ja niiden lomaan pienempiä hevosia ruskean ja '
+            + 'keltaisen sävyin.',
+          lahde: 'Wikimedia Commons (public domain)',
+          wiki: 'Lascaux’n luola',
+        },
+        {
+          otsikko: 'Seitsemänkymmentä metriä sarjakuvaa pellavalle',
+          aika: '1070-luku',
+          tiedosto: 'Bayeux Tapestry 32-33 comet Halley Harold.jpg',
+          teksti: 'Bayeux\'n seinävaate kertoo, miten Normandian herttua Vilhelm '
+            + 'valloitti Englannin vuonna 1066. Se ei ole kudottu vaan '
+            + 'kirjottu villalangalla pellavakankaalle, ja sitä on lähes '
+            + 'seitsemänkymmentä metriä. Kuvat etenevät kohtaus kohtaukselta '
+            + 'kuin sarjakuva, ja niiden yllä kulkee latinankielinen '
+            + 'tekstirivi. Yhdessä kohtauksessa ihmiset osoittavat taivaalle: '
+            + 'siellä näkyy Halleyn komeetta, joka todella ohitti maan samana '
+            + 'vuonna.',
+          selite: 'Kirjottu kohtaus, jossa miehet osoittavat sormellaan taivaalla '
+            + 'näkyvää komeettaa; vieressä istuu kruunattu Harold ja '
+            + 'yläpuolella lukee ISTI MIRANT STELLA.',
+          lahde: 'Myrabella, Wikimedia Commons (public domain)',
+          wiki: 'Bayeux’n seinävaate',
+        },
+        {
+          otsikko: 'Linnoituksessa oli vain seitsemän vankia',
+          aika: '1789',
+          tiedosto: 'Jean-Baptiste Lallemand - La prise de la Bastille, le 14 juillet 1789 - P1718 - Musée Carnavalet.jpg',
+          teksti: 'Bastilji oli keskiaikainen linnoitus, jota kuningas käytti '
+            + 'vankilana. Kun väkijoukko valtasi sen 14. heinäkuuta 1789, '
+            + 'sisällä oli seitsemän vankia — ei yhtään kuuluisaa. Merkitys '
+            + 'ei ollutkaan vangeissa vaan siinä, mitä rakennus edusti: '
+            + 'kuningas saattoi sulkea kenet tahansa sinne ilman '
+            + 'oikeudenkäyntiä. Linnoitus purettiin heti, ja päivästä tuli '
+            + 'Ranskan kansallispäivä, jota vietetään yhä joka vuosi.',
+          selite: 'Maalaus valtauspäivästä: savua nousee linnoituksen muurien '
+            + 'takaa, etualalla ihmisiä tykkien kanssa ja kaatuneita maassa.',
+          lahde: 'Jean-Baptiste Lallemand, Wikimedia Commons (public domain)',
+          wiki: 'Bastiljin valtaus',
+        },
+        {
+          otsikko: 'Sali, joka rakennettiin valosta',
+          aika: '1678–1684',
+          tiedosto: 'Chateau Versailles Galerie des Glaces.jpg',
+          teksti: 'Versaillesin peilisali on 73 metriä pitkä käytävä, jonka '
+            + 'toisella seinällä on ikkunat puutarhaan ja toisella yhtä monta '
+            + 'peiliä niitä vastapäätä. Peilejä on 357. Se oli 1600-luvulla '
+            + 'tavaton ylellisyys: peili oli kallis ja Venetsia varjeli '
+            + 'valmistustaitoaan tarkasti. Kun kynttilät sytytettiin illalla, '
+            + 'valo heijastui edestakaisin ja sali näytti kaksi kertaa '
+            + 'suuremmalta. Nykyään sinne pääsee tavallisella pääsylipulla.',
+          selite: 'Pitkä juhlasali, jossa kultaiset kynttiläkruunut riippuvat '
+            + 'holvin alla ja aurinko piirtää ikkunoista ruudukon '
+            + 'parkettilattiaan.',
+          lahde: 'Myrabella, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Peilisali',
+        },
+      ],
+    },
+  ],
 };
