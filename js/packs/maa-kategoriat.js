@@ -6230,4 +6230,534 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  TUR: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Turkin kuuluisimpien museoiden sivut kertovat usein vain '
+        + 'aukioloajoista. Nämä kymmenen päästävät oikeasti sisään: '
+        + 'zoomattavia kokoelmia, 360 asteen kierroksia kaivauksilla ja '
+        + 'satojatuhansia kuvia.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'Digital SSM — Sakıp Sabancı -museon kokoelmat verkossa',
+              tiedosto: 'Hilye-i serif 2.jpg',
+              teksti: 'Istanbulilaisen museon kahdeksan kokoelmaa on avattu '
+                + 'verkkoon. Pelkästään kirjataiteen ja kalligrafian '
+                + 'osastossa on yli 600 teosta, ja jokaista voi suurentaa '
+                + 'ruudulla siveltimenvedon tarkkuudelle.',
+              selite: 'Sinivalkoinen kukkareunus kehystää kultapohjaista pyöreää '
+                + 'kenttää, jonka päälle on kirjoitettu tiheää arabialaista '
+                + 'kaunokirjoitusta.',
+              lahde: 'Hafız Osman, Wikimedia Commons (public domain)',
+              linkki: 'https://digitalssm.org/',
+            },
+            {
+              nimi: 'Pera-museo — orientalistiset maalaukset teos kerrallaan',
+              tiedosto: 'Osman Hamdi Bey - The Tortoise Trainer - Google Art Project.jpg',
+              teksti: 'Peran kokoelmasta löytyy Osman Hamdi Beyn Kilpikonnien '
+                + 'kesyttäjä vuodelta 1906. Jokainen maalaus aukeaa omalle '
+                + 'sivulleen, ja osa museon esineistä on skannattu myös '
+                + 'kolmiulotteisiksi.',
+              selite: 'Punaiseen kaapuun pukeutunut mies seisoo kumartuneena '
+                + 'sinisen kaakeliseinän edessä, ja hänen jalkojensa juuressa '
+                + 'ryömii viisi kilpikonnaa.',
+              lahde: 'Osman Hamdi Bey, Wikimedia Commons (public domain)',
+              linkki: 'https://www.peramuseum.org/collection/orientalist-painting-collection/15',
+            },
+            {
+              nimi: 'Istanbul Modern — nykytaidetta ja valokuvia',
+              teksti: 'Istanbulin modernin taiteen museolla on kaksi '
+                + 'verkkokokoelmaa: taidekokoelma ja erillinen '
+                + 'valokuvakokoelma. Teokset selataan kuvaruudukosta, ja '
+                + 'jokaisesta aukeaa oma sivunsa.',
+              linkki: 'https://www.istanbulmodern.org/en/collection',
+            },
+          ],
+        },
+        {
+          otsikko: 'Historia ja muinaisuus',
+          kohteet: [
+            {
+              nimi: 'Sanal Müze — Turkin muinaiskaupungit 360 asteen kierroksina',
+              tiedosto: 'Gaziantep Zeugma Museum Gypsy mosaic 7066.jpg',
+              teksti: 'Kulttuuriministeriön sivulta avautuu yli kuusikymmentä '
+                + 'virtuaalikierrosta: Göbeklitepen kaivaus, Troija, Efeso, '
+                + 'Hattusa ja Zeugman mosaiikkimuseo. Näkymää pyöritetään '
+                + 'hiirellä.',
+              selite: 'Mosaiikki tytön kasvoista: pienistä värikivistä ladotut '
+                + 'tummat silmät katsovat sivulle ja hiukset kiertyvät '
+                + 'poskille.',
+              lahde: 'Dosseman, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://sanalmuze.gov.tr/',
+            },
+            {
+              nimi: 'Çatalhöyükin verkkonäyttely — 9 000 vuotta vanha kaupunki',
+              tiedosto: 'Seated Woman of Çatalhöyük on black background.jpg',
+              teksti: 'Koç-yliopiston näyttely kertoo kaupungista, jonka taloihin '
+                + 'mentiin sisään katon kautta. Mukana on aikajana, '
+                + 'kaivauspäiväkirjoja ja arkeologien vastauksia kysymyksiin.',
+              selite: 'Savesta muotoiltu istuva nainen mustaa taustaa vasten; '
+                + 'hänen käsivartensa lepäävät kahden kissaeläimen pään '
+                + 'päällä.',
+              lahde: 'Nevit Dilmen, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://curiouscaseofcatalhoyuk.ku.edu.tr/',
+            },
+            {
+              nimi: 'Byzantium 1200 — Konstantinopoli rakennettuna uudelleen',
+              teksti: 'Hanke on mallintanut tietokoneella kymmeniä Istanbulin '
+                + 'bysanttilaisia rakennuksia sellaisina kuin ne olivat '
+                + 'vuonna 1200. Hippodromista ja kadonneista palatseista on '
+                + 'kuvia joka suunnasta.',
+              linkki: 'https://www.byzantium1200.com/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'SALT Research — istanbulilainen arkisto auki kaikille',
+              teksti: 'SALT on skannannut arkistonsa vapaasti selattavaksi. '
+                + 'Pelkästään arkkitehtuurikokoelmassa on yli 9 000 '
+                + 'piirustusta ja 4 000 valokuvaa, ja aineistoa voi rajata '
+                + 'tyypin mukaan.',
+              linkki: 'https://archives.saltresearch.org/',
+            },
+            {
+              nimi: 'Koç-yliopiston digitaaliset kokoelmat — 90 000 kohdetta',
+              teksti: 'Vanhoja valokuvia, karttoja ja käsikirjoituksia yhdessä '
+                + 'haussa. Sivulla on myös englanninkielisiä '
+                + 'verkkonäyttelyitä hetiiteistä ja Hagia Sofian mosaiikeista '
+                + 'ennen ja jälkeen korjauksen.',
+              linkki: 'https://librarydigitalcollections.ku.edu.tr/en/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja retket',
+          kohteet: [
+            {
+              nimi: 'Trakus — Turkin linnut valokuvina',
+              tiedosto: 'Krüper\'s Nuthatch, Köprülü Canyon NP, Antalya, Turkey 1.jpg',
+              teksti: 'Turkkilaisten lintuharrastajien yhteinen kuvapankki: 513 '
+                + 'lajia ja yli 114 000 valokuvaa. Lajigalleriasta näkee, '
+                + 'miltä kukin lintu näyttää ja missä päin maata se on '
+                + 'kuvattu.',
+              selite: 'Pieni nakkeli istuu vinolla oksalla: selkä on siniharmaa, '
+                + 'rinta ruskeanpunainen ja päälaella kulkee musta juova.',
+              lahde: 'borhammere, Wikimedia Commons (CC BY 4.0)',
+              linkki: 'https://www.trakus.org/',
+            },
+            {
+              nimi: 'TrakEl — Turkin perhoset lajigalleriana',
+              teksti: 'Trakusin sisarsivusto tekee saman perhosille. Uusia '
+                + 'havaintoja kirjataan viikoittain eri puolilta Turkkia, ja '
+                + 'jokaisesta lajista kertyy oma kuvagalleriansa.',
+              linkki: 'https://www.trakel.org/kelebekler/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  RUS: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Venäjän suuret museot ja kirjastot ovat vieneet kokoelmansa '
+        + 'verkkoon. Eremitaasin maalauksia voi zoomata, Kremlin kruunuja '
+        + 'katsoa läheltä ja Prokudin-Gorskin värikuvat vievät vuoteen 1910.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'Eremitaasi — Talvipalatsin teokset zoomattavina',
+              tiedosto: 'Leonardo da Vinci attributed - Madonna Litta.jpg',
+              teksti: 'Pietarin Eremitaasi on maailman suurimpia museoita. Täällä '
+                + 'sen teoksia voi suurentaa siveltimenvetoja myöten, ja '
+                + 'katunäkymä vie kävelylle palatsin salien läpi.',
+              selite: 'Maalaus nuoresta äidistä sinisessä viitassa ja punaisessa '
+                + 'puvussa: hän pitelee sylissään pientä lasta, ja taustan '
+                + 'kaari-ikkunoista näkyy vuoria.',
+              lahde: 'Leonardo da Vinci, Wikimedia Commons (public domain)',
+              linkki: 'https://artsandculture.google.com/partner/the-state-hermitage-museum',
+            },
+            {
+              nimi: 'Tretjakovin galleria — venäläinen maalaus verkossa',
+              tiedosto: 'Valentin Serov - Девочка с персиками. Портрет В.С.Мамонтовой - Google Art Project.jpg',
+              teksti: 'Moskovan Tretjakov on venäläisen taiteen päämuseo. Oma '
+                + 'Tretjakovka -palvelussa teokset avautuvat suurina kuvina, '
+                + 'ja jokaisesta kerrotaan, mitä siinä oikein tapahtuu.',
+              selite: 'Tyttö vaaleanpunaisessa puserossa istuu pöydän ääressä. '
+                + 'Valkoisella pöytäliinalla on persikoita, ja takana hohtaa '
+                + 'aurinkoinen ikkuna.',
+              lahde: 'Valentin Serov, Wikimedia Commons (public domain)',
+              linkki: 'https://my.tretyakov.ru/app/gallery/',
+            },
+            {
+              nimi: 'Virtuaalinen Venäjän museo — Pietarin taidekokoelma',
+              tiedosto: 'Aivazovsky, Ivan - The Ninth Wave.jpg',
+              teksti: 'Venäjän museon verkkokokoelmassa on ikoneja, maalauksia, '
+                + 'veistoksia ja kansantaidetta tarkkoina kuvina. Rastilla '
+                + 'voi rajata näkyviin vaikka pelkät veistokset.',
+              selite: 'Meri myrskyää auringonnousussa: taivas hehkuu oranssina, '
+                + 'vihreä aalto kohoaa ja sen juurella kourallinen ihmisiä '
+                + 'pitää kiinni maston jäännöksestä.',
+              lahde: 'Ivan Aivazovski, Wikimedia Commons (public domain)',
+              linkki: 'https://rusmuseumvrm.ru/collections/index.php',
+            },
+            {
+              nimi: 'Kremlin museot — aarrekammio esine kerrallaan',
+              tiedosto: 'Monomakh\'s Cap - by shakko 01.JPG',
+              teksti: 'Kremlin museoiden verkkoluettelossa selataan tsaarien '
+                + 'kruunuja, valtaistuimia, juhlavaunuja ja kirkkoesineitä. '
+                + 'Kokoelmat aukeavat kuvaruudukkoina, ja kuvia voi '
+                + 'suurentaa.',
+              selite: 'Kullattu, jalokivin koristeltu kruunu näyttelyvitriinissä: '
+                + 'kupolimainen huippu päättyy ristiin ja alareunaa kiertää '
+                + 'paksu tumma turkisreunus.',
+              lahde: 'Shakko, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://collectiononline.kreml.ru/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Valokuvausnäyttelyt',
+          kohteet: [
+            {
+              nimi: 'Prokudin-Gorskin värikuvat — Venäjä vuonna 1910',
+              tiedosto: 'Prokudin-Gorskii-19.jpg',
+              teksti: 'Sergei Prokudin-Gorski valokuvasi Venäjää värillisenä jo '
+                + 'yli sata vuotta sitten kolmella värisuotimella. Kongressin '
+                + 'kirjastossa on noin 1900 lasinegatiivia selattavana.',
+              selite: 'Värivalokuva vuodelta 1911: parrakas mies istuu '
+                + 'kirkkaansinisessä kukkakuvioisessa kaavussa ja valkoisessa '
+                + 'turbaanissa puisen oven edessä.',
+              lahde: 'Sergei Prokudin-Gorski, Wikimedia Commons (public domain)',
+              linkki: 'https://www.loc.gov/pictures/search/?co=prok',
+            },
+            {
+              nimi: 'Venäjän historia valokuvissa — arkisto vuodesta 1860',
+              teksti: 'Museoiden ja kotialbumien valokuvat vuosilta 1860–1999 '
+                + 'ovat samassa haussa. Kuvia selataan vuoden, kaupungin tai '
+                + 'aiheen mukaan, ja niistä voi koota oman näyttelyn.',
+              linkki: 'https://russiainphoto.ru/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'Venäjän kansalliskirjasto — virtuaalinäyttelyt',
+              teksti: 'Pietarin kansalliskirjasto on tehnyt kymmeniä '
+                + 'verkkonäyttelyitä: keskiaikaisia käsikirjoituksia, vanhoja '
+                + 'karttoja, kaiverruksia ja 1900-luvun alun värillisiä kuvia '
+                + 'kaupungista.',
+              linkki: 'https://expositions.nlr.ru/',
+            },
+            {
+              nimi: 'Elektronekrasovka — digitoitu kirjasto vuodesta 1564',
+              teksti: 'Moskovan Nekrasov-kirjaston digitoidut kirjat, '
+                + 'aikakauslehdet ja julisteet aukeavat suoraan selaimessa. '
+                + 'Vanhat kuvalehdet luetaan sivu kerrallaan kuin oikea nide.',
+              linkki: 'https://electro.nekrasovka.ru/books',
+            },
+          ],
+        },
+        {
+          otsikko: 'Tiede ja tekniikka',
+          kohteet: [
+            {
+              nimi: 'Darwin-museo — kokoelma kolmiulotteisena',
+              teksti: 'Moskovan Darwin-museo on julkaissut noin 300 esinettä '
+                + 'kolmiulotteisina malleina. Kalloa, lintua tai kotiloa voi '
+                + 'pyörittää hiirellä ja katsoa sitä joka puolelta.',
+              linkki: 'https://sketchfab.com/darwinmuseum.ru',
+            },
+            {
+              nimi: 'Digitaalinen Kunstkamera — 1700-luvun museo uudelleen',
+              teksti: 'Pietari Suuren perustama Kunstkamera oli Venäjän '
+                + 'ensimmäinen museo. Sen 1700-luvun salit on rakennettu '
+                + 'verkkoon kolmiulotteisiksi, ja niissä kuljetaan huoneesta '
+                + 'toiseen.',
+              linkki: 'https://digital.kunstkamera.ru/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  UKR: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Ukrainan museot, arkistot ja kansallispuistot ovat vieneet '
+        + 'aarteensa verkkoon. Skyyttalainen kulta, tuhat vuotta vanhat '
+        + 'mosaiikit ja kukkivat petrykivka-maalaukset aukeavat yhdellä '
+        + 'klikkauksella.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'museum-digital Ukraina — 54 museon esineet samassa haussa',
+              teksti: 'Yli 24 000 esinettä ukrainalaisista museoista on koottu '
+                + 'yhteen hakuun: kansanpukuja, kolikoita ja kaivauslöytöjä. '
+                + 'Kuvaseinä ja aikajana näyttävät esineitä myös ilman '
+                + 'hakusanaa.',
+              linkki: 'https://ua.museum-digital.org/',
+            },
+            {
+              nimi: 'Ivan Hončarin museo — kansantaide kuva kuvalta',
+              tiedosto: 'Ukrainian Pysanka with Birds.jpg',
+              teksti: 'Kiovan kansankulttuurin museo on avannut kokoelmansa '
+                + 'verkkoon: pyhäinkuvia, pukuja, keramiikkaa, soittimia, '
+                + 'leluja ja sata pääsiäismunaa eli pysankaa, jokainen omana '
+                + 'kuvanaan.',
+              selite: 'Punainen pääsiäismuna, johon on maalattu valkoisin ja '
+                + 'keltaisin viivoin kolme lintua, havunoksia ja '
+                + 'aurinkokuvioita.',
+              lahde: 'Lubap, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://honchar.org.ua/collections',
+            },
+            {
+              nimi: 'Petrykivka-maalaus — Unescon listan kukkakuviot',
+              tiedosto: 'Петриківка.jpg',
+              teksti: 'Digitaalisessa tietosanakirjassa on 139 teosta ja 57 '
+                + 'mestarin elämäkerrat. Samalla sivulla voi tehdä itselleen '
+                + 'taustakuvan petrykivkan kukista puhelimeen tai '
+                + 'tietokoneeseen.',
+              selite: 'Maalaus vaalealla pohjalla: punaisia kukkia ja '
+                + 'marjatertuja tummanvihreiden lehtien seassa, kaikki tehty '
+                + 'ohuin siveltimenvedoin.',
+              lahde: 'Олена Щербань, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://petrykivka.org/',
+            },
+            {
+              nimi: 'Ukrainan kansallinen taidemuseo — teokset zoomattavina',
+              teksti: 'Kiovan vanhimman museon kokoelma on Google Arts & '
+                + 'Culturessa. Keskiaikaisia ikoneita ja ukrainalaisia '
+                + 'maalauksia voi zoomata niin lähelle, että siveltimenjäljet '
+                + 'erottuvat.',
+              linkki: 'https://artsandculture.google.com/partner/national-art-museum-of-ukraine',
+            },
+          ],
+        },
+        {
+          otsikko: 'Historia ja muinaisuus',
+          kohteet: [
+            {
+              nimi: 'Pyhän Sofian katedraali — virtuaalikierros ja tietovisa',
+              tiedosto: 'Oranta-Kyiv.jpg',
+              teksti: 'Kierros vie katedraaliin, kellotorniin ja koko vanhaan '
+                + 'luostarialueeseen. Seinillä hehkuu tuhatvuotinen '
+                + 'mosaiikki, ja tiloihin on piilotettu kaksitoista kysymystä '
+                + 'etsittäväksi.',
+              selite: 'Mosaiikki kultaisella pohjalla: sinipukuinen nainen seisoo '
+                + 'kädet ylös kohotettuina, pään ympärillä kultainen kehä.',
+              lahde: 'Wikimedia Commons (public domain)',
+              linkki: 'https://sofiia-kyivska.emuseum.ua/',
+            },
+            {
+              nimi: 'Pektoraali — skyyttalainen kulta-aarre verkkonäyttelynä',
+              tiedosto: 'Scythian gold pectoral Tovsta Mohyla (detail 1).jpg',
+              teksti: 'Ukrainan historian museon verkkonäyttely kertoo '
+                + 'kultaisesta rintakorusta, joka löytyi Tovsta Mohylan '
+                + 'hautakummusta vuonna 1971. Mukana on videokierroksia ja '
+                + 'kaivauspäiväkirjan sivuja.',
+              selite: 'Lähikuva kultaisesta korusta: kaksi partaista miestä istuu '
+                + 'vastakkain ja ompelee yhdessä lampaannahkapaitaa.',
+              lahde: 'Curryfauvel, Wikimedia Commons (CC0)',
+              linkki: 'https://nmiu.org/events/online/1',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'Urban Media Archive — 21 000 valokuvaa kaupungeista',
+              teksti: 'Lvivin kaupunkihistorian keskuksen arkistossa on yli 21 '
+                + '000 valokuvaa, 7 000 filmiä ja videota, vanhoja karttoja '
+                + 'ja äänitettyjä muistoja. Sivusto toimii myös englanniksi.',
+              linkki: 'https://uma.lvivcenter.org/en',
+            },
+            {
+              nimi: 'Ukrainan taidekirjasto — kirjat sivu kerrallaan',
+              teksti: 'Ilmainen kirjasto on täynnä skannattuja taidekirjoja ja '
+                + 'vanhoja lehtiä: kansantaidetta, avantgardea, keramiikkaa '
+                + 'ja oma hyllynsä kuvitettuja lastenkirjoja ja satuja.',
+              linkki: 'https://uartlib.org/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja retket',
+          kohteet: [
+            {
+              nimi: 'Haikaran pesä — Hrytsko-kattohaikaran oma kanava',
+              tiedosto: 'Family of White storks (35609152356).jpg',
+              teksti: 'Pyriatynin kansallispuisto pitää kameraa kattohaikaran '
+                + 'pesällä Leljakyn kylässä. Kanavalle tulee uusia pätkiä '
+                + 'lähes joka päivä: ruokintaa, poikasia ja ukkosen katselua.',
+              selite: 'Kolme valkoista kattohaikaraa seisoo risupesän päällä '
+                + 'kirkkaan sinistä taivasta vasten.',
+              lahde: 'Oleg Dubyna, Wikimedia Commons (CC BY-SA 2.0)',
+              linkki: 'https://www.youtube.com/channel/UCaWBDQAIfeCRE7CHohy8g1w',
+            },
+            {
+              nimi: 'Vernadskyn asema — 360 asteen kierros Etelämantereella',
+              tiedosto: 'Vernadsky Station Winter Island Antarctica Gentoo Penguin (33461204498).jpg',
+              teksti: 'Ukrainan oma napa-asema on kaukana mutta auki selaimessa. '
+                + 'Panoraamakierros vie aseman sisätiloihin ja viereiseen '
+                + 'vanhaan Wordie Houseen, jonka kallioilla kävelee '
+                + 'pingviinejä.',
+              selite: 'Esikkopingviini kävelee märällä kalliolla meren rannassa '
+                + 'siivet hieman levällään.',
+              lahde: 'Gary Bembridge, Wikimedia Commons (CC BY 2.0)',
+              linkki: 'https://uac.gov.ua/vernadsky-station/station-3d/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  ROU: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Romaniassa aarteet ovat verkossa yllättävän hyvin esillä: '
+        + 'kansallinen aarreluettelo, kylämuseoiden 3D-kierrokset ja '
+        + 'lasilevykuvien arkisto. Karpaateilla riittää katsottavaa myös '
+        + 'suorana.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'Romanian kansallinen taidemuseo — salit 360 asteen kierroksina',
+              tiedosto: 'Nicolae Grigorescu - Taranca voioasa.jpg',
+              teksti: 'Bukarestin entisessä kuninkaanlinnassa toimivan '
+                + 'taidemuseon saleja kierretään verkossa 360 asteen kuvina. '
+                + 'Brâncuşin salista on oma kierroksensa: Uni, Danaïde ja '
+                + 'Suudelmanportin pienoismalli.',
+              selite: 'Maalaus hymyilevästä nuoresta naisesta tummaa taustaa '
+                + 'vasten: kirkkaan keltainen huivi pään ympärillä, valkoinen '
+                + 'paita ja raidallinen liivi.',
+              lahde: 'Nicolae Grigorescu, Wikimedia Commons (public domain)',
+              linkki: 'https://www.mnar.arts.ro/en/explore/397-virtual-tours',
+            },
+            {
+              nimi: 'Romanian talonpoikaismuseo — esineet zoomattavina',
+              tiedosto: 'Bukovina eggs.JPG',
+              teksti: 'Bukarestin talonpoikaismuseon esineitä voi katsoa läheltä: '
+                + 'kirjailtuja paitoja, lasille maalattuja ikoneita, '
+                + 'kolikkokoristeisia asuja ja koristeltuja pääsiäismunia.',
+              selite: 'Kasa käsin koristeltuja pääsiäismunia: punaisia, ruskeita '
+                + 'ja kellertäviä kuoria, joihin on piirretty ohuita '
+                + 'valkoisia kuvioita.',
+              lahde: 'TwoWings, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://artsandculture.google.com/partner/national-museum-of-the-romanian-peasant',
+            },
+            {
+              nimi: 'Muzee de la sat — kylämuseot 3D-kierroksina',
+              teksti: 'Romanian maaseudun pikkumuseoista on tehty 119 '
+                + 'kolmiulotteista kierrosta. Kartalta valitaan maakunta, ja '
+                + 'sitten museon läpi kuljetaan hiirellä huone kerrallaan.',
+              linkki: 'https://muzeedelasat.ro/?lang=en',
+            },
+          ],
+        },
+        {
+          otsikko: 'Historia ja muinaisuus',
+          kohteet: [
+            {
+              nimi: 'Kansallinen historiamuseo — virtuaalinen 3D-alue',
+              tiedosto: 'Helmet of Coțofenești 01.jpg',
+              teksti: 'Museon virtuaalialueella on kymmeniä 3D-kierroksia '
+                + 'näyttelyihin: daakialaisnäyttely, Traianuksen pylvään '
+                + 'kipsikopio ja esittelyt aarteista, kuten Coţofeneştin '
+                + 'kultakypärästä.',
+              selite: 'Kullasta taottu kypärä vitriinissä: otsassa kaksi suurta '
+                + 'silmää kulmakarvoineen, ja kupu on täynnä pyöreitä '
+                + 'nystyröitä.',
+              lahde: 'Dorieo, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.mnir.ro/zona-3d/',
+            },
+            {
+              nimi: 'Romanian aarreluettelo — 114 000 esinettä kuvineen',
+              teksti: 'Kansallisaarteeksi luokitellut esineet ovat yhdessä '
+                + 'tietokannassa valokuvineen: kultakoruja, ikoneita, '
+                + 'kansanpukuja, aseita ja vanhoja kirjoja. Selaus alkaa '
+                + 'suoraan kuvalistasta.',
+              linkki: 'https://clasate.cimec.ro/lista.asp',
+            },
+            {
+              nimi: 'Peleşin linna — kokoelmat osastoittain',
+              teksti: 'Sinaian vuoristolinnan kokoelmat on jaettu verkossa '
+                + 'osastoihin: aseet, kellot, lasimaalaukset, soittimet, '
+                + 'hopeatyöt ja huonekalut. Jokaisesta avautuu kuvasarja '
+                + 'esineitä.',
+              linkki: 'https://peles.ro/ro/colectii/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Valokuvausnäyttelyt',
+          kohteet: [
+            {
+              nimi: 'Costică Acsinten arkisto — 9 000 lasilevykuvaa',
+              tiedosto: 'Costică Acsinte - Cuplu.jpg',
+              teksti: 'Sloboziassa 1920–1940-luvuilla kuvannut studiovalokuvaaja '
+                + 'jätti tuhansia lasinegatiiveja. Skannauksissa näkyvät myös '
+                + 'levyjen naarmut ja lohkeamat.',
+              selite: 'Mustavalkoinen studiokuva nuoresta parista kukkakorin '
+                + 'kummallakin puolella; lasilevyn reunat ovat lohjenneet '
+                + 'mustiksi laikuiksi.',
+              lahde: 'Costică Acsinte, Wikimedia Commons (public domain)',
+              linkki: 'https://www.flickr.com/photos/costicaacsinte/',
+            },
+            {
+              nimi: 'Galeria Portretelor — muotokuvat museon kokoelmista',
+              teksti: 'Kansallisen historiamuseon muotokuva-arkisto verkossa: '
+                + 'valokuvia, postikortteja ja litografioita ruhtinaista, '
+                + 'näyttelijöistä ja tiedemiehistä — ja tavallisista '
+                + 'perheistä.',
+              linkki: 'https://galeriaportretelor.ro/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja retket',
+          kohteet: [
+            {
+              nimi: 'Libearty-karhuturvakoti — suora kamera metsään',
+              tiedosto: 'Bear climbing a tree in Libearty Bear Sanctuary 32147519364 cropped.jpg',
+              teksti: 'Zărneştin turvakodissa elää yli sata häkeistä pelastettua '
+                + 'ruskeakarhua 69 hehtaarin metsässä. Kamera osoittaa '
+                + 'lampeen, jolla karhut käyvät juomassa ja kylpemässä.',
+              selite: 'Ruskeakarhu kiipeää puunrunkoa ylös takajaloillaan '
+                + 'roikkuen, ympärillä aurinkoista vihreää lehvästöä.',
+              lahde: 'Nicolas Vollmer, Wikimedia Commons (CC BY 2.0)',
+              linkki: 'https://camstreamer.com/live/stream/8802-libearty-bear-sanctuary-zarnesti',
+            },
+            {
+              nimi: 'Wildlife Romania — pesäkamerat haukalla ja haikaroilla',
+              teksti: 'Neljä suoraa kameraa Romanian luontoon: aavikkohaukan '
+                + 'pesä, kaksi kattohaikaran pesää ja lintujen '
+                + 'ruokintapaikka. Aavikkohaukka on maan harvinaisimpia '
+                + 'pesiviä lintuja.',
+              linkki: 'https://www.wildliferomania.com/live/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };

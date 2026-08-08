@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 379, teksti: 'Menovinkit Turkille, Venäjälle, Ukrainalle ja Romanialle' },
   { v: 378, teksti: 'Prahalle oma lehti: Orloj, Golem ja Smetanan joki' },
   { v: 377, teksti: 'Madridille ja Tukholmalle nähtävyysjutut kuvineen' },
   { v: 376, teksti: 'Kairolle ja Venetsialle nähtävyysjutut kuvineen' },
