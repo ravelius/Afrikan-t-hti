@@ -103,6 +103,9 @@ tehtävää ja kuluttamaan turhaan. Säännöt kaikille:
    `(vNNN)` ja PR-numero.
 2. `git fetch origin main` JUURI ennen versionumeron valintaa —
    sessiot julkaisevat rinnakkain ja numero on voinut kasvaa.
+   Jos toinen PR ehti silti ottaa saman numeron ennen mergeäsi,
+   nosta omasi seuraavaan vapaaseen ja päivitä CACHE, APP_VERSION
+   ja muutokset.js-rivi ennen mergeä (malli: Sonnetin v351→v352).
 3. Kaava: sw.js `CACHE` + js/main.js `APP_VERSION` samaan versioon;
    rivi js/muutokset.js:ään (≤60 merkkiä, ei loppupistettä, uusin
    ylin); `node --test tests/*.test.mjs`;

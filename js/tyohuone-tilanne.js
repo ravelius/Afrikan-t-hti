@@ -28,31 +28,30 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Menovinkit-sivut viidelle maalle (Egypti, Italia, '
-        + 'Espanja, Ruotsi, Saksa) — viisi agenttia rinnakkain, '
-        + 'tarkistusskripti päällä. Valmiina: v350 lehtijako '
+      tehtava: 'Radio- ja tv-napit molempiin lehteihin. Valmiina: '
+        + 'v353 menovinkit kaikille viidelle maalle, v350 lehtijako '
         + '(kaupunki- ja maalehti erikseen), Maiden tiedot -varuste, '
         + 'Lontoon nähtävyysjutut.',
-      seuraavaksi: 'Radio- ja tv-napit molempiin lehtiin, sitten '
-        + 'loput Euroopan maalehdet.',
+      seuraavaksi: 'Loput Euroopan maalehdet.',
     },
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
       tila: 'tyossa',
-      tehtava: 'Italian korkokartta, Venetsian kaupunkikartta ja '
-        + 'Italian intro (ensimmäinen maa kolmesta).',
-      seuraavaksi: 'Espanja/Madrid, sitten Ruotsi/Tukholma; sen '
-        + 'jälkeen tv-tallennekandidaattien haku.',
+      tehtava: 'Espanjan korkokartta ja Madridin kaupunkikartta. '
+        + 'Valmiina: v351 Italia (korkokartta, Venetsian '
+        + 'kohdekartta, intro).',
+      seuraavaksi: 'Ruotsi/Tukholma; sen jälkeen '
+        + 'tv-tallennekandidaattien haku.',
     },
     {
       tekija: 'Sonnet 1',
       rooli: 'QA + työhuone',
       tila: 'tyossa',
-      tehtava: 'Työhuoneen Kehitys-välilehti: iso kaari, '
-        + 'ääninäytteet ja Euroopan tekstit kuunneltavina. Valmiina: '
-        + 'koko aineiston QA (331 ääntä, 1800 kuvaa, peili — nolla '
-        + 'oikeaa virhettä).',
+      tehtava: 'Työhuoneen kokonaisuudistus: 5 välilehteä (Tilanne, '
+        + 'Testaa, Kehitys, Kaupungit, Studio). Valmiina: v352 '
+        + 'Kehitys-välilehti kuuntelupaketteineen ja koko aineiston '
+        + 'QA (nolla oikeaa virhettä).',
       seuraavaksi: 'Iso loppu-QA koko Euroopalle ennen omistajan '
         + 'testiä.',
     },
@@ -81,6 +80,24 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Menovinkit kaikilla lehtimailla (v353)',
+    ohje: 'Avaa minkä tahansa lehtimaan kaupunkilehti: viimeinen '
+      + 'aihesivu on nyt Menovinkit myös Berliinissä, Pariisissa, '
+      + 'Roomassa ja Kairossa — ei vain Lontoossa.',
+  },
+  {
+    otsikko: 'Kehitys-välilehti työhuoneessa (v352)',
+    ohje: 'Työhuone → Kehitys: kuuntele kertoja- ja hahmoääninäytteet '
+      + '(valinta odottaa sinua), lue ison kaaren essee ja '
+      + 'mannerkokeilut. Sateenvarjomies-ehdotus on Iso kaari '
+      + '-osiossa.',
+  },
+  {
+    otsikko: 'Italian kartat ja intro (v351)',
+    ohje: 'Matkusta Italiaan: korkokartta, Venetsian kohdekartta ja '
+      + 'uusi maaintro. Vertaa jälkeä Egyptin karttoihin.',
+  },
   {
     otsikko: 'Lehtijako ja kohtaaminen lopussa (v350)',
     ohje: 'Avaa Lontoo: kaupunkilehti on nyt 5 sivua ja maalehti '
