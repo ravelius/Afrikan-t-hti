@@ -40,11 +40,13 @@ export const TILANNE = {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
       tila: 'tyossa',
-      tehtava: 'Espanjan tv-nappi RTVE-tallenteilla Saksan kahden '
-        + 'valinnan mallilla (sää + Telediario-kooste). Ruotsi ja '
-        + 'Italia jäävät ilman nappia (HLS-only / RAI:n tokenit). '
-        + 'Valmiina: v359 Venetsian laguuni, v351/v354/v355 kartat.',
-      seuraavaksi: 'RTVE-napin julkaisu; sitten kaista tyhjä.',
+      tehtava: 'Espanjan tv-nappi: RTVE ohjaa http-osoitteeseen, '
+        + 'joten uutisproxy-workeriin tehdään https-reitti ensin '
+        + '(rajattu poikkeuslupa Opus 1:n kaistalle), sitten nappi '
+        + '(sää oletuksena, Telediario toisena). Ruotsi ja Italia '
+        + 'ilman nappia, syyt koodissa (#490).',
+      seuraavaksi: 'RTVE-napin julkaisu; omistajan iPad-testi '
+        + 'lopullinen varmistus.',
     },
     {
       tekija: 'Sonnet 1',
