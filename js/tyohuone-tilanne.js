@@ -98,13 +98,10 @@ export const TESTATTAVAA = [
       + 'ennen.',
   },
   {
-    otsikko: 'Espanjan tv-nappi — TESTAA IPADILLA (v360)',
-    ohje: 'Avaa Espanjan maalehti: tv-napissa kaksi valintaa, Sää '
-      + 'tänään (38 s) ja Uutiset neljässä minuutissa. Tämä on '
-      + 'juuri se laitetesti, jota kehitysympäristöstä ei voi '
-      + 'tehdä. Jos nappi sanoo "Ei saatu haettua", vika on '
-      + 'todennäköisesti Cloudflaren workerin päivitysviive — '
-      + 'kokeile hetken päästä uudestaan ennen kuin raportoit.',
+    otsikko: 'Espanjan tv-nappi (v360) — iPad-testi OK 8.8.',
+    ohje: 'Espanjan maalehdessä tv-napissa kaksi valintaa: Sää '
+      + 'tänään (38 s) ja Uutiset neljässä minuutissa. Omistaja '
+      + 'varmisti toimivuuden iPadilla 8.8.',
   },
   {
     otsikko: 'Berliinin nähtävyysjutut — PILOTTI (v358)',
