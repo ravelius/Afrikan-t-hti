@@ -3635,3 +3635,40 @@ test('päivitysloki kattaa nykyisen version', async () => {
   assert.equal(MUUTOKSET[0].v, nykyinen,
     `loki alkaa versiosta ${MUUTOKSET[0].v}, mutta peli on versiossa ${nykyinen}`);
 });
+
+test('lehtien visat antavat tietopisteitä, eivät rahaa', async () => {
+  const { TIETOPISTE_KULTTUURIVISA, TIETOPISTE_MINITEHTAVA, tietopisteTeksti } = await import('../js/game.js');
+  const game = newGame();
+  const rahatEnnen = game.player.money;
+
+  // Kulttuurivisa: oikea vastaus kasvattaa tietopisteitä, ei kukkaroa,
+  // ja sama kaupunki palkitsee vain kerran.
+  let tulos = game.actionKulttuuri('tanger', true, TIETOPISTE_KULTTUURIVISA);
+  assert.equal(tulos.ok, true);
+  assert.equal(game.player.money, rahatEnnen);
+  assert.equal(game.player.tietopisteet, TIETOPISTE_KULTTUURIVISA);
+  tulos = game.actionKulttuuri('tanger', true, TIETOPISTE_KULTTUURIVISA);
+  assert.equal(tulos.ok, false);
+  assert.equal(game.player.tietopisteet, TIETOPISTE_KULTTUURIVISA);
+
+  // Minitehtävä: pienempi piste, väärästä ei mitään.
+  tulos = game.actionMinitehtava('tanger', 'historia', false, TIETOPISTE_MINITEHTAVA);
+  assert.equal(tulos.ok, true);
+  assert.equal(tulos.palkittu, false);
+  tulos = game.actionMinitehtava('tanger', 'ruoka', true, TIETOPISTE_MINITEHTAVA);
+  assert.equal(tulos.palkittu, true);
+  assert.equal(game.player.money, rahatEnnen);
+  assert.equal(game.player.tietopisteet, TIETOPISTE_KULTTUURIVISA + TIETOPISTE_MINITEHTAVA);
+
+  // Taivutus: yksi piste on "tietopiste", monta on "tietopistettä".
+  assert.equal(tietopisteTeksti(1), '+1 tietopiste');
+  assert.equal(tietopisteTeksti(2), '+2 tietopistettä');
+
+  // Tallennus kantaa laskurin, ja vanha tallennus ilman kenttää saa nollan.
+  const kopio = (await import('../js/game.js')).Game.fromJSON(JSON.parse(JSON.stringify(game.toJSON())));
+  assert.equal(kopio.players[0].tietopisteet, TIETOPISTE_KULTTUURIVISA + TIETOPISTE_MINITEHTAVA);
+  const vanha = game.toJSON();
+  for (const p of vanha.players) delete p.tietopisteet;
+  const palautettu = (await import('../js/game.js')).Game.fromJSON(JSON.parse(JSON.stringify(vanha)));
+  assert.equal(palautettu.players[0].tietopisteet, 0);
+});
