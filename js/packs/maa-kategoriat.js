@@ -5436,4 +5436,122 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  DNK: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Tanska on siirtänyt itsensä ruudulle: kansallisgallerian teokset '
+        + 'saa ladata koneelle, koko maa näkyy ilmasta vuodesta 1890, '
+        + 'kirkkojen holvimaalauksia selataan aiheittain ja merikotkanpesään '
+        + 'näkee suorana.',
+      nostot: [
+        {
+          otsikko: '39 478 taideteosta, jotka saa ladata omalle koneelle',
+          tiedosto: 'Christen Købke, Parti af Østerbro i morgenbelysning, 1836, KMS844, Statens Museum for Kunst.jpg',
+          teksti: 'Tanskan kansallisgalleria SMK on avannut kokoelmansa verkkoon. '
+            + 'Tietokannassa on yli 200 000 kohdetta, ja 150 893 niistä on jo '
+            + 'tekijänoikeuksista vapaita. Sellaisia, joista on myös kuva, on '
+            + '39 478 — ne saa ladata suurina ilman kirjautumista ja ilman '
+            + 'maksua. Haku toimii taiteilijan, vuosisadan, aiheen ja jopa '
+            + 'värin mukaan. Zoomata voi niin lähelle, että maalipinnan '
+            + 'halkeamat erottuvat.',
+          selite: 'Christen Købken maalaus vuodelta 1836: aamuvalossa lehmiä '
+            + 'ajetaan pitkin Østerbron katua Kööpenhaminassa, vasemmalla '
+            + 'järven kulma ja oikealla korkea poppelirivi.',
+          lahde: 'Christen Købke, Wikimedia Commons (public domain)',
+          linkki: 'https://open.smk.dk/',
+          linkkiNimi: 'SMK Open — Tanskan kansallisgallerian kokoelma',
+        },
+        {
+          otsikko: '2 137 715 ilmakuvaa, jotka tanskalaiset naulasivat kartalle',
+          tiedosto: 'Kongskildegård, 1950.jpg',
+          teksti: 'Tanskan kuninkaallisella kirjastolla on noin kolme miljoonaa '
+            + 'ilmakuvaa vuosilta 1890–2010. Lentokoneesta kuvattiin talo '
+            + 'talolta, ja kuvat myytiin asukkaille. Arkistoon ei kuitenkaan '
+            + 'merkitty, missä mikäkin kuva oli otettu. Siksi tanskalaisia '
+            + 'pyydettiin apuun, ja he ovat siirtäneet kuvat oikeille '
+            + 'paikoilleen. Verkossa on 2 137 715 kuvaa, joista 99,73 '
+            + 'prosenttia on nyt paikannettu. Karttaa zoomataan, ja kuvat '
+            + 'aukeavat.',
+          selite: 'Mustavalkoinen ilmakuva vuodelta 1950: tanskalainen maatila '
+            + 'lammen rannalla, valkoiset rakennukset pihan ympärillä ja '
+            + 'lehmiä laitumella. Negatiivissa näkyy vaalea naarmu.',
+          lahde: 'Sylvest Jensen Luftfoto / Det Kgl. Bibliotek, Wikimedia Commons (CC BY 4.0)',
+          linkki: 'https://www.kb.dk/danmarksetfraluften/',
+          linkkiNimi: 'Danmark set fra Luften — Tanska ilmasta vuodesta 1890',
+        },
+        {
+          otsikko: '220 suoruumista ja 566 mestauspaikkaa samalla kartalla',
+          tiedosto: 'Poskær Stenhus, forår 2015.jpg',
+          teksti: 'Tanskan valtio pitää rekisteriä kaikista maan '
+            + 'muinaisjäännöksistä ja arkeologisista löydöistä, ja rekisteri '
+            + 'on auki kenelle tahansa. Etusivulta pääsee suoraan valmiisiin '
+            + 'hakuihin: dolmeneja ja jättiläishautoja on 331, tuhansia '
+            + 'hautakumpuja, 566 vanhaa mestauspaikkaa ja 220 suosta '
+            + 'löytynyttä ruumista. Yksi niistä on Bjældskovdal, josta '
+            + 'Tollundin mies nostettiin turpeesta vuonna 1950. Sivu listaa '
+            + 'myös kuluvan vuoden kaivaukset: niitä on 237.',
+          selite: 'Poskær Stenhus Itä-Jyllannissa: pyöreä kivikehä ympäröi '
+            + 'matalaa kumpua, jonka päällä lepää valtava kattokivi '
+            + 'kannatinkivien varassa. Takana on kevätpuinen metsä.',
+          lahde: 'Old Dane, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.kulturarv.dk/fundogfortidsminder/',
+          linkkiNimi: 'Fund og Fortidsminder — muinaisjäännökset kartalla',
+        },
+        {
+          otsikko: '538 kirkkoa, joiden kattoon on maalattu helvetti',
+          tiedosto: 'Fanefjord Kirke - kalkmalerier1.jpg',
+          teksti: 'Tanskaan rakennettiin vuosina 1050–1250 yli 2 000 kirkkoa, ja '
+            + 'niiden holvit maalattiin täyteen kuvia. Kalkmalerier.dk on '
+            + 'kuvannut näitä maalauksia 538 kirkosta, kymmeniätuhansia '
+            + 'otoksia vuosilta 1100–1600. Parasta on aiheluettelo, jonka '
+            + 'mukaan voi hakea: eläimet, taruolennot, helvetti, viimeinen '
+            + 'tuomio, kuolemansynnit, hatut, rautahansikkaat. Mukana on '
+            + 'kirkkoja, jotka ovat nykyään Ruotsissa ja Saksassa — Tanska '
+            + 'oli silloin isompi.',
+          selite: 'Fanefjordin kirkon holvi Mønin saarella: punaruskeaa '
+            + 'kasviornamenttia, enkeleitä ja keskellä Kristus soikion '
+            + 'sisällä. Oikealla näkyy puinen saarnastuoli.',
+          lahde: 'Hubertus, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://www.kalkmalerier.dk/',
+          linkkiNimi: 'Kalkmalerier.dk — keskiaikaiset kirkkomaalaukset',
+        },
+        {
+          otsikko: '201 Andersenin satua, joista muistat ehkä viisi',
+          tiedosto: 'Hans Christian Andersen by Thora Hallager 1869.jpg',
+          teksti: 'H.C. Andersen kirjoitti paljon muutakin kuin Pienen '
+            + 'merenneidon ja Ruman ankanpoikasen. Etelä-Tanskan yliopiston '
+            + 'Andersen-keskus pitää verkossa The Complete Andersen '
+            + '-kokoelmaa: 201 satua ja tarinaa englanniksi, '
+            + 'aakkosjärjestyksessä, ja jokaisen otsikon perässä lukee '
+            + 'tanskankielinen alkuperäisnimi. Hakukenttään voi kirjoittaa '
+            + 'myös tanskaa. Samalta sivustolta löytyvät Andersenin kirjeet, '
+            + 'päiväkirjat, unet ja kuvitusgalleria.',
+          selite: 'Thora Hallagerin valokuva vuodelta 1869: H.C. Andersen istuu '
+            + 'sivuttain kameraan, terävä profiili, rusetti kaulassa ja '
+            + 'samettikaulus takissa.',
+          lahde: 'Thora Hallager, Wikimedia Commons (public domain)',
+          linkki: 'https://andersen.sdu.dk/vaerk/hersholt/',
+          linkkiNimi: 'The Complete Andersen — kaikki sadut verkossa',
+        },
+        {
+          otsikko: 'Merikotkanpesä suorana, aurinkopaneelien varassa',
+          tiedosto: 'White-tailed eagle (22856267294).jpg',
+          teksti: 'Tanskan lintuyhdistys DOF lähettää suoraa kuvaa merikotkien '
+            + 'pesältä Fugleværnsfondenin luonnonsuojelualueelta '
+            + 'Saksfjed-Hyllekrogissa Lollannin saarella. Kameroita on '
+            + 'useita, joten linnut näkyvät silloinkin kun ne eivät ole '
+            + 'pesässä. Naaras on 11-vuotias ruotsalaissyntyinen lintu, '
+            + 'koiras 15–16-vuotias. Naaraan tunnistaa jalkarenkaasta ja '
+            + 'kahdesta mustasta pilkusta pyrstön päällä. Kamerat käyvät '
+            + 'aurinkosähköllä, joten pilvisellä säällä ruutu voi pimentyä.',
+          selite: 'Merikotka lähikuvassa: keltainen koukkunokka, keltaiset silmät '
+            + 'ja vaalea pää, takana sumea vihreä niitty.',
+          lahde: 'Susanne Nilsson, Wikimedia Commons (CC BY-SA 2.0)',
+          linkki: 'https://www.dof.dk/oplev-fuglene/ornetv',
+          linkkiNimi: 'ØrneTV — merikotkat suorana',
+        },
+      ],
+    },
+  ],
 };
