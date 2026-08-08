@@ -1889,4 +1889,198 @@ export const KULTTUURI_KATEGORIAT = {
       ],
     },
   ],
+  pariisi: [
+    {
+      id: 'kaupunki',
+      nimi: 'Pariisi',
+      johdanto: 'Kaupunki, jonka rautatorniin on kirjoitettu kullalla 72 '
+        + 'tiedemiehen nimet ja jonka kaikki maantiet mitataan yhdestä '
+        + 'pronssisesta tähdestä kadun kivissä.',
+      kansikuvat: [
+        {
+          tiedosto: 'Chimera Notre Dame Paris.jpg',
+          selite: 'Kivinen siivekäs olento istuu Notre-Damen tornien välisellä '
+            + 'kaiteella leuka käsien varassa ja katsoo kaupungin yli. Nämä '
+            + 'kimeerat eivät ole keskiaikaisia, vaan Viollet-le-Duc '
+            + 'veistätti ne 1800-luvun korjaustöissä.',
+          lahde: 'Lupo, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Cariatide Wallace 1.jpg',
+          selite: 'Wallace-suihkukaivon jalusta läheltä: neljä tummanvihreää '
+            + 'valurautanaista seisoo selät vastakkain ja kannattelee '
+            + 'käsivarsillaan kupolia, jonka keskeltä vesi valuu. He '
+            + 'esittävät hyvyyttä, yksinkertaisuutta, laupeutta ja kohtuutta.',
+          lahde: 'Coyau, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Point Zéro des Routes de France. Centre de la dalle.JPG',
+          selite: 'Notre-Damen edustan katukivissä on kahdeksankulmainen '
+            + 'pronssilaatta, jossa on kahdeksansakarainen tuuliruusu. '
+            + 'Ympärillä kiveen on hakattu sanat POINT ZERO — tästä kohdasta '
+            + 'mitataan kaikkien Ranskan maanteiden kilometrit.',
+          lahde: 'Jean-Pierre Bazard, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Tornissa on 72 nimeä kullalla',
+          tiedosto: 'Chevreul, Flachat, Navier.001 - Torre Eiffel.jpg',
+          teksti: 'Gustave Eiffel halusi, että hänen torninsa on tieteen '
+            + 'muistomerkki. Ensimmäisen kerroksen ympäri kiertää 65 metrin '
+            + 'korkeudella nimilista: 18 nimeä tornin jokaisella sivulla, '
+            + 'yhteensä 72 ranskalaista tiedemiestä ja insinööriä. Kirjaimet '
+            + 'ovat kullattuja ja 60 senttiä korkeita. Nimet peitettiin '
+            + 'maalilla 1900-luvun alussa ja paljastettiin vasta 1986–1987. '
+            + 'Yhtään naista listalla ei ole. Siksi tammikuussa 2026 '
+            + 'julkistettiin toinen 72 nimen lista, pelkkiä naistutkijoita, '
+            + 'jotka on tarkoitus kaivertaa miesten nimien yläpuolelle vuonna '
+            + '2027.',
+          selite: 'Lähikuva ensimmäisen kerroksen kaidenauhasta: kohokirjaimin '
+            + 'lukee CHEVREUL, FLACHAT, NAVIER, ja alla näkyy tornin niitattu '
+            + 'ristikko. Kemisti Chevreul kävi katsomassa työmaata melkein '
+            + 'päivittäin ja kuoli 102-vuotiaana yhdeksän päivää tornin '
+            + 'avajaisten jälkeen.',
+          lahde: 'Fernando Losada Rodríguez, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Eiffel-torni',
+        },
+        {
+          otsikko: 'Metron sisäänkäynti koottiin palasista',
+          tiedosto: '01 Guimard\'s Métropolitain.jpg',
+          teksti: 'Pariisin metro avattiin 19. heinäkuuta 1900. Sisäänkäynneistä '
+            + 'oli järjestetty arkkitehtikilpailu, mutta yksikään 21 '
+            + 'ehdotuksesta ei kelvannut, ja työ annettiin Hector '
+            + 'Guimardille, joka ei ollut edes osallistunut kilpailuun. Hän '
+            + 'piirsi valurautaisia vakio-osia, jotka sopivat yhteen kuin '
+            + 'rakennussarja: samoista paloista sai kasattua sopivan '
+            + 'sisäänkäynnin mihin tahansa kadunkulmaan. Niitä tehtiin 167. '
+            + 'Sitten tyyli meni pois muodista ja puolet purettiin. Jäljellä '
+            + 'olevat 86 rauhoitettiin vuonna 1978.',
+          selite: 'Guimardin emalikilpi puiden lehvien keskellä: sana '
+            + 'MÉTROPOLITAIN vihreillä, käsin piirretyillä kirjaimilla '
+            + 'keltaisella pohjalla. Kilpeä kannattaa kaartuva '
+            + 'valurautatanko, ja oikeassa alanurkassa lukee pienellä Hector '
+            + 'Guimard Arch. Vasemmassa reunassa näkyy lyhtypylvään latvan '
+            + 'tumma silmu.',
+          lahde: 'Terrazzo (Flickr), Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Pariisin metro',
+        },
+        {
+          otsikko: 'Kukko putosi ja löytyi seuraavana päivänä',
+          tiedosto: 'Coq de Notre-Dame de Paris 2020.jpg',
+          teksti: 'Notre-Damen ullakko syttyi 15. huhtikuuta 2019, ja keskitorni '
+            + 'romahti kello 19.45. Katon alla paloi 1 300 tammirungosta '
+            + 'tehty kattotuolisto, joka oli 1200-luvulta. Tornin huipulla '
+            + 'seisoi kuparinen kukko, jonka sisään oli suljettu '
+            + 'pyhäinjäännöksiä. Ensin sitä luultiin tuhoutuneeksi, mutta se '
+            + 'löytyi seuraavana päivänä maasta lommoilla. Onnea oli '
+            + 'muutenkin: kuusitoista kuparipatsasta oli nostettu katolta '
+            + 'korjattavaksi neljä päivää ennen paloa. Uuden kullatun kukon '
+            + 'sisään pantiin samat pyhäinjäännökset ja 2 000 '
+            + 'jälleenrakentajan nimet.',
+          selite: 'Vanha kukko lasivitriinissä. Kupari on hapettunut '
+            + 'vaaleanvihreäksi, ja siipi- ja pyrstösulat ovat pudotuksessa '
+            + 'revenneet ja litistyneet levyiksi. Kukko nostettiin uuden '
+            + 'tornin huipulle 16. joulukuuta 2023, ja katedraali avattiin '
+            + 'yleisölle 7. joulukuuta 2024.',
+          lahde: 'Siren-Com, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Notre-Damen katedraali',
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Kaksi muusikkoa aloitti Pariisin kaduilta ja kaupungin laidan '
+        + 'asuntovaunuleiriltä — ja teki lauluja, joita soitetaan yhä '
+        + 'kaikkialla maailmassa.',
+      nostot: [
+        {
+          otsikko: 'Édith Piaf lauloi ensin kadulla',
+          tiedosto: 'Édith Piaf 914-6440.jpg',
+          teksti: 'Édith Piaf syntyi Bellevillessä joulukuussa 1915. Tarinan '
+            + 'mukaan hän syntyi kadulla talon portaille, vaikka '
+            + 'syntymätodistuksessa lukee sairaala. Teininä hän lauloi '
+            + 'kolikoista Pigallen kaduilla ja pihoissa sisarpuolensa kanssa. '
+            + 'Yökerhon omistaja Louis Leplée kuuli hänet kadulta vuonna 1935 '
+            + 'ja antoi lempinimen la Môme Piaf — piaf on pariisilaista '
+            + 'puhekieltä ja tarkoittaa varpusta. Laulaja oli 142 senttiä '
+            + 'pitkä. Tunnetuin laulu La Vie en rose ilmestyi 1946, ja sen '
+            + 'sanat hän kirjoitti itse.',
+          selite: 'Piaf laulamassa Rotterdamissa 13. joulukuuta 1962, alle vuosi '
+            + 'ennen kuolemaansa. Hän seisoo mikrofonin vieressä mustassa '
+            + 'mekossa kädet ristissä rinnan edessä ja katsoo ylös — asu ja '
+            + 'asento olivat hänen tavaramerkkinsä.',
+          lahde: 'Eric Koch / Anefo, Wikimedia Commons (CC0)',
+          wiki: 'Édith Piaf',
+          musiikki: 'https://music.apple.com/fi/search?term=edith%20piaf%20la%20vie%20en%20rose',
+          musiikkiNimi: 'Édith Piaf Apple Musicissa',
+        },
+        {
+          otsikko: 'Kaksi sormea riitti',
+          tiedosto: 'Reinhardt Harcourt 1944.jpg',
+          teksti: 'Django Reinhardt kasvoi romaniperheen asuntovaunussa Pariisin '
+            + 'porttien luona ja soitti banjoa pihoissa ja tanssipaikoissa jo '
+            + 'lapsena. Lokakuussa 1928 vaunussa syttyi tulipalo: kynttilä '
+            + 'kaatui selluloidikukkien päälle. Vasemman käden nimetön ja '
+            + 'pikkurilli jäivät liikkumattomiksi, ja lääkärit sanoivat, '
+            + 'ettei hän soita enää. Veli toi sairaalaan kitaran, ja Django '
+            + 'opetteli soittamaan soolot kahdella sormella. Vuonna 1934 hän '
+            + 'perusti Pariisissa yhtyeen Quintette du Hot Club de France.',
+          selite: 'Django Reinhardt studiokuvassa vuonna 1944, kymmenen vuotta '
+            + 'yhtyeensä perustamisen jälkeen. Palossa vaurioitunut vasen '
+            + 'käsi jää kuvassa piiloon — kuulijat huomasivat sen vain '
+            + 'nuoteista, eivät soitosta.',
+          lahde: 'Studio Harcourt, Wikimedia Commons (PD)',
+          wiki: 'Django Reinhardt',
+          musiikki: 'https://music.apple.com/fi/search?term=django%20reinhardt%20minor%20swing',
+          musiikkiNimi: 'Django Reinhardt Apple Musicissa',
+        },
+      ],
+    },
+    {
+      id: 'arki',
+      nimi: 'Arki ja tavat',
+      johdanto: 'Leipä, josta kilpaillaan sokkona, ja kirjakauppa, joka mahtuu '
+        + 'kokonaan yhteen peltilaatikkoon joen kaiteella.',
+      nostot: [
+        {
+          otsikko: 'Patongista kilpaillaan joka vuosi',
+          tiedosto: 'Baguette 001.jpg',
+          teksti: 'Ranskan laki määrää, mitä perinteisessä patongissa saa olla: '
+            + 'käytännössä vain vehnäjauhoa, vettä, suolaa ja hiivaa, eikä '
+            + 'taikinaa saa missään vaiheessa pakastaa. Pariisin kaupunki on '
+            + 'järjestänyt vuodesta 1994 kilpailun, jossa leivän pitää olla '
+            + '55–65 senttiä pitkä ja painaa 250–300 grammaa. Leivät '
+            + 'numeroidaan, jottei raati tiedä kenen leipää maistaa, ja '
+            + 'raadissa istuu kuusi arvottua tavallista pariisilaista. '
+            + 'Voittaja saa 4 000 euroa ja toimittaa vuoden ajan '
+            + 'presidentinpalatsin leivät.',
+          selite: 'Vastapaistettuja patonkeja pellillä. Kuori on ruskea ja '
+            + 'halkeillut pitkittäin, ja juuri se viilto on leipurin oma '
+            + 'käsiala — jokainen tekee sen omalla tavallaan.',
+          lahde: 'N i c o l a, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Patonki',
+        },
+        {
+          otsikko: 'Seinen vihreät kirjalaatikot',
+          tiedosto: 'Paris 75005 Quai de Montebello Bouquinistes 20071014.jpg',
+          teksti: 'Seinen kaiteisiin on pultattu vihreitä peltilaatikoita, joissa '
+            + 'myydään käytettyjä kirjoja. Kauppiaita on runsaat kaksisataa '
+            + 'ja laatikoita lähes yhdeksänsataa kolmen kilometrin matkalla. '
+            + 'Kaupunki päättää säännöt: yksi myyjä saa kahdeksan metriä '
+            + 'kaidetta ja enintään neljä laatikkoa, ne on avattava vähintään '
+            + 'neljänä päivänä viikossa, ja maali on aina sama vaunuvihreä '
+            + 'kuin ensimmäisen metron kylteissä. Kesällä 2024 laatikot piti '
+            + 'purkaa olympialaisten avajaisten tieltä, mutta päätös '
+            + 'peruttiin ja ne saivat jäädä.',
+          selite: 'Avattu bouquiniste-koju Quai de Montebellella. Vanhoja lehtien '
+            + 'kansia ja painokuvia riippuu pyykkipojilla rivissä, alarivissä '
+            + 'on Le Petit Journal -lehden kuvitettuja etusivuja, ja edessä '
+            + 'odottaa myyjän puinen kokoontaittuva tuoli.',
+          lahde: 'Benh LIEU SONG, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+    },
+  ],
 };
