@@ -8981,8 +8981,17 @@ body.vertailu-tila .pawns { display: none; }
   width: auto;
   max-width: none;
   height: auto;
-  /* Kortti ei koskaan ylitä dialogia — vieritys pysyy kortin sisällä. */
-  max-height: 100%;
+  /*
+   * Katto INHERIT-arvolla, ei prosenttina: dialogin korkeus on auto,
+   * ja prosentti autokorkuista vanhempaa vasten ei rajoita mitään —
+   * kortti kasvoi dialogin ohi ja alareuna leikkautui iPhonella
+   * (omistajan löytö 8.8.2026, East Side Gallery). inherit kopioi
+   * dialogin dvh+safe-area-katon, jolloin pitkä juttu rullaa kortin
+   * sisällä eikä jatku ruudun ali.
+   */
+  max-height: inherit;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 1.2rem 1.15rem 1rem;
 }
 

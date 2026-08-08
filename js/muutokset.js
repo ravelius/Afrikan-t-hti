@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 393, teksti: 'Nähtävyyskortti mahtuu ruutuun, pitkä juttu rullaa sisällä' },
   { v: 392, teksti: 'Lehden vieritys tasaiseksi tarttuvien rivien kohdalla' },
   { v: 391, teksti: 'Maakartat Islannille, Irlannille ja neljälle muulle' },
   { v: 391, teksti: 'Kuuden maan intro lukee nyt korkokarttaa' },
