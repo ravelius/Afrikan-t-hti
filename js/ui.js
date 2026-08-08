@@ -1477,6 +1477,8 @@ export class UI {
     this.arrivalUutiset = document.getElementById('arrival-uutiset');
     // Mediarivi: maan radio ja tv-kanavan suora lähetys.
     this.arrivalMedia = document.getElementById('arrival-media');
+    // Kaupunkilehden oma mediarivi (ks. paivitaMediarivit).
+    this.arrivalMediaKaupunki = document.getElementById('arrival-media-kaupunki');
     this.arrivalMaaTervehdykset = document.getElementById('arrival-maa-tervehdykset');
     // Lippu näytetään vasta kun se on oikeasti latautunut — ilman verkkoa
     // riviltä ei jää rikkinäistä kuvaruutua.
@@ -5937,11 +5939,10 @@ export class UI {
       // Tunnusluvut ja tervehdykset kartan alle (pilottimaat).
       this.naytaMaaTunnusluvut(iso);
       this.naytaMaaUutiset(iso, city.id);
-      // Mediarivi rakennetaan joka kaupungille uudestaan.
-      this.arrivalMedia.replaceChildren();
-      this.arrivalMedia.hidden = true;
-      this.naytaKieliNappi(city);
-      this.naytaTvNappi(iso);
+      // Mediarivit rakennetaan joka kaupungille uudestaan.
+      this.mediaKaupunki = city;
+      this.mediaIso = iso;
+      this.paivitaMediarivit();
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
       //
@@ -6204,18 +6205,56 @@ export class UI {
    * painalluksesta, joten selvä puhe on siinä vahvuus eikä toistuva
    * häiriö. Tausta väistyy näytteen ajaksi kuten kulttuurinostoissa.
    */
-  naytaKieliNappi(city) {
-    // Mediarivi uutisten alla (omistajan toive 5.8.2026) — aiemmin
-    // nappi asui tervehdysrivin sisällä.
-    const kohde = this.arrivalMedia;
-    const nayte = (KIELET[this.game.pack.id] ?? {})[city.id];
+  /**
+   * Mediarivit molempiin lehtiin (omistajan toive 8.8.2026: "radio- ja
+   * videonapit näkyviin kumpaankin lehteen").
+   *
+   * Ennen rivejä oli yksi ja se asui maaosastossa. Kun maaosasto
+   * siirtyi karttamaissa omalle sivulleen, radio ja tv lähtivät
+   * kaupunkilehdestä mukana — pelaaja oli juuri saapunut paikkaan,
+   * mutta paikallisradio löytyi vain toisesta lehdestä.
+   *
+   * Nyt rivejä on kaksi. Kaupunkilehden rivi on aina, ja maaosaston
+   * rivi vain silloin kun osasto on OMALLA sivullaan: jos se on
+   * kaupungin etusivun palstassa (maat ilman korkokarttaa), samat
+   * napit näkyisivät kahdesti samassa näkymässä.
+   */
+  paivitaMediarivit() {
+    const city = this.mediaKaupunki;
+    const iso = this.mediaIso;
+    for (const kohde of [this.arrivalMedia, this.arrivalMediaKaupunki]) {
+      if (!kohde) continue;
+      kohde.replaceChildren();
+      kohde.hidden = true;
+    }
+    if (city && this.arrivalMediaKaupunki) {
+      this.naytaKieliNappi(city, this.arrivalMediaKaupunki);
+      this.naytaTvNappi(iso, this.arrivalMediaKaupunki);
+    }
+    // Maaosaston rivi vain, kun osasto ei ole kaupungin etusivulla.
+    if (!(this.tutkiMaaEtusivu || this.tutkiTila === 'maa')) return;
+    /*
+     * Maalehden voi avata mistä tahansa maasta (Maiden tiedot), eikä
+     * se silloin ole se maa, jossa pelaaja seisoo. Radio ja tv ovat
+     * maan omia ja seuraavat lehteä, mutta kaupungissa nauhoitettu
+     * kielinäyte EI kuulu vieraan maan lehteen — se olisi väärästä
+     * paikasta. Siksi kaupunki annetaan vain oman maan lehdelle.
+     */
+    const maanIso = this.tutkiTila === 'maa' ? (this.tutkiMaaLehti ?? iso) : iso;
+    this.naytaKieliNappi(maanIso === iso ? city : null, this.arrivalMedia, maanIso);
+    this.naytaTvNappi(maanIso, this.arrivalMedia);
+  }
+
+  naytaKieliNappi(city, kohde = this.arrivalMedia, iso = null) {
+    const nayte = city ? (KIELET[this.game.pack.id] ?? {})[city.id] : null;
     /*
      * Suora lähetys ensin, äänite varalle (omistajan järjestys).
      * Äänitettä ei poistettu: lähetysosoitteet lakkaavat toimimasta
      * ilman varoitusta, ja silloin nappi soittaa nauhan sen sijaan
      * että jäisi hiljaiseksi.
      */
-    const radio = radioMaalle(this.game.pack.map?.cityCountry?.[city.id]);
+    const maa = iso ?? (city ? this.game.pack.map?.cityCountry?.[city.id] : null);
+    const radio = radioMaalle(maa);
     if (!radio && !nayte?.url) return;
     kohde.hidden = false;
     /*
@@ -6254,10 +6293,10 @@ export class UI {
    * Kanavat: js/packs/uutislahteet.js TV_KANAVAT — YouTuben
    * kanavaupotus seuraa aina kulloistakin suoraa lähetystä.
    */
-  naytaTvNappi(iso) {
+  naytaTvNappi(iso, kohde = this.arrivalMedia) {
     const tv = iso ? TV_KANAVAT[iso] : null;
     if (!tv) return;
-    this.arrivalMedia.hidden = false;
+    kohde.hidden = false;
     const nappi = html('button', 'kulttuuri-kuuntele kieli-kuuntele');
     nappi.type = 'button';
     // Tallennelähteellä nappi lupaa uutislähetykset, ei suoraa.
@@ -6275,7 +6314,7 @@ export class UI {
     nappi.addEventListener('click', () => (tv.tallenteet
       ? this.avaaTallenneIkkuna(tv)
       : this.avaaTvIkkuna(tv)));
-    this.arrivalMedia.appendChild(nappi);
+    kohde.appendChild(nappi);
   }
 
   /**
@@ -6937,6 +6976,12 @@ export class UI {
     if (this.arrivalMaa.parentElement !== this.arrivalPalstat) {
       this.arrivalPalstat.appendChild(this.arrivalMaa);
     }
+    // Mediarivi samasta syystä takaisin uutisten kylkeen: maalehti
+    // lainaa sen aihesivun kärkeen (ks. naytaTutkiSivu).
+    if (this.arrivalMedia && this.arrivalOikea
+      && this.arrivalMedia.parentElement !== this.arrivalOikea) {
+      this.arrivalOikea.appendChild(this.arrivalMedia);
+    }
     // Maa-etusivun kuvanosto ei kuulu etusivun maaosastoon.
     this.arrivalMaa.querySelector(':scope > .maa-etusivu-nosto')?.remove();
     const kategoriat = cityId ? [...(KULTTUURI_KATEGORIAT[cityId] ?? [])] : [];
@@ -7088,6 +7133,10 @@ export class UI {
     // Kaupunkilehti aukeaa aina kaupunkitilassa; maalehti on oma
     // näkymänsä, joka avataan kartalta (avaaMaalehti).
     this.tutkiTila = 'kaupunki';
+    this.tutkiMaaLehti = null;
+    // Vasta tässä tiedetään, onko maaosasto omalla sivullaan, joten
+    // mediarivit ratkaistaan uudestaan (ks. paivitaMediarivit).
+    this.paivitaMediarivit();
     this.naytaTutkiSivu(0, { heti: true });
   }
 
@@ -7143,6 +7192,21 @@ export class UI {
     else if (kategoria?.numerot) this.piirraMaaNumerotSivu(kategoria);
     else this.piirraKategoria(kategoria);
     this.arrivalKategoria.hidden = !kategoria;
+    /*
+     * Mediarivi maalehden ensimmäiselle sivulle myös silloin, kun
+     * maalla ei ole korkokarttaa.
+     *
+     * Karttamailla rivi tulee maaosaston mukana (piirraMaaEtusivu
+     * siirtää arrivalMaan sivulle). Ruotsilla ja Espanjalla karttaa ei
+     * vielä ole, joten niiden maalehti alkaa suoraan aihesivusta eikä
+     * radiota näkyisi lainkaan — juuri sitä omistaja pyysi
+     * korjaamaan. Rivi siirretään, ei kopioida: sama elementti palaa
+     * paikalleen seuraavalla rakennaSivut-ajolla.
+     */
+    if (this.tutkiTila === 'maa' && i === 1 && !kategoria?.kartta
+      && this.arrivalMedia && !this.arrivalMedia.hidden) {
+      this.arrivalKategoria.insertBefore(this.arrivalMedia, this.arrivalKategoria.firstChild);
+    }
 
     // Liike kertoo suunnan; ilman sitä sivu vain vaihtuu paikallaan.
     this.arrivalKategoria.classList.remove('sivu-vasemmalta', 'sivu-oikealta');
@@ -7206,6 +7270,9 @@ export class UI {
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
     const arkki = this.arrivalDialog.querySelector('.dialog-card');
     if (arkki) this.kytkeTutkiSelaus(arkki);
+    // Radio ja tv seuraavat lehteä: maalehdessä ne ovat SEN maan,
+    // ei sen, jossa pelaaja sattuu seisomaan (ks. paivitaMediarivit).
+    this.paivitaMediarivit();
     // Maalehti alkaa maan etusivulta (indeksi 0 on kaupunkilehden
     // kansi, jota maalehdellä ei ole — siksi sivu 1).
     this.naytaTutkiSivu(1, { heti: true });
