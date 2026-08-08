@@ -70,6 +70,7 @@ import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
 import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
 import { MAAKARTAT, KAUPUNKIKARTAT, karttapiste } from './packs/maakartat.js';
+import { NAHTAVYYSJUTUT } from './packs/nahtavyysjutut.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
 import { paivanKuva } from './packs/paivan-kuvat.js';
@@ -8079,7 +8080,19 @@ export class UI {
     else asetaKuva(kuva, valokuvaUrl(kartta.tiedosto, 1000), valokuvaVara(kartta.tiedosto, 1000));
     kotelo.appendChild(kuva);
     const selitteet = html('div', 'kartta-selitteet');
-    (kartta.kohteet ?? []).forEach((k, i) => {
+    /*
+     * Nähtävyysjuttu voi asua joko suoraan kartan kohdeoliossa
+     * (Lontoo, kirjoitettu maakartat.js:ään) tai omassa tiedostossaan
+     * nimen mukaan avaimistettuna (js/packs/nahtavyysjutut.js) —
+     * näin kartta/koordinaattidataa (maakartat.js) ei tarvitse
+     * koskea, kun juttuja lisätään uusille kaupungeille. Juttu
+     * voittaa kohteen mahdollisen wiki-kentän (undefined ohittaa
+     * sen), koska omalla jutulla ei näytetä "Lue lisää" -linkkiä.
+     */
+    const kaupunki = this.arrivalShownFor;
+    (kartta.kohteet ?? []).forEach((raaka, i) => {
+      const juttu = NAHTAVYYSJUTUT[kaupunki]?.[raaka.nimi];
+      const k = juttu ? { ...raaka, wiki: undefined, ...juttu } : raaka;
       const numero = String(i + 1);
       const p = karttapiste(kartta, k.lat, k.lon);
       // Napautettava, jos kohteella on oma juttu TAI wiki-artikkeli.
@@ -8180,6 +8193,10 @@ export class UI {
       nappi.type = 'button';
       nappi.addEventListener('click', () => this.openWikiArticle(kohde.wiki, kohde.nimi));
       sisalto.appendChild(nappi);
+    } else if (kohde.lahde) {
+      // Oma kooste ilman tarkistettua fi.wikipedian artikkelia: pelkkä
+      // lähdemaininta, ei linkkiä (omistajan spesifikaatio 8.8.2026).
+      sisalto.appendChild(html('p', 'nahtavyys-lahderivi', kohde.lahde));
     }
     if (!dialogi.open) dialogi.showModal();
   }
