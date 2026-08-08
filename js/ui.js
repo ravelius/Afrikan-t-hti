@@ -6735,7 +6735,19 @@ export class UI {
     }
     nayta();
     kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
-    this.arrivalDialog.appendChild(kortti);
+    /*
+     * Suurennos liitetään PÄÄLLIMMÄISEEN avoimeen dialogiin. Modaali
+     * (showModal) elää selaimen top layer -kerroksessa, joka peittää
+     * kaiken ulkopuolisen z-indexistä riippumatta — kun kuvaa
+     * napautettiin nähtävyysikkunassa, arrivalDialogiin liitetty
+     * suurennos jäi ikkunan TAAKSE (omistajan löytö 8.8.2026).
+     * Saman dialogin lapsena suurennos on samassa kerroksessa ja
+     * z-index 70 nostaa sen kortin ylle; position: fixed kattaa yhä
+     * koko ruudun, koska dialogilla ei ole transformia.
+     */
+    const nahtavyys = document.getElementById('nahtavyys-dialog');
+    const isanta = nahtavyys?.open ? nahtavyys : this.arrivalDialog;
+    isanta.appendChild(kortti);
     this.kulttuuriKuvaEl = kortti;
   }
 
@@ -8378,6 +8390,20 @@ export class UI {
   avaaNahtavyys(kohde, numero) {
     const dialogi = document.getElementById('nahtavyys-dialog');
     if (!dialogi) return;
+    /*
+     * Sulku taustaa napauttamalla (omistajan toive 8.8.2026). Kortti
+     * täyttää dialogin tarkalleen, joten dialogiin itseensä osuva
+     * napautus voi tulla vain reunojen ulkopuolelta eli taustalta.
+     * Jos kuvasuurennos on auki, suljetaan ensin vain se.
+     */
+    if (!dialogi.dataset.taustaSulkee) {
+      dialogi.dataset.taustaSulkee = '1';
+      dialogi.addEventListener('click', (e) => {
+        if (e.target !== dialogi) return;
+        if (this.kulttuuriKuvaEl) { this.suljeKulttuuriKuva(); return; }
+        dialogi.close();
+      });
+    }
     document.getElementById('nahtavyys-otsikko').textContent = kohde.nimi;
     const aika = document.getElementById('nahtavyys-aika');
     aika.textContent = [numero ? `Kohde ${numero}` : null, kohde.aika]
