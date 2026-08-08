@@ -32,15 +32,14 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Maalehden rakenneuudistus (sisällysluettelo '
-        + 'etusivulle, hampurilaisvalikko, sivuaiheet nappien '
-        + 'alle, Saksan siivous, Ruokaa ja tapakulttuuria, lehden '
-        + 'nimeksi Unohdettu aarre). Valmiina: v361 menovinkit 8 '
-        + 'maalle, v363 listamalli (4 maata, Suomi pilottina) + '
-        + 'alapalkin järjestys + visa omana korttinaan.',
-      seuraavaksi: 'Loput maat listamallilla; lopuksi v361-maat ja '
-        + 'lehtimaat samaan malliin (kaksi mallia näkyy hetken '
-        + 'rinnakkain, tarkoituksella).',
+      tehtava: 'Loput 19 maata listamallilla uudelle pohjalle. '
+        + 'Valmiina: v366 maalehden rakenneuudistus '
+        + '(sisällysluettelo, hampurilaisvalikko, sivuaiheet '
+        + 'nappien alla, Saksan siivous, Ruokaa ja tapakulttuuria, '
+        + 'lehden nimeksi Unohdettu aarre), v363 listamalli, v361 '
+        + 'menovinkit 8 maalle.',
+      seuraavaksi: 'Lopuksi v361-maat ja lehtimaat samaan malliin '
+        + '(kaksi mallia näkyy hetken rinnakkain, tarkoituksella).',
     },
     {
       tekija: 'Opus 2',
@@ -92,6 +91,16 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Maalehti uusiksi: sisällysluettelo ja Unohdettu aarre (v366)',
+    ohje: 'Avaa Saksan lehti: etusivu on nyt sisällysluettelo '
+      + '(pikkukuva + otsikko + ingressi kahdessa palstassa), '
+      + 'kartta omalla sivullaan, hampurilaisnappi avaa saman '
+      + 'luettelon mistä tahansa. Nappien alla lukee minne ne '
+      + 'vievät. Ruokasivu on nyt Ruokaa ja tapakulttuuria '
+      + '(Kirchnerin ja Ritterin maalaukset), ja lehden nimi on '
+      + 'kaikkialla Unohdettu aarre.',
+  },
   {
     otsikko: 'Menovinkkien listamalli ja iloisempi visa (v363)',
     ohje: 'Katso Suomen menovinkit: uusi listamalli ryhmäotsikoin '
