@@ -28,14 +28,18 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Menovinkit uudella listamallilla (omistajan ohje '
-        + '8.8.): selvät yläotsikot, pikkukuva + lyhyt selitys + '
-        + 'linkki, jopa ~20 linkkiä per maa. Ensin 23 uutta maata, '
-        + 'lopuksi kuusi lehtimaata samaan malliin.',
-      seuraavaksi: 'Lehden alavalikon järjestys (Poistu vasen, '
-        + 'Seuraava/Tapaa oikea) ja tietovisan iloisempi ulkoasu '
-        + '(omistajan ohjeet 8.8.). Maalehtien syvyys päätetään '
-        + 'vasta omistajan testikierroksen jälkeen.',
+      tehtava: 'Maalehden rakenneuudistus (omistajan palaute 8.8.): '
+        + 'etusivulle sisällysluettelo kahdessa palstassa kartan '
+        + 'tilalle, hampurilaisvalikko, alavalikko kuntoon, '
+        + 'sivuaiheet nappien alle. Saksasta pois päivän kuva, '
+        + 'valokuvaus ja sarjakuva; ruokasivu uusiksi muotoon '
+        + 'Ruokaa ja tapakulttuuria. Lehden nimeksi Unohdettu '
+        + 'aarre (ent. Matkasanomat). Lisäksi tietovisa '
+        + 'iloisemmaksi ja menovinkit listamalliin (23 maata, erä '
+        + '1/3 mainissa v361).',
+      seuraavaksi: 'Pohja ensin, sitten loput menovinkkierät '
+        + 'uudelle pohjalle. Maalehtien syvyys päätetään omistajan '
+        + 'testikierroksen jälkeen.',
     },
     {
       tekija: 'Opus 2',
