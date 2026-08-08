@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 395, teksti: 'Euroopan viimeiset kuusi maakarttaa, Venäjä mukaan' },
+  { v: 395, teksti: 'Balkanin ja idän introt lukevat nyt korkokarttaa' },
   { v: 394, teksti: 'Berliinille Tornit ja torit sekä Arki ja kadut' },
   { v: 394, teksti: 'Venetsialle Kaupunki veden varassa ja Käsityö' },
   { v: 394, teksti: 'Maalehdestä pois kaupunkilehden saapumislause' },

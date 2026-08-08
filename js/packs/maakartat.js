@@ -1210,6 +1210,331 @@ export const MAAKARTAT = {
       wiki: 'Hortobágyn kansallispuisto',
     },
   },
+  ROU: {
+    tiedosto: 'Romania relief location map.svg',
+    lahde: 'SANtosito ja OpenStreetMapin tekijät, Wikimedia Commons '
+      + '(CC BY-SA 4.0)',
+    // Moduuli ja tiedostosivu ilmoittavat samat rajat, ja moduuli on
+    // yksinkertainen suorakaide ilman kaavaa.
+    rajat: { pohjoinen: 48.5, etela: 43.4, lansi: 20.0, ita: 30.0 },
+    /*
+     * Tulcea eikä Constanța: Tonavan suisto on kartan selvin
+     * yksittäinen muoto, ja kaupungit ovat vain 90 km:n päässä
+     * toisistaan eli menisivät päällekkäin. Brașov osuu Karpaattien
+     * mutkaan, kartan ruskeimpaan kohtaan.
+     */
+    kaupungit: [
+      { nimi: 'Bukarest', lat: 44.433, lon: 26.104, paa: true },
+      { nimi: 'Cluj-Napoca', lat: 46.767, lon: 23.583 },
+      { nimi: 'Brașov', lat: 45.642, lon: 25.589 },
+      { nimi: 'Timișoara', lat: 45.749, lon: 21.227 },
+      { nimi: 'Iași', lat: 47.162, lon: 27.589 },
+      { nimi: 'Tulcea', lat: 45.19, lon: 28.8 },
+    ],
+    // Intro päättyy siihen, että Tonava puhkaisee vuoret lounaassa.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Kivikasvot vartioivat Tonavan solaa',
+      tiedosto: 'Rock sculpture of Decebalus5.jpg',
+      teksti: 'Romanian lounaisnurkassa Tonava kaivautuu Karpaattien '
+        + 'ja Balkanvuorten väliin. Solaa sanotaan Rautaportiksi, ja '
+        + 'se on 134 kilometriä pitkä. Ahtain kohta on Suuri Kazan: '
+        + 'joki kapenee 150 metriin ja on paikoin 53 metriä syvä. '
+        + 'Vuonna 1972 valmistui Rautaportti I -pato. Se nosti veden '
+        + 'pintaa padon lähellä 35 metriä, ja veden alle jäivät vanha '
+        + 'Orșovan kaupunki, viisi kylää ja Ada Kalehin saari, jolla '
+        + 'oli oma turkkilainen yhteisönsä ja moskeija. Kaikkiaan 17 '
+        + '000 ihmistä joutui muuttamaan. Vuosina 1994–2004 sola sai '
+        + 'uuden vartijan: kallioon hakattiin daakialaisten viimeisen '
+        + 'kuninkaan Decebaluksen kasvot, jotka ovat yli neljäkymmentä '
+        + 'metriä korkeat.',
+      selite: 'Decebaluksen kasvot hakattuna kalliojyrkänteeseen '
+        + 'Tonavan yläpuolella; leuan alla lukee latinaksi '
+        + '"DECEBALUS REX".',
+      lahde: 'Sadko, Wikimedia Commons (CC BY-SA 4.0)',
+      wiki: 'Rautaportti',
+    },
+  },
+  BGR: {
+    tiedosto: 'Relief Map of Bulgaria.jpg',
+    lahde: 'NordNordWest ja Viktor V, Wikimedia Commons (CC BY-SA 3.0)',
+    // Tiedostosivu: "Equirectangular projection, N/S stretching
+    // 130 %", samat luvut kuin moduulissa.
+    rajat: { pohjoinen: 44.4, etela: 41.1, lansi: 22.1, ita: 28.9 },
+    /*
+     * Kaksi rannikkokaupunkia (Varna ja Burgas) siksi, että vasta
+     * niiden väli paljastaa rantaviivan mutkan. Smoljan on ainoa
+     * piste kartan eteläisessä vuoristossa, noin tuhannessa metrissä.
+     */
+    kaupungit: [
+      { nimi: 'Sofia', lat: 42.7, lon: 23.333, paa: true },
+      { nimi: 'Ruse', lat: 43.856, lon: 25.971 },
+      { nimi: 'Varna', lat: 43.217, lon: 27.917 },
+      { nimi: 'Burgas', lat: 42.495, lon: 27.472 },
+      { nimi: 'Plovdiv', lat: 42.15, lon: 24.75 },
+      { nimi: 'Smoljan', lat: 41.583, lon: 24.7 },
+    ],
+    // Intro päättyy koilliseen, jossa tasangolta nousee yksi kallio.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Ratsastaja, joka päätyi eurokolikkoon',
+      // Rivi on tarkoituksella yli mitan: peilaustyökalu lukee vain
+      // ensimmäisen palan, joten nimeä ei saa katkaista (tests/media).
+      tiedosto: 'Caballero de Madara, reserva histórico-arqueológica Nacional de Madara, Bulgaria, 2016-05-27, DD 39.jpg',
+      teksti: 'Šumenin lähellä Koillis-Bulgariassa kohoaa lähes '
+        + 'pystysuora, satametrinen kalliojyrkänne. Sen kylkeen on '
+        + 'hakattu ratsastaja 23 metriä maanpinnan yläpuolelle. Kuva '
+        + 'on lähes luonnollisen kokoinen: ratsastaja työntää '
+        + 'keihäänsä hevosen jalkoihin kaatuneeseen leijonaan, ja '
+        + 'perässä juoksee koira. Reliefi tehtiin todennäköisesti '
+        + '700-luvun alussa. Sen ympärille on kaiverrettu kolme '
+        + 'kreikankielistä tekstiä, joissa mainitaan kaanit Tervel, '
+        + 'Krum ja Omurtag — ne kertovat Bulgarian varhaisimmista '
+        + 'vuosikymmenistä. Sää on kuluttanut yksityiskohtia, joten '
+        + 'ratsastajan vaatteet erottuvat huonosti. Kun Bulgaria otti '
+        + 'euron käyttöön, ratsastaja päätyi sentin kolikoihin.',
+      selite: 'Madaran ratsastaja kalliopinnassa: hevonen keskellä, '
+        + 'ratsastaja sen selässä, koira vasemmalla alhaalla ja '
+        + 'kaatunut leijona hevosen jalkojen alla.',
+      lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
+      wiki: 'Madaran ratsastaja',
+    },
+  },
+  HRV: {
+    /*
+     * Pelin pienin kartta (731 px), mutta lehti piirtää maakartan
+     * enintään noin 680 fyysisen pikselin levyisenä, joten se riittää.
+     *
+     * ÄLÄ VAIHDA `Relief map of Croatia.png`:hen, vaikka se on 1888 px,
+     * kauniimpi, rajat on dokumentoitu sen omalla sivulla ja Wikipedian
+     * moduuli listaa sen image2:ksi. Se on WORLD MERCATOR, ei
+     * tasavälinen. Pelin prosenttikaava heittää sillä jopa 1 % kuvan
+     * korkeudesta (~5 km) keskileveysasteilla — nolla reunoilla,
+     * maksimi keskellä, eli juuri siellä missä maan pisteet ovat.
+     * Poikkeama on mitattu, ei arvattu: kuvan merimaski ristikorreloitiin
+     * tasavälistä sijaintikarttaa vasten kaistaleittain.
+     */
+    tiedosto: 'Croatia relief map.png',
+    lahde: 'Nzeemin, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 46.8, etela: 42.1, lansi: 13.1, ita: 19.9 },
+    /*
+     * Koordinaatit ovat poikkeuksellisesti englanninkielisestä
+     * Wikipediasta: suomenkielisessä ne on pyöristetty
+     * kaariminuutteihin, mikä heittäisi tällä rajauksella noin 1,5 km.
+     *
+     * Dubrovnik on 88,5 %:n kohdalla eli lähes kartan alalaidassa —
+     * juuri siksi se on listalla: se on erillään muusta maasta Bosnian
+     * merikaistaleen takana, ja se on pelilaudan kohde.
+     */
+    kaupungit: [
+      { nimi: 'Zagreb', lat: 45.813, lon: 15.978, paa: true },
+      { nimi: 'Rijeka', lat: 45.327, lon: 14.441 },
+      { nimi: 'Zadar', lat: 44.114, lon: 15.228 },
+      { nimi: 'Split', lat: 43.508, lon: 16.44 },
+      { nimi: 'Dubrovnik', lat: 42.64, lon: 18.108 },
+      { nimi: 'Osijek', lat: 45.556, lon: 18.694 },
+    ],
+    // Intro päättyy kartan outoon aukkoon etelässä.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Silta, joka kiertää toisen maan',
+      tiedosto: 'Pelješac Bridge 1.jpg',
+      teksti: 'Kroatian kartalla on outo aukko: etelässä Bosnia ja '
+        + 'Hertsegovinalle kuuluva noin 20 kilometrin merikaistale '
+        + 'katkaisee maan kahtia. Dubrovnikiin ajava joutui '
+        + 'ylittämään rajan kahdesti kahdenkymmenen kilometrin '
+        + 'matkalla. Vuonna 2022 aukko kierrettiin merta pitkin: '
+        + 'Pelješacin silta vietiin mantereelta niemimaalle Mali '
+        + 'Stonin lahden yli. Silta on 2 404 metriä pitkä, ja sen '
+        + 'alta mahtuu 55 metriä korkea laiva. Keskellä on viisi 285 '
+        + 'metrin jännettä, joita köysipylonit kannattavat. '
+        + 'Rakentaminen kesti neljä vuotta ja maksoi noin 420 '
+        + 'miljoonaa euroa. Ensimmäisenä elokuunaan silta kantoi noin '
+        + '455 000 autoa.',
+      selite: 'Pelješacin silta kaartaa Mali Stonin lahden yli; '
+        + 'köysipylonit kannattavat viittä 285 metrin jännettä, ja '
+        + 'taustalla nousevat karstivuoret.',
+      lahde: 'kallerna, Wikimedia Commons (CC BY-SA 4.0)',
+      wiki: 'Pelješacin silta',
+    },
+  },
+  BIH: {
+    /*
+     * SVG, joten se skaalautuu pelin pyytämään kokoon pienestä
+     * kanvaasista (1063 px) huolimatta. Tiedostosivu ilmoittaa rajat
+     * itse: "Equirectangular projection, N/S stretching 140 %", samat
+     * luvut kuin moduulissa.
+     *
+     * Sama Mercator-varoitus kuin Kroatialla: `Relief map of Bosnia
+     * and Herzegovina.png` on isompi ja rajat on dokumentoitu, mutta
+     * se on World Mercator eikä kelpaa.
+     */
+    tiedosto: 'Bosnia and Herzegovina relief location map.svg',
+    lahde: 'DzWiki ja NordNordWest, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 45.4, etela: 42.4, lansi: 15.5, ita: 19.9 },
+    /*
+     * Neum on listalla, koska se on maan ainoa merenrantakaupunki:
+     * piste osuu tarkalleen siihen kohtaan, jossa vuoristomaa
+     * koskettaa Adriaa. Bihać näyttää läntisen nokan, joka työntyy
+     * syvälle Kroatian sisään.
+     */
+    kaupungit: [
+      { nimi: 'Sarajevo', lat: 43.856, lon: 18.413, paa: true },
+      { nimi: 'Banja Luka', lat: 44.773, lon: 17.193 },
+      { nimi: 'Tuzla', lat: 44.538, lon: 18.677 },
+      { nimi: 'Bihać', lat: 44.815, lon: 15.869 },
+      { nimi: 'Mostar', lat: 43.344, lon: 17.808 },
+      { nimi: 'Neum', lat: 42.925, lon: 17.617 },
+    ],
+    // Intro päättyy kaakon vuoriin, joihin ei ole menty kirveen kanssa.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Metsä, jossa puut saavat kaatua itse',
+      tiedosto: 'Np sutjeska prasuma perucica vodopad skakavac.JPG',
+      teksti: 'Kartan kaakkoiskulmassa, Montenegron rajalla, kasvaa '
+        + 'Perućica, yksi Euroopan viimeisistä aarniometsistä. Siellä '
+        + 'ei ole koskaan hakattu puuta, ja alue rauhoitettiin '
+        + 'tiukasti jo vuonna 1952. Metsä täyttää noin 1 434 hehtaarin '
+        + 'laakson, joka nousee 578 metristä maan korkeimmalle '
+        + 'huipulle Maglićille, 2 386 metriin. Puu- ja pensaslajeja on '
+        + 'yli 170 ja muita kasveja yli tuhat. Korkein mitattu kuusi '
+        + 'oli 57,4 metriä, ja moni puu on noin kolmesataa vuotta '
+        + 'vanha. Nisäkäslajeja on 36, muun muassa karhu, susi ja '
+        + 'gemssi. Laakson pohjalla putoaa Skakavacin vesiputous noin '
+        + '75 metriä.',
+      selite: 'Perućican aarniometsä täyttää koko laakson pohjasta '
+        + 'harjanteille asti, ja keskellä erottuu ohuena valkoisena '
+        + 'juovana Skakavacin vesiputous.',
+      lahde: 'Darko Gavric, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'Perućica',
+    },
+  },
+  UKR: {
+    tiedosto: 'Reliefkarte Ukraine 2022.png',
+    lahde: 'Tschubby, Wikimedia Commons (CC BY-SA 3.0)',
+    // Moduuli on yksinkertainen suorakaide ilman kaavaa, ja kuvasuhde
+    // vahvistaa rajat 0,7 %:n tarkkuudella.
+    rajat: { pohjoinen: 52.7, etela: 44.1, lansi: 21.5, ita: 40.7 },
+    /*
+     * Mukatševo eikä Užhorod: molemmat ovat Karpaattien toisella
+     * puolella ja kertovat saman asian, mutta Užhorod osuisi 4,1 %:n
+     * kohdalle, jossa nimilappu leikkautuisi. Ilman kumpaakaan
+     * kartalta ei näkisi, että lännessä on vuorten yli menevä kolkka.
+     */
+    kaupungit: [
+      { nimi: 'Kiova', lat: 50.45, lon: 30.523, paa: true },
+      { nimi: 'Lviv', lat: 49.843, lon: 24.027 },
+      { nimi: 'Mukatševo', lat: 48.439, lon: 22.717 },
+      { nimi: 'Harkova', lat: 49.992, lon: 36.231 },
+      { nimi: 'Dnipro', lat: 48.468, lon: 35.04 },
+      { nimi: 'Odessa', lat: 46.483, lon: 30.733 },
+    ],
+    // Intro päättyy läntiseen jokeen, joka kiertää kalliosaaren.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Kaupunki kalliosaarella kanjonin pohjalla',
+      // Sama kuin Bulgarialla: nimeä ei saa katkaista kahdelle riville.
+      tiedosto: 'Вид с Армянского бастиона на Каменец-Подольскую крепость - panoramio.jpg',
+      teksti: 'Ukrainan lännessä Smotrytš-joki tekee melkein täyden '
+        + 'lenkin ja jättää keskelle kalliosaaren. Sen päällä on '
+        + 'Kamjanets-Podilskyin vanhakaupunki, ja saarta kiertää '
+        + 'kanjoni, jonka seinämät ovat paikoin viisikymmentä metriä '
+        + 'korkeat. Kallio on kalkkikiveä, joka syntyi yli 400 '
+        + 'miljoonaa vuotta sitten matalan meren pohjalle — '
+        + 'seinämistä löytyy vieläkin muinaisten merieläinten '
+        + 'jäänteitä. Kannaksen kohdalle, missä lenkki melkein '
+        + 'sulkeutuu, rakennettiin linna, ja siitä johtaa '
+        + 'vanhaankaupunkiin silta rotkon yli. Kaupungissa asuu noin '
+        + '98 000 ihmistä, ja kanjoni on suojeltu geologisena '
+        + 'luonnonmuistomerkkinä.',
+      selite: 'Näkymä Armenialaiselta bastionilta linnoitukseen: '
+        + 'kallio putoaa pystysuorana kanjoniin, ja Linnansilta '
+        + 'johtaa kaupunkiin.',
+      lahde: 'Сергей Марцынюк, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'Kamjanets-Podilskyi',
+    },
+  },
+  RUS: {
+    /*
+     * PELIN AINOA KARTTA, JOKA EI OLE TASAVÄLINEN. Lue tämä ennen kuin
+     * kosket mihinkään.
+     *
+     * Venäjälle ei yksinkertaisesti ole olemassa tasavälistä
+     * korkokarttaa, joka toimisi pelissä. Kaikki 106 Wikipedian
+     * Module:Location map/data/Russia* -moduulia käytiin läpi
+     * 8.8.2026:
+     *  - Koko Venäjän ainoa dokumentoitu tasavälinen kartta on
+     *    poliittinen, ei korkokartta, ja se ulottuu Itämereltä
+     *    Beringinsalmelle. Sillä Moskova asettuisi 10,5 %:n ja Pietari
+     *    6,25 %:n kohdalle — kaksi täplää vasemmassa reunassa ja 89 %
+     *    kuvasta tyhjää Siperiaa. Lisäksi kuva ylittää 180.
+     *    pituuspiirin, mitä prosenttikaava ei osaa käsitellä.
+     *  - Koko Venäjän korkokartat ovat joko kartiokuvausta tai ilman
+     *    dokumentoituja rajoja.
+     *  - Euroopan-puoleisen Venäjän korkokartat ovat kaikki LAEA.
+     * Siksi tämä on laea, ja siksi karttapiste()-funktiossa on haara.
+     * Fablen päätös 8.8.2026.
+     *
+     * Kuva on 1181 px ja PYSTYMALLINEN (0,76) toisin kuin muut pelin
+     * maakartat. Isompaa ei ole: kaikki laea-relief-variantit ovat
+     * samankokoisia tai pienempiä.
+     */
+    tiedosto: 'European Russia laea relief location map.jpg',
+    lahde: 'Uwe Dedering, Wikimedia Commons (CC BY-SA 3.0)',
+    projektio: 'laea',
+    /*
+     * Projektiokeskus on tiedostosivulla (57,5 °N / 42,5 °E).
+     * Kertoimet ja siirrot on mitattu kuvasta: ne muuntavat
+     * projektion yksiköt prosenteiksi kuvan reunoista. Tiedostosivun
+     * "Area of interest" EI ole kuvan reuna, joten rajat-kenttää ei
+     * voi täyttää.
+     */
+    laea: {
+      keskiLat: 57.5,
+      keskiLon: 42.5,
+      xKerroin: 213.4825,
+      xSiirto: 50,
+      yKerroin: 161.4897,
+      ySiirto: 50.8673,
+    },
+    /*
+     * Moskova ja Pietari ovat pakollisia — ne ovat pelilaudan kohteet.
+     * Muut neljä on valittu näyttämään, kuinka valtava tasanko on:
+     * Murmansk napapiirin pohjoispuolella, Jekaterinburg Uralin
+     * takana, Sotši Kaukasuksen juurella ja Nižni Novgorod Volgan ja
+     * Okan yhtymäkohdassa.
+     */
+    kaupungit: [
+      { nimi: 'Moskova', lat: 55.756, lon: 37.618, paa: true },
+      { nimi: 'Pietari', lat: 59.938, lon: 30.309 },
+      { nimi: 'Murmansk', lat: 68.969, lon: 33.079 },
+      { nimi: 'Nižni Novgorod', lat: 56.327, lon: 44.008 },
+      { nimi: 'Jekaterinburg', lat: 56.836, lon: 60.613 },
+      { nimi: 'Sotši', lat: 43.596, lon: 39.727 },
+    ],
+    // Intro päättyy luoteeseen, jossa järven saarella seisoo puukirkko.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Kaksikymmentäkaksi kupolia ilman naulaa',
+      tiedosto: 'Kizhi TransfigurationChurch 007 7869c.jpg',
+      teksti: 'Äänisen saarella Karjalassa seisoo puukirkko, jonka '
+        + 'alttari vihittiin kesäkuussa 1714. Kirkastuksen kirkossa on '
+        + '22 sipulikupolia kolmessa kerroksessa, ja se on 37 metriä '
+        + 'korkea — yhtä korkea kuin kymmenkerroksinen talo — mutta '
+        + 'koko rakennus on tehty hirsistä kirveellä. Pohja on 20 '
+        + 'kertaa 29 metriä ja hirret noin 30 senttiä paksua mäntyä. '
+        + 'Seinissä ei ole ainuttakaan naulaa: hirret on veistetty '
+        + 'lomittain nurkkasalvoksiin. Kupolit sen sijaan on katettu '
+        + 'haapapaanuilla, ja niitä pitää paikoillaan noin 60 000 '
+        + 'paanua ja 180 000 naulaa. Tarina kertoo, että pääkirvesmies '
+        + 'teki koko kirkon yhdellä kirveellä ja heitti sen lopuksi '
+        + 'järveen.',
+      selite: 'Kirkastuksen kirkko Kižin saarella: 22 kupolia, kaikki '
+        + 'katettu käsin veistetyillä haapapaanuilla.',
+      lahde: 'Ludvig14, Wikimedia Commons (CC BY-SA 4.0)',
+      wiki: 'Kiži',
+    },
+  },
 };
 
 /*
@@ -1916,8 +2241,37 @@ export const KAUPUNKIKARTAT = {
   },
 };
 
+/*
+ * Lambertin tasapinta-azimutaalinen projektio (LAEA).
+ *
+ * Käytössä VAIN Venäjällä, koska sille ei ole olemassa tasavälistä
+ * korkokarttaa (perustelu RUS-merkinnän kommentissa). Kaava on
+ * projektion vakiomuoto; kuvakohtaiset venytys- ja siirtoluvut ovat
+ * kartan omassa laea-oliossa, ja ne on mitattu kuvasta.
+ *
+ * Älä lisää tätä muille maille etsimättä ensin tasavälistä karttaa:
+ * tasavälisen kartan rajat voi tarkistaa kuka tahansa tiedostosivulta,
+ * mutta nämä kertoimet joutuu mittaamaan uudestaan.
+ */
+function laeaPiste(laea, lat, lon) {
+  const { keskiLat, keskiLon, xKerroin, xSiirto, yKerroin, ySiirto } = laea;
+  const aste = Math.PI / 180;
+  const k0 = keskiLat * aste;
+  const k1 = lat * aste;
+  const ero = (lon - keskiLon) * aste;
+  // Mittakaavatekijä, joka pitää pinta-alat oikeina.
+  const m = Math.sqrt(2 / (1 + Math.sin(k0) * Math.sin(k1)
+    + Math.cos(k0) * Math.cos(k1) * Math.cos(ero)));
+  return {
+    x: xSiirto + xKerroin * m * Math.cos(k1) * Math.sin(ero),
+    y: ySiirto - yKerroin * m * (Math.cos(k0) * Math.sin(k1)
+      - Math.sin(k0) * Math.cos(k1) * Math.cos(ero)),
+  };
+}
+
 /** Pisteen paikka kuvassa prosentteina (left/top). */
 export function karttapiste(kartta, lat, lon) {
+  if (kartta.projektio === 'laea') return laeaPiste(kartta.laea, lat, lon);
   const { pohjoinen, etela, lansi, ita } = kartta.rajat;
   return {
     x: ((lon - lansi) / (ita - lansi)) * 100,
