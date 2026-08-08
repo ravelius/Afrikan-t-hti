@@ -49,6 +49,14 @@ const KAUPUNGIT = {
     // mahdu ydinkeskustaan ilman että kartta muuttuu puuroksi.
     rajat: { pohjoinen: 30.068, etela: 30.018, lansi: 31.198, ita: 31.278 },
   },
+  madrid: {
+    // Kuninkaanlinnalta Retiron puistoon, Gran Vían pohjoispuolelta
+    // Atochan asemalle. Kaikki kuusi kohdetta (linna, Plaza Mayor,
+    // Puerta del Sol, Cibeles, Prado, Alcalán portti) osuvat alueelle,
+    // ja Retiron puisto tuo itälaitaan ison vihreän vastapainon
+    // ruutukaavalle.
+    rajat: { pohjoinen: 40.43, etela: 40.406, lansi: -3.72, ita: -3.675 },
+  },
   venetsia: {
     // Koko historiallinen keskusta rautatieasemalta Arsenaalille:
     // Canal Grande kaartaa kuvan halki S-kirjaimena, ja kaikki kuusi
