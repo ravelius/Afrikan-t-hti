@@ -1510,9 +1510,17 @@ export class UI {
     // toive 7.8.2026: maaosasto pois etusivulta, tilalle linkki
     // "Saksa-osio ›" oikeaan yläkulmaan).
     this.arrivalMaaLinkki = document.getElementById('arrival-maa-linkki');
+    /*
+     * Kulmalinkki avaa maalehden, ei enää sivua samasta pinosta.
+     *
+     * Ennen v350:tä maan etusivu oli kaupungin sivujen jatkona, ja
+     * linkki hyppäsi sen kohdalle. Kun lehdet erotettiin, maan sivut
+     * lähtivät tutkiSivut-listasta — findIndex palautti -1 eikä
+     * napista tapahtunut mitään. Nyt se tekee saman kuin kartan "i":
+     * avaa maalehden.
+     */
     this.arrivalMaaLinkki.addEventListener('click', () => {
-      const i = (this.tutkiSivut ?? []).findIndex((k) => k.id === 'maa-etusivu');
-      if (i >= 0) this.naytaTutkiSivu(i + 1, { suunta: 1 });
+      if (this.tutkiMaaIso) this.avaaMaalehti(this.tutkiMaaIso);
     });
     // Lehtitaitto (omistajan toive 5.8.2026): kaupungin oma kansiosio
     // taittuu etusivulle, ja masto kertoo että käsissä on paikallislehti.
@@ -7006,6 +7014,31 @@ export class UI {
     const kansi = kategoriat.find((k) => k.id === 'kaupunki') ?? null;
     const lehti = Boolean(kansi);
     /*
+     * MENOVINKIT NÄKYY MOLEMMISSA LEHDISSÄ (omistajan tilaus 8.8.2026:
+     * "tämä sivu voi kattaa koko maan linkit ja saisi näkyä myös maan
+     * omalla lehdellä").
+     *
+     * Sivu ei ole matkaopas vaan lista parhaista paikoista
+     * NETTIMATKAAJALLE: museoiden verkkokokoelmat, digitoidut arkistot
+     * ja suorat kamerat. Sellainen aineisto on lähes aina koko maan
+     * yhteistä — National Gallery ja Kew palvelevat samaa lukijaa
+     * riippumatta siitä, mihin noppa vei — joten sisältö asuu
+     * maapaketissa yhtenä kappaleena ja lainataan tähän. Kaupungille
+     * ei tehdä omaa kopiota: kaksi kopiota ajautuisi erilleen
+     * ensimmäisellä päivityksellä.
+     *
+     * Viimeiseksi sivuksi, koska se on lehden uloskäynti: linkit
+     * vievät pelistä pois, ja niiden jälkeen odottaa enää kohtaaminen.
+     *
+     * Sivu tuodaan maan lipun kanssa (maanSivut on jo varustanut sen),
+     * ja se on tarkoitus: lippu kertoo kaupunkilehdessäkin, että nämä
+     * osoitteet kattavat koko maan eivätkä vain tätä kaupunkia.
+     */
+    if (lehti) {
+      const vinkit = this.maanSivut.find((s) => s.id === 'menovinkit');
+      if (vinkit) kategoriat.push(vinkit);
+    }
+    /*
      * "Maa numeroina" viimeiseksi sivuksi jokaiseen kaupunkiin, jolla
      * on maatunnus (docs/valtion-analyysi.md): lehtikaupungissa se on
      * lehden arkkisivu, muualla sama sisältö maalohkon jatkona
@@ -7029,6 +7062,7 @@ export class UI {
     // omalle sivulleen, eikä sama sisältö saa näkyä kahdesti.
     this.tutkiMaaEtusivu = Boolean(maakartta);
     if (maakartta) this.arrivalMaa.hidden = true;
+    this.tutkiMaaIso = maanIso;
     this.arrivalMaaLinkki.textContent = maakartta ? `${otsikonMaa}-osio ›` : '';
     this.arrivalDialog.classList.toggle('lehti', lehti);
     this.piirraLehtiKuvat(kansi?.kansikuvat);
@@ -7845,7 +7879,18 @@ export class UI {
      */
     // Kansiosio on lyhyt, ja sitaatti toistaisi viereisen virkkeen
     // melkein kiinni alkuperäisessä — siksi se voidaan jättää pois.
-    const nostoVirke = sitaatti ? poimiNostoVirke((kategoria.nostot ?? []).slice(0, 1)) : null;
+    /*
+     * Sitaatti otetaan siitä nostosta, jonka ALLE se joutuu (indeksi 1),
+     * ei siitä, jonka perään se ladotaan.
+     *
+     * Ensimmäisestä nostosta poimittuna se toisti sanasta sanaan
+     * virkkeen, joka oli juuri luettu parikymmentä pikseliä ylempänä —
+     * Lontoon Menovinkit-sivulla ne olivat samassa ruudussa (mitattu
+     * 8.8.2026, 834 px). Lehdessä nostositaatti kuuluu sen jutun
+     * yhteyteen, jota se houkuttelee lukemaan, ja seuraavasta
+     * nostosta poimittuna se tekee juuri sen.
+     */
+    const nostoVirke = sitaatti ? poimiNostoVirke((kategoria.nostot ?? []).slice(1, 2)) : null;
     let ensimmainen = true;
     let nostoSijoitettu = false;
     for (const nosto of kategoria.nostot ?? []) {

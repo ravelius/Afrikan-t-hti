@@ -7055,6 +7055,19 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   color: rgba(70, 51, 31, 0.7);
 }
 
+/*
+ * Kapealla ruudulla ylärivi siirtyy vasempaan reunaan, koska
+ * maaosion kulmalinkki asuu oikeassa. Keskitettynä ne menivät
+ * päällekkäin: mitattu 8.8.2026 iPhonen leveydellä (390 px)
+ * "Matkasanomat" ulottui x-välille 15–375 ja "ISO-BRITANNIA-OSIO ›"
+ * välille 204–378, eli sanat kirjaimellisesti toistensa päällä.
+ * Vasen nimiö ja oikea osastolinkki on tavallinen lehden ylätunniste,
+ * joten mitään ei menetetä.
+ */
+@media (max-width: 560px) {
+  .dialog.lehti .lehti-ylarivi { text-align: left; }
+}
+
 /* Lehden nimiö: kaupungin nimi isolla antiikvalla keskitettynä. */
 .dialog.lehti #arrival-city {
   margin: 0;
