@@ -413,3 +413,33 @@ poissa — se avaa saman kartan tilan, johon pääsee ilmankin.
 Omistaja päättää myöhemmin, tuleeko varusteelle uusi merkitys (esim.
 maiden vertailu, tunnusluvut kartalle tai suodatin "mitkä maat olen
 jo lukenut") vai poistetaanko se. Tätä EI ratkaista loppukirissä.
+
+## Loppu-QA:n tarkistuslista: tunnetut kuvatoistot
+
+Nämä on löydetty työn aikana ja jätetty TARKOITUKSELLA korjaamatta
+(Fablen ohje 8.8.2026: kirjaa listalle, korjaus tehdään QA-kierroksella
+jos omistaja pitää niitä ongelmana). Molemmat ovat toistoa, eivät
+virhettä — kuva on oikea ja lisenssi kunnossa kummassakin paikassa.
+
+1. **Vasa-laiva kahdessa paikassa.**
+   `Lateral view of the Vasa ship, Vasa Museum, Stockholm, Sweden
+   julesvernex2.jpg` on sekä Ruotsin Historia-aiheessa
+   (maa-kategoriat.js SWE) että Tukholman kannessa
+   (kulttuuri-kategoriat.js). Vanha, ei tämän kirin tekemä. Sama
+   pelaaja näkee molemmat, koska Tukholmassa käydessä maalehti on
+   yhden napautuksen päässä.
+
+2. **Kattohaikara pesällä kahdessa maassa.**
+   Ukrainan menovinkkien `Family of White storks (35609152356).jpg` ja
+   Bulgarian `White stork (Ciconia ciconia) Yastrebets.jpg`. Eri
+   tiedostot ja eri maiden lehdet, mutta aihe on sama. Etsin
+   Bulgarialle korvaajaa (lentävä pikkukorppikotka, Musalan huippu);
+   molemmat olivat mitattavasti heikompia 84 pikselissä, joten kuva
+   jäi ennalleen. Jos tämä korjataan, korvaajan pitää olla yhtä
+   luettava pienenä — huono kuva on pahempi kuin toisto.
+
+Tarkistus, joka kannattaa ajaa QA:ssa: koko paketin duplikaattihaku
+(kansikuvat + nostot + galleriat + listat) löytää nämä ja kaikki
+myöhemmin syntyvät. Skripti on scratchpadissa, mutta sen voi kirjoittaa
+uusiksi kymmenessä rivissä — olennaista on, että se katsoo KAIKKI
+kuvakentät eikä vain nostojen tiedostoja.

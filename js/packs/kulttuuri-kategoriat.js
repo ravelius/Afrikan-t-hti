@@ -698,148 +698,6 @@ export const KULTTUURI_KATEGORIAT = {
    * siirtyivät Espanjan Ruoka-aiheeseen, jonne ne kuuluvat: molemmat
    * ovat koko maan tapoja, vaikka cocidon nimessä lukee Madrid.
    */
-  madrid: [
-    {
-      id: 'kaupunki',
-      nimi: 'Madrid',
-      johdanto: 'Euroopan korkeimmalla sijaitseva pääkaupunki, jonka '
-        + 'kuninkaat perustivat keskelle tyhjää ylätasankoa ja jonka '
-        + 'asukkaat päättivät valvoa myöhempään kuin kukaan muu.',
-      /*
-       * Lehden etusivun kuvat: iso vaakakuva pääkuvaksi ja kaksi
-       * pienempää sen alle. Sama malli kuin Venetsiassa, Kairossa ja
-       * Lontoossa.
-       */
-      kansikuvat: [
-        {
-          tiedosto: 'Madrid May 2014-42a.jpg',
-          selite: 'Plaza Mayor on suorakulmainen sali ilman kattoa: '
-            + 'yhdeksän porttia, 237 parveketta ja keskellä Filip '
-            + 'III ratsain.',
-          lahde: 'Alvesgaspar, Wikimedia Commons (CC BY-SA 3.0)',
-        },
-        {
-          tiedosto: 'Madrid Gran Via Metropolis (28895530633).jpg',
-          selite: 'Gran Vía illalla. Etualalla Metrópolis-talon kupoli, '
-            + 'jonka huipulla siivekäs voitonjumalatar on seissyt '
-            + 'vuodesta 1975.',
-          lahde: 'Nan Palmero from San Antonio, TX, USA, Wikimedia Commons (CC BY 2.0)',
-        },
-        {
-          tiedosto: 'Palacio de Cristal - 02.jpg',
-          selite: 'Retiron puiston Kristallipalatsi syksyisen lammen '
-            + 'takaa. Se rakennettiin 1887 kasvihuoneeksi, nykyään se '
-            + 'on näyttelytila ilman vakituista kokoelmaa.',
-          lahde: 'Carlos Delgado, Wikimedia Commons (CC BY-SA 3.0)',
-        },
-      ],
-      nostot: [
-        {
-          otsikko: 'Goya maalasi madridilaisten vapaapäivät',
-          tiedosto: 'La pradera de San Isidro, Francisco de Goya.jpg',
-          teksti: 'Ennen kuin Francisco de Goyasta tuli hovimaalari ja '
-            + 'ennen kuin hän maalasi sotaa ja hulluutta, hän teki '
-            + 'kymmenen vuotta töitä kuninkaallisen kutomon tilauksesta: '
-            + 'malleja seinävaatteisiin, joiden aiheeksi haluttiin '
-            + 'iloisia kansankuvia. Goya meni kaduille ja niityille ja '
-            + 'katsoi, mitä madridilaiset oikeasti tekivät vapaapäivinään '
-            + '— joivat, tanssivat, riitelivät, leikkivät. Siitä syntyi '
-            + 'tarkin muotokuva, joka 1700-luvun Madridista on: ei '
-            + 'kuninkaista vaan kaupungista.',
-          selite: 'San Isidron niitty (1788): koko kaupunki juhlii '
-            + 'suojeluspyhimyksensä päivää Manzanaresin rannalla, ja '
-            + 'joen takana kohoaa Madrid kupoleineen.',
-          lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
-          wiki: 'Francisco de Goya',
-          galleria: [
-            {
-              otsikko: 'Päivänvarjo',
-              tiedosto: 'El Quitasol (Goya).jpg',
-              selite: 'Päivänvarjo (1777). Palvelija pitää varjoa '
-                + 'nuoren naisen yllä — Goyan tunnetuin kutomomalli ja '
-                + 'yhä Pradon suosituimpia tauluja.',
-              lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Sokkoleikki',
-              tiedosto: 'La gallina ciega (Goya).jpg',
-              selite: 'Sokkoleikki (1789): piiri tanssii silmät '
-                + 'sidotun ympärillä puulusikka kädessä. Leikin nimi '
-                + 'on espanjaksi "sokea kana".',
-              lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Lumisade',
-              tiedosto: 'La nevada, Francisco de Goya.jpg',
-              selite: 'Lumisade eli Talvi (1786). Madrid on 650 metrin '
-                + 'korkeudessa, ja talvi puree — kolme miestä taluttaa '
-                + 'aasia lumituiskussa, koira perässä.',
-              lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Tanssi Manzanaresin rannalla',
-              tiedosto: 'El baile a orillas del Manzanares.jpg',
-              selite: 'Tanssi Manzanaresin rannalla (1777): majo ja '
-                + 'maja, kaupungin omat keikarit, tanssivat seguidillaa '
-                + 'joen törmällä.',
-              lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Saviastioiden kauppias',
-              tiedosto: 'El cacharrero, Francisco de Goya.jpg',
-              selite: 'Saviastioiden kauppias (1779). Kauppias levittää '
-                + 'ruukkunsa maahan, ja ohi vierivistä vaunuista '
-                + 'katsotaan — kaksi Madridia samassa kuvassa.',
-              lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
-            },
-          ],
-        },
-        {
-          otsikko: 'Kaupunki, jossa syödään seisten',
-          tiedosto: 'Mercado de San Miguel, Madrid - 001.jpg',
-          teksti: 'Madridissa lounas on kahdelta ja illallinen '
-            + 'yhdeksän jälkeen, ja väliin jää tunteja, jotka '
-            + 'täytetään tapaksilla. Tapa tarkoittaa kantta: '
-            + 'juomalasin päälle asetettiin viipale kinkkua tai '
-            + 'leipää, jottei kärpäsiä päässyt sisään — kansi muuttui '
-            + 'ruoaksi. Tapaksia syödään seisten baaritiskillä ja '
-            + 'siirrytään sitten seuraavaan paikkaan; kierros on '
-            + 'nimeltään tapeo, ja se on yhtä paljon kävelyä kuin '
-            + 'syömistä. Vuoden 1916 valurautainen San Miguelin halli '
-            + 'on kierroksen tunnetuin pysäkki.',
-          selite: 'Mercado de San Miguelin lasi- ja valurautahalli '
-            + 'Plaza Mayorin kupeessa. Vanha vihannestori muuttui 2009 '
-            + 'tapastoriksi, jonka tiskien ympärillä seistään.',
-          lahde: 'Nicolas Vigier, Wikimedia Commons (CC0)',
-          wiki: 'Tapas',
-        },
-        {
-          otsikko: 'Chotis tanssitaan yhden laatan päällä',
-          tiedosto: 'Parejas bailando Chotis - Madrid 01.jpg',
-          teksti: 'Chotis tuli Madridiin 1850 Keski-Euroopasta, mutta '
-            + 'muuttui perillä omanlaisekseen. Säännön mukaan mies ei '
-            + 'siirry laatalta, jolla seisoo: hän pyörii paikallaan, ja '
-            + 'nainen kiertää hänen ympärillään. Säestää organillo, '
-            + 'kadulla työnnettävä kampiurut. Tanssi kuuluu '
-            + 'verbena-juhliin, joista suurin on San Isidro 15. '
-            + 'toukokuuta — sama juhla, jonka Goya maalasi. Samasta '
-            + 'Madridista syntyi myös zarzuela, laulun ja puheen '
-            + 'vuorottelu, jota esitetään kaupungin omassa '
-            + 'Zarzuela-teatterissa yhä.',
-          selite: 'Pareja tanssimassa chotisia Plaza de Santa Cruzilla. '
-            + 'Miehillä on chulapon lakki ja liivi, naisilla pitkä '
-            + 'pilkullinen mekko, huivi hartioilla ja neilikka '
-            + 'hiuksissa.',
-          lahde: 'Javier Perez Montes, Wikimedia Commons (CC BY-SA 4.0)',
-          wiki: 'Zarzuela',
-          musiikki: 'https://music.apple.com/fi/search?term=zarzuela',
-          musiikkiNimi: 'Zarzuela-musiikkia Apple Musicissa',
-          musiikkiNayte: 'https://archive.org/download/granvi30g/AE2784.mp3',
-          musiikkiNayteNimi: 'La Gran Vía -zarzuela — Emilio Sagi-Barba, PD',
-        },
-      ],
-    },
-  ],
   /*
    * Tukholman kansi (v315). Litteät nostot (europe-kulttuuri.js) on
    * siirretty tänne monistusohjeen mukaan: ABBA Apple Music -linkkeineen
@@ -1505,6 +1363,226 @@ export const KULTTUURI_KATEGORIAT = {
             + 'kastanja.',
           lahde: 'Thomas Ledl, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Karl-Marx-Hof',
+        },
+      ],
+    },
+  ],
+  madrid: [
+    {
+      id: 'kaupunki',
+      nimi: 'Madrid',
+      johdanto: 'Euroopan korkeimmalla sijaitseva pääkaupunki, jonka kuninkaat '
+        + 'perustivat keskelle tyhjää ylätasankoa ja jonka asukkaat päättivät '
+        + 'valvoa myöhempään kuin kukaan muu.',
+      kansikuvat: [
+        {
+          tiedosto: 'Madrid May 2014-42a.jpg',
+          selite: 'Plaza Mayor on suorakulmainen sali ilman kattoa: yhdeksän '
+            + 'porttia, 237 parveketta ja keskellä Filip III ratsain.',
+          lahde: 'Alvesgaspar, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Madrid Gran Via Metropolis (28895530633).jpg',
+          selite: 'Gran Vía illalla. Etualalla Metrópolis-talon kupoli, jonka '
+            + 'huipulla siivekäs voitonjumalatar on seissyt vuodesta 1975.',
+          lahde: 'Nan Palmero from San Antonio, TX, USA, Wikimedia Commons (CC BY 2.0)',
+        },
+        {
+          tiedosto: 'Palacio de Cristal - 02.jpg',
+          selite: 'Retiron puiston Kristallipalatsi syksyisen lammen takaa. Se '
+            + 'rakennettiin 1887 kasvihuoneeksi, nykyään se on näyttelytila '
+            + 'ilman vakituista kokoelmaa.',
+          lahde: 'Carlos Delgado, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Goya maalasi madridilaisten vapaapäivät',
+          tiedosto: 'La pradera de San Isidro, Francisco de Goya.jpg',
+          teksti: 'Ennen kuin Francisco de Goyasta tuli hovimaalari ja ennen kuin '
+            + 'hän maalasi sotaa ja hulluutta, hän teki kymmenen vuotta töitä '
+            + 'kuninkaallisen kutomon tilauksesta: malleja seinävaatteisiin, '
+            + 'joiden aiheeksi haluttiin iloisia kansankuvia. Goya meni '
+            + 'kaduille ja niityille ja katsoi, mitä madridilaiset oikeasti '
+            + 'tekivät vapaapäivinään — joivat, tanssivat, riitelivät, '
+            + 'leikkivät. Siitä syntyi tarkin muotokuva, joka 1700-luvun '
+            + 'Madridista on: ei kuninkaista vaan kaupungista.',
+          selite: 'San Isidron niitty (1788): koko kaupunki juhlii '
+            + 'suojeluspyhimyksensä päivää Manzanaresin rannalla, ja joen '
+            + 'takana kohoaa Madrid kupoleineen.',
+          lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
+          wiki: 'Francisco de Goya',
+          galleria: [
+            {
+              otsikko: 'Päivänvarjo',
+              tiedosto: 'El Quitasol (Goya).jpg',
+              selite: 'Päivänvarjo (1777). Palvelija pitää varjoa nuoren naisen '
+                + 'yllä — Goyan tunnetuin kutomomalli ja yhä Pradon '
+                + 'suosituimpia tauluja.',
+              lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Sokkoleikki',
+              tiedosto: 'La gallina ciega (Goya).jpg',
+              selite: 'Sokkoleikki (1789): piiri tanssii silmät sidotun ympärillä '
+                + 'puulusikka kädessä. Leikin nimi on espanjaksi "sokea '
+                + 'kana".',
+              lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Lumisade',
+              tiedosto: 'La nevada, Francisco de Goya.jpg',
+              selite: 'Lumisade eli Talvi (1786). Madrid on 650 metrin '
+                + 'korkeudessa, ja talvi puree — kolme miestä taluttaa aasia '
+                + 'lumituiskussa, koira perässä.',
+              lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Tanssi Manzanaresin rannalla',
+              tiedosto: 'El baile a orillas del Manzanares.jpg',
+              selite: 'Tanssi Manzanaresin rannalla (1777): majo ja maja, '
+                + 'kaupungin omat keikarit, tanssivat seguidillaa joen '
+                + 'törmällä.',
+              lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Saviastioiden kauppias',
+              tiedosto: 'El cacharrero, Francisco de Goya.jpg',
+              selite: 'Saviastioiden kauppias (1779). Kauppias levittää ruukkunsa '
+                + 'maahan, ja ohi vierivistä vaunuista katsotaan — kaksi '
+                + 'Madridia samassa kuvassa.',
+              lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kaupunki, jossa syödään seisten',
+          tiedosto: 'Mercado de San Miguel, Madrid - 001.jpg',
+          teksti: 'Madridissa lounas on kahdelta ja illallinen yhdeksän jälkeen, '
+            + 'ja väliin jää tunteja, jotka täytetään tapaksilla. Tapa '
+            + 'tarkoittaa kantta: juomalasin päälle asetettiin viipale '
+            + 'kinkkua tai leipää, jottei kärpäsiä päässyt sisään — kansi '
+            + 'muuttui ruoaksi. Tapaksia syödään seisten baaritiskillä ja '
+            + 'siirrytään sitten seuraavaan paikkaan; kierros on nimeltään '
+            + 'tapeo, ja se on yhtä paljon kävelyä kuin syömistä. Vuoden 1916 '
+            + 'valurautainen San Miguelin halli on kierroksen tunnetuin '
+            + 'pysäkki.',
+          selite: 'Mercado de San Miguelin lasi- ja valurautahalli Plaza Mayorin '
+            + 'kupeessa. Vanha vihannestori muuttui 2009 tapastoriksi, jonka '
+            + 'tiskien ympärillä seistään.',
+          lahde: 'Nicolas Vigier, Wikimedia Commons (CC0)',
+          wiki: 'Tapas',
+        },
+        {
+          otsikko: 'Chotis tanssitaan yhden laatan päällä',
+          tiedosto: 'Parejas bailando Chotis - Madrid 01.jpg',
+          teksti: 'Chotis tuli Madridiin 1850 Keski-Euroopasta, mutta muuttui '
+            + 'perillä omanlaisekseen. Säännön mukaan mies ei siirry '
+            + 'laatalta, jolla seisoo: hän pyörii paikallaan, ja nainen '
+            + 'kiertää hänen ympärillään. Säestää organillo, kadulla '
+            + 'työnnettävä kampiurut. Tanssi kuuluu verbena-juhliin, joista '
+            + 'suurin on San Isidro 15. toukokuuta — sama juhla, jonka Goya '
+            + 'maalasi. Samasta Madridista syntyi myös zarzuela, laulun ja '
+            + 'puheen vuorottelu, jota esitetään kaupungin omassa '
+            + 'Zarzuela-teatterissa yhä.',
+          selite: 'Pareja tanssimassa chotisia Plaza de Santa Cruzilla. Miehillä '
+            + 'on chulapon lakki ja liivi, naisilla pitkä pilkullinen mekko, '
+            + 'huivi hartioilla ja neilikka hiuksissa.',
+          lahde: 'Javier Perez Montes, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Zarzuela',
+          musiikki: 'https://music.apple.com/fi/search?term=zarzuela',
+          musiikkiNimi: 'Zarzuela-musiikkia Apple Musicissa',
+          musiikkiNayte: 'https://archive.org/download/granvi30g/AE2784.mp3',
+          musiikkiNayteNimi: 'La Gran Vía -zarzuela — Emilio Sagi-Barba, PD',
+        },
+      ],
+    },
+    {
+      id: 'urheilu',
+      nimi: 'Urheilu',
+      johdanto: 'Kaupungissa on kaksi suurta jalkapalloseuraa, ja kummallakin on '
+        + 'oma suihkulähde, jonka päälle mestaruus kiivetään juhlimaan.',
+      nostot: [
+        {
+          otsikko: 'Nurmi lasketaan hissillä maan alle',
+          tiedosto: 'Estadio Santiago Bernabeu - Field.jpg',
+          teksti: 'Real Madridin kotistadion avattiin 14. joulukuuta 1947, ja '
+            + 'siihen mahtuu nykyään 83 186 katsojaa. Suuren remontin jälkeen '
+            + 'sen erikoisin osa on nurmikenttä. Kenttä on leikattu kuudeksi '
+            + 'yli sadan metrin pituiseksi kaukaloksi, jotka voidaan ajaa '
+            + 'sivuun ja laskea hydraulisella hissillä kolmenkymmenen metrin '
+            + 'syvyyteen. Siellä alhaalla on kasvihuone, jossa ruoho saa '
+            + 'valoa ja jatkaa kasvamistaan. Koko kentän piilottaminen kestää '
+            + 'noin kuusi tuntia — sen jälkeen stadionille mahtuu konsertti.',
+          selite: 'Bernabéun nurmi ja siniset katsomot tyhjinä vuonna 2018, ennen '
+            + 'remonttia. Katsomo nousee kolmena kerroksena kentän ympäri, ja '
+            + 'ylimmän yllä näkyy katos ja pala taivasta.',
+          lahde: 'Mervat, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Estadio Santiago Bernabéu',
+        },
+        {
+          otsikko: 'Suihkulähde, joka vaihtoi joukkuetta',
+          tiedosto: 'Fuente de Cibeles - 03.jpg',
+          teksti: 'Cibeleen aukion suihkulähteessä jumalatar ajaa vaunuja, joita '
+            + 'vetää kaksi leijonaa. Ensimmäisinä sen päälle kiipesivät '
+            + 'Atlético Madridin kannattajat: seuran toimisto oli '
+            + 'naapurikadulla, ja siellä juhlittiin voittoja jo vuonna 1962. '
+            + 'Real Madridin väki omaksui tavan perässä, ja 1980-luvun '
+            + 'lopulla Cibeles oli jo niin vahvasti valkoisten paikka, että '
+            + 'atléticolaiset luovuttivat sen. Vuodesta 1991 he ovat '
+            + 'juhlineet saman puistokadun toisessa päässä, Neptunuksen '
+            + 'suihkulähteellä.',
+          selite: 'Cibeleen suihkulähteen kaksi kivileijonaa alaviistosta '
+            + 'kuvattuna: harjat, valjaat ja tassut erottuvat tarkkaan. Ne '
+            + 'veisti ranskalainen Roberto Michel 1780-luvulla. Takana liehuu '
+            + 'Espanjan lippu ja kohoaa vaalea palatsi.',
+          lahde: 'Carlos Delgado, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Plaza de Cibeles',
+        },
+      ],
+    },
+    {
+      id: 'rakennukset',
+      nimi: 'Kadut ja talot',
+      johdanto: 'Kaupungin läpi murrettiin katu hopeisella hakulla, ja palaneen '
+        + 'linnan tilalle rakennettiin sellainen, joka ei voisi palaa.',
+      nostot: [
+        {
+          otsikko: 'Katu, joka murrettiin talojen läpi',
+          tiedosto: 'Derribo de casas para la apertura de la Gran Vía - 1912.jpg',
+          teksti: 'Madridin vanhassa keskustassa kadut olivat kapeita ja '
+            + 'mutkaisia, ja niiden läpi päätettiin murtaa yksi leveä. Työ '
+            + 'alkoi 4. huhtikuuta 1910, kun kuningas Alfonso XIII löi '
+            + 'hopeisella hakulla ensimmäisen reiän papin talon seinään San '
+            + 'Josén kirkon vieressä. Ennen kuin Gran Vía oli valmis, oli '
+            + 'purettu 312 taloa ja 48 katua kadonnut tai muuttunut toiseksi. '
+            + 'Sisällissodassa katua sanottiin Kranaattikaduksi: sen '
+            + 'korkeimman talon ylimmissä kerroksissa oli tähystyspaikka, ja '
+            + 'tykit ampuivat sitä kohti.',
+          selite: 'Gran Vían ensimmäistä osuutta rakennetaan vuonna 1912. '
+            + 'Vasemmalla seisoo juuri valmistunut Metrópolis-talo, edessä on '
+            + 'kasa hakattuja kivenlohkareita, ja ihmiset kävelevät paljaalla '
+            + 'maalla siinä, missä oli ollut kortteleittain taloja.',
+          lahde: 'Wikimedia Commons (PD)',
+          wiki: 'Alfonso XIII',
+        },
+        {
+          otsikko: 'Linna rakennettiin palamattomaksi',
+          tiedosto: 'Real Alcázar de Madrid, unknown.jpg',
+          teksti: 'Kuninkaiden vanha Alcázar-linna syttyi palamaan jouluaattona '
+            + '1734, ja tuli tuhosi sen lähes kokonaan. Filip V käski '
+            + 'rakentaa tilalle linnan, joka ei voisi palaa: seinät kiveä ja '
+            + 'tiiltä, katot holvattuja, puuta vain ovissa, ikkunanpuitteissa '
+            + 'ja kattotuoleissa. Työ alkoi 1738, ja ensimmäinen kuningas '
+            + 'muutti sisään 1764. Kuninkaanlinna on 135 000 neliömetrillään '
+            + 'Länsi-Euroopan suurin — silti kuningas ei asu siellä vaan '
+            + 'pienemmässä talossa kaupungin laidalla.',
+          selite: 'Vanha Alcázar noin vuonna 1710 tehdyssä kuvassa: pitkä '
+            + 'julkisivu ikkunariveineen, keskellä kello ja vaakuna oven '
+            + 'yllä, päädyissä jyrkkäkattoiset tornit. Rakennuksesta ei ole '
+            + 'jäljellä mitään.',
+          lahde: 'Wikimedia Commons (PD)',
+          wiki: 'Palacio Real de Madrid',
         },
       ],
     },
