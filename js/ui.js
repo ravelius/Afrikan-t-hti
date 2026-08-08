@@ -7911,6 +7911,50 @@ export class UI {
     }
   }
 
+  /**
+   * Menovinkkien listamalli: ryhmiteltyjä rivejä, joissa on pieni
+   * kuva, nimi linkkinä ja lyhyt selitys.
+   *
+   * Ryhmäotsikko on lukijan kartta: kaksikymmentä osoitetta peräkkäin
+   * on luettelo, mutta samat kaksikymmentä neljän otsikon alla on
+   * hakemisto, josta löytää sen mitä etsii.
+   *
+   * Kuvaton rivi on täysin kelvollinen (ks. piirraKategoria).
+   */
+  piirraVinkkilista(kohde, ryhmat) {
+    for (const ryhma of ryhmat ?? []) {
+      if (ryhma.otsikko) kohde.appendChild(html('h4', 'vinkki-ryhma', ryhma.otsikko));
+      const lista = html('ul', 'vinkkilista');
+      for (const k of ryhma.kohteet ?? []) {
+        const rivi = html('li', `vinkki${k.tiedosto ? '' : ' kuvaton'}`);
+        if (k.tiedosto) {
+          const kuva = document.createElement('img');
+          kuva.className = 'vinkki-kuva';
+          kuva.alt = k.selite ?? k.nimi ?? '';
+          kuva.decoding = 'async';
+          kuva.draggable = false;
+          // Pikkukuva riittää: rivin kuva on noin sata pikseliä leveä,
+          // ja iso tiedosto vain hidastaisi kahdenkymmenen rivin sivua.
+          asetaKuva(kuva, valokuvaUrl(k.tiedosto, 320), valokuvaVara(k.tiedosto, 320));
+          rivi.appendChild(kuva);
+        }
+        const teksti = html('div', 'vinkki-teksti');
+        const linkki = html('a', 'vinkki-nimi', k.nimi ?? k.linkki);
+        linkki.href = k.linkki;
+        linkki.target = '_blank';
+        linkki.rel = 'noopener noreferrer';
+        teksti.appendChild(linkki);
+        if (k.teksti) teksti.appendChild(html('p', 'vinkki-selitys', k.teksti));
+        // Lähdemaininta on lisenssin ehto, ei koriste — pienellä,
+        // mutta aina näkyvissä.
+        if (k.lahde) teksti.appendChild(html('p', 'vinkki-lahde', k.lahde));
+        rivi.appendChild(teksti);
+        lista.appendChild(rivi);
+      }
+      kohde.appendChild(lista);
+    }
+  }
+
   piirraKategoria(kategoria, kohde = this.arrivalKategoria, { otsikko = true, sitaatti = true } = {}) {
     kohde.replaceChildren();
     if (!kategoria) return;
@@ -7940,6 +7984,26 @@ export class UI {
     }
     if (kategoria.johdanto) {
       kohde.appendChild(html('p', 'johdanto', kategoria.johdanto));
+    }
+    /*
+     * LISTAMALLI (omistajan päätös 8.8.2026: menovinkit "enemmän
+     * listamaiseksi").
+     *
+     * Nostomalli antaa yhdelle kohteelle puoli sivua. Se on oikein
+     * silloin, kun kohteita on kuusi ja jokaisesta on jotain
+     * kerrottavaa — mutta menovinkit on hakemisto, ja hakemistossa
+     * määrä on arvo itsessään: kaksikymmentä osoitetta ryhmiteltynä
+     * palvelee lukijaa paremmin kuin kuusi esseetä.
+     *
+     * Rivi on siis pieni kuva, nimi linkkinä ja lause tai kaksi.
+     * Kuva on VAPAAEHTOINEN: hyvä osoite pääsee listalle ilman
+     * kuvaakin, koska kelvollista vapaata kuvaa ei ole jokaisesta
+     * museosta eikä puuttuva kuva saa karsia hyvää kohdetta.
+     */
+    if (kategoria.lista) {
+      this.piirraVinkkilista(kohde, kategoria.lista);
+      if (kategoria.tehtava) this.piirraMinitehtava(kohde, kategoria);
+      return;
     }
     /*
      * Sitaattinosto sivun alkupuolelle: lehdessä se on aukeaman

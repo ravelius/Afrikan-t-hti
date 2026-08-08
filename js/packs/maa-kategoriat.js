@@ -5676,115 +5676,109 @@ export const MAA_KATEGORIAT = {
     {
       id: 'menovinkit',
       nimi: 'Menovinkit',
-      johdanto: 'Suomi on skannannut itsensä verkkoon tarkemmin kuin arvaisi: '
-        + 'sanomalehdet 1770-luvulta, 12 000 vapaata taideteoskuvaa, '
-        + 'satatuhatta valokuvaa vanhasta Helsingistä ja kartta, jolla näkyy '
-        + 'jokainen muinaisjäännös.',
-      nostot: [
+      johdanto: 'Suomen arkistot ja kokoelmat ovat verkossa poikkeuksellisen '
+        + 'avoimina: sanomalehdet 1770-luvulta, museoiden kuvat ladattavina '
+        + 'ja muinaisjäännökset kartalla.',
+      lista: [
         {
-          otsikko: 'Lue oman kotipaikkakuntasi uutiset vuodelta 1873',
-          tiedosto: '1847-10-19 Suometar 42 19 10 1847.jpg',
-          teksti: 'Kansalliskirjasto on skannannut Suomen sanomalehdet sivu '
-            + 'sivulta, ja kaikki ennen vuotta 1940 ilmestynyt on verkossa '
-            + 'ilmaiseksi. Haku toimii kuin hakukone: kirjoita oman kunnan '
-            + 'nimi, rajaa vuosi ja katso mitä silloin tapahtui. Vanhimmat '
-            + 'lehdet ovat 1770-luvulta. Sivut aukeavat sellaisina kuin ne '
-            + 'painettiin, fraktuurakirjaimilla ja ilmoituksineen. Suomen '
-            + 'ruotsinkieliset lehdet ovat vapaita vuoteen 1949 asti.',
-          selite: 'Suometar-lehden etusivu 19. lokakuuta 1847: kaksi tiheää '
-            + 'palstaa fraktuurakirjaimia, vasemmalla runo Kanteleeni synty '
-            + 'ja oikealla osasto Sanomia Ulkomaalta.',
-          lahde: 'Paavo Tikkanen, Wikimedia Commons (public domain)',
-          linkki: 'https://digi.kansalliskirjasto.fi/search?formats=NEWSPAPER',
-          linkkiNimi: 'Kansalliskirjasto — digitoidut sanomalehdet',
+          otsikko: 'Arkistot ja lehdet',
+          kohteet: [
+            {
+              nimi: 'Kansalliskirjasto — digitoidut sanomalehdet',
+              tiedosto: '1847-10-19 Suometar 42 19 10 1847.jpg',
+              teksti: 'Suomen sanomalehdet 1770-luvulta alkaen, sivu sivulta '
+                + 'skannattuna. Vuoteen 1939 asti kaikki on vapaasti '
+                + 'luettavissa — hae oman kotipaikkakuntasi nimellä.',
+              selite: 'Suomettaren etusivu vuodelta 1847 fraktuurakirjaimin.',
+              lahde: 'Paavo Tikkanen, Wikimedia Commons (public domain)',
+              linkki: 'https://digi.kansalliskirjasto.fi/search?formats=NEWSPAPER',
+            },
+            {
+              nimi: 'Finna — museot ja kirjastot yhdessä haussa',
+              teksti: 'Yli kolmensadan suomalaisen museon, kirjaston ja arkiston '
+                + 'aineistot samasta hakukentästä. Rajaa haun pelkkiin kuviin '
+                + 'tai pelkkiin vapaasti käytettäviin.',
+              linkki: 'https://finna.fi/',
+            },
+            {
+              nimi: 'Helsingin kaupunginmuseo — 111 000 valokuvaa',
+              tiedosto: 'Munkkisaari, Helsinki 1907.jpg',
+              teksti: 'Signe Branderin ja muiden kuvaajien Helsinki sadan vuoden '
+                + 'takaa. Melkein kaikki kuvat saa ladata ja käyttää '
+                + 'vapaasti.',
+              selite: 'Pyykinhuuhtojia Munkkisaaren laiturilla vuonna 1907, '
+                + 'taustalla höyrylaiva.',
+              lahde: 'Signe Brander, Wikimedia Commons (public domain)',
+              linkki: 'https://hkm.finna.fi',
+            },
+          ],
         },
         {
-          otsikko: '12 000 taideteoskuvaa, jotka saa ladata omalle koneelle',
-          tiedosto: 'Albert Edelfelt - Leikkiviä poikia rannalla.jpg',
-          teksti: 'Kansallisgalleria on Ateneum, Kiasma ja Sinebrychoffin '
-            + 'taidemuseo yhdessä, ja sen kokoelmaan kuuluu yli 43 000 '
-            + 'taideteosta. Verkkokokoelmassa niitä selataan taiteilijan, '
-            + 'vuoden tai aiheen mukaan, ja teokset aukeavat suurina kuvina. '
-            + 'Noin 12 000 tekijänoikeusvapaata teoskuvaa on julkaistu '
-            + 'CC0-lisenssillä: ne saa ladata ja käyttää täysin vapaasti, '
-            + 'myös koulutyössä. Mukana ovat muun muassa Edelfelt, '
-            + 'Schjerfbeck ja Simberg.',
-          selite: 'Albert Edelfeltin maalaus Leikkiviä poikia rannalla vuodelta '
-            + '1884: kolme poikaa kahlaa kivikkorannalla ja työntää puisia '
-            + 'leikkilaivoja veteen, taustalla purjelaivoja.',
-          lahde: 'Albert Edelfelt, Wikimedia Commons (public domain)',
-          linkki: 'https://kokoelma.kansallisgalleria.fi/fi/search',
-          linkkiNimi: 'Kansallisgallerian kokoelma — haku',
+          otsikko: 'Taide ja perinne',
+          kohteet: [
+            {
+              nimi: 'Kansallisgalleria — 12 000 kuvaa ilman käyttöehtoja',
+              tiedosto: 'Albert Edelfelt - Leikkiviä poikia rannalla.jpg',
+              teksti: 'Ateneumin, Kiasman ja Sinebrychoffin kokoelmat verkossa. '
+                + 'Vanhemmat teokset on merkitty CC0:ksi, eli kuvan saa '
+                + 'ladata ja tehdä sillä mitä haluaa.',
+              selite: 'Kolme poikaa leikkilaivoineen rantavedessä, taustalla '
+                + 'purjelaivoja.',
+              lahde: 'Albert Edelfelt, Wikimedia Commons (public domain)',
+              linkki: 'https://kokoelma.kansallisgalleria.fi/fi/search',
+            },
+            {
+              nimi: 'SKVR — Suomen Kansan Vanhat Runot',
+              tiedosto: 'Runonlaulaja Petri Shemeikka, Ristivaara 1907 (KK3490-590).tif',
+              teksti: 'Ne runot, joista Kalevala koottiin, kaikki 34 kirjaa '
+                + 'haettavassa muodossa. Voit etsiä laulajan nimellä tai '
+                + 'pitäjällä ja lukea saman runon eri versiot vierekkäin.',
+              selite: 'Runonlaulaja Petri Shemeikka istumassa hirsitalon edessä '
+                + 'vuonna 1907.',
+              lahde: 'Samuli Paulaharju, Wikimedia Commons (CC BY 4.0)',
+              linkki: 'https://aineistot.finlit.fi/exist/apps/skvr/',
+            },
+          ],
         },
         {
-          otsikko: '111 000 valokuvaa Helsingistä, ja melkein kaikki saa ottaa',
-          tiedosto: 'Munkkisaari, Helsinki 1907.jpg',
-          teksti: 'Helsingin kaupunginmuseon kuva-arkisto on kokonaan verkossa: '
-            + 'yli 111 000 kuvaa, joista noin 110 000 on tekijänoikeusvapaita '
-            + 'tai CC BY -lisenssillä. Hakuun voi kirjoittaa kadun nimen ja '
-            + 'katsoa, miltä se näytti sata vuotta sitten. Yli tuhat kuvaa on '
-            + 'Signe Branderin ottamia. Muinaismuistolautakunta palkkasi '
-            + 'hänet 1900-luvun alussa kuvaamaan kaupunkia, joka oli juuri '
-            + 'katoamassa purkutöiden alle.',
-          selite: 'Signe Branderin valokuva Munkkisaaren salmesta vuonna 1907: '
-            + 'naiset huuhtovat pyykkiä puulaiturilla, edessä rivi '
-            + 'soutuveneitä ja taustalla höyrylaiva.',
-          lahde: 'Signe Brander, Wikimedia Commons (public domain)',
-          linkki: 'https://hkm.finna.fi/',
-          linkkiNimi: 'Helsingin kaupunginmuseo — kuva-arkisto Finnassa',
-        },
-        {
-          otsikko: 'Yli 40 000 muinaisjäännöstä kartalla — katso mikä on lähinnä kotiasi',
-          tiedosto: 'Sammallahdenmäki 1.jpg',
-          teksti: 'Museovirasto pitää rekisteriä Suomen kiinteistä '
-            + 'muinaisjäännöksistä, ja niitä on yli 40 000. Joukossa on '
-            + 'pronssikautisia hautaröykkiöitä, kivikauden asuinpaikkoja, '
-            + 'jatulintarhoja, linnavuoria ja autioituneita kylänpaikkoja. '
-            + 'Kulttuuriympäristön palveluikkunassa haun rajaa omalla '
-            + 'kunnalla, ja jokaisesta kohteesta aukeaa kuvaus, ajoitus ja '
-            + 'kartta. Melkein joka kunnasta löytyy useita — myös kaupunkien '
-            + 'keskeltä.',
-          selite: 'Sammallahdenmäen pronssikautinen hautaröykkiö Raumalla: '
-            + 'harmaista lohkareista ladottu suorakulmainen kiviladelma '
-            + 'kalliolla männikön keskellä.',
-          lahde: 'kallerna, Wikimedia Commons (CC BY-SA 3.0)',
-          linkki: 'https://www.kyppi.fi/palveluikkuna/mjreki/read/asp/r_default.aspx',
-          linkkiNimi: 'Kulttuuriympäristön palveluikkuna — muinaisjäännösrekisteri',
-        },
-        {
-          otsikko: 'Runot, joista Kalevala tehtiin — 34 kirjaa haettavana',
-          tiedosto: 'Runonlaulaja Petri Shemeikka, Ristivaara 1907 (KK3490-590).tif',
-          teksti: 'Elias Lönnrot ei keksinyt Kalevalaa vaan kokosi sen '
-            + 'kansanrunoista. Ne runot ovat verkossa. Suomen Kansan Vanhat '
-            + 'Runot on 34-osainen kokoelma karjalaista, inkeriläistä ja '
-            + 'suomalaista runoutta, jota kerättiin 1500-luvulta 1930-luvulle '
-            + 'asti. Kirjat ilmestyivät 1908–1948 ja täydennysosa 1997. '
-            + 'Tietokannasta haetaan paikkakunnan, laulajan tai vuoden '
-            + 'mukaan, ja jokaisen runon alta näkyy kuka sen lauloi ja missä.',
-          selite: 'Runonlaulaja Petri Shemeikka istuu hirsirakennuksen edessä '
-            + 'Ristivaarassa vuonna 1907: pitkä valkoinen parta, liivi ja '
-            + 'polveen ulottuvat nahkasaappaat.',
-          lahde: 'Samuli Paulaharju, Wikimedia Commons (CC BY 4.0)',
-          linkki: 'https://aineistot.finlit.fi/exist/apps/skvr/index.html',
-          linkkiNimi: 'SKVR — Suomen Kansan Vanhat Runot',
-        },
-        {
-          otsikko: 'Onko taivaalla revontulia juuri nyt? Kartta vastaa',
-          tiedosto: 'Aurora borealis over Saana fell.jpg',
-          teksti: 'Ilmatieteen laitos mittaa maan magneettikenttää '
-            + 'havaintoasemilla ympäri Suomea. Revontulet ja avaruussää '
-            + '-sivun kartta näyttää jokaisen aseman kohdalla, ovatko '
-            + 'revontulet juuri nyt todennäköisiä, mahdollisia vai '
-            + 'epätodennäköisiä. Alta löytyy kuluneen vuorokauden '
-            + 'mittauskäyrä ja sanallinen ennuste seuraaviksi öiksi. Lapissa '
-            + 'revontulia näkyy usein rauhallisenakin yönä, etelässä '
-            + 'harvemmin.',
-          selite: 'Revontulet Saanatunturin yllä Kilpisjärvellä: vihreät nauhat '
-            + 'kaartuvat tähtitaivaalla lumisen tunturin ja paljaiden '
-            + 'koivujen yläpuolella.',
-          lahde: 'WikiLucas00, Wikimedia Commons (CC BY-SA 4.0)',
-          linkki: 'https://www.ilmatieteenlaitos.fi/revontulet-ja-avaruussaa',
-          linkkiNimi: 'Ilmatieteen laitos — revontulet ja avaruussää',
+          otsikko: 'Maastossa ja taivaalla',
+          kohteet: [
+            {
+              nimi: 'Museovirasto — muinaisjäännösrekisteri',
+              tiedosto: 'Sammallahdenmäki 1.jpg',
+              teksti: 'Yli 40 000 muinaisjäännöstä kartalla. Zoomaa oman '
+                + 'kotikuntasi kohdalle ja katso, mitä sen maan alta on '
+                + 'löytynyt.',
+              selite: 'Sammallahdenmäen pronssikautinen kiviladelma männikössä.',
+              lahde: 'kallerna, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://www.kyppi.fi/palveluikkuna/mjreki/read/asp/r_default.aspx',
+            },
+            {
+              nimi: 'Ilmatieteen laitos — revontulet ja avaruussää',
+              tiedosto: 'Aurora borealis over Saana fell.jpg',
+              teksti: 'Onko taivaalla revontulia juuri nyt? Kartta näyttää '
+                + 'magneettiset mittausasemat ja vuorokauden käyrän, ja '
+                + 'sivulla on sanallinen ennuste.',
+              selite: 'Vihreät revontulet Saanatunturin yllä lumisessa '
+                + 'maisemassa.',
+              lahde: 'WikiLucas00, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.ilmatieteenlaitos.fi/revontulet-ja-avaruussaa',
+            },
+            {
+              nimi: 'Paikkatietoikkuna — vanhat kartat päällekkäin',
+              teksti: 'Maanmittauslaitoksen karttapalvelu, jossa nykykartan '
+                + 'päälle voi ladata vanhoja karttatasoja ja verrata, miten '
+                + 'maisema on muuttunut.',
+              linkki: 'https://kartta.paikkatietoikkuna.fi/',
+            },
+            {
+              nimi: 'Kansallisarkisto — Astia',
+              teksti: 'Digitoituja asiakirjoja kirkonkirjoista karttoihin. '
+                + 'Sukututkimuksen aloittamiseen ei tarvita muuta kuin '
+                + 'isovanhemman syntymäpitäjä.',
+              linkki: 'https://astia.narc.fi/uusiastia/',
+            },
+          ],
         },
       ],
     },
