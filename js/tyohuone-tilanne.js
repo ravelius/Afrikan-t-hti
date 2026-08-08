@@ -44,14 +44,12 @@ export const TILANNE = {
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'tyossa',
-      tehtava: 'Kaupunkikarttojen ulkoasu omistajan ohjeella 8.8.: '
-        + 'kontrasti alas (tummimmat viivat vaaleammiksi, kuusi '
-        + 'karttaa uusiksi), numeroympyröiden tausta vaaleammaksi, '
-        + 'OSM-merkintä pienemmäksi, hover-seloste pöytäkoneelle. '
-        + 'Valmiina: v360 Espanjan tv-nappi, v359 laguuni.',
-      seuraavaksi: 'Raportti Fablelle, kun kartat on ajettu ja '
-        + 'katsottu.',
+      tila: 'odottaa',
+      tehtava: 'Kaista tyhjä. Valmiina: v362 kaupunkikarttojen '
+        + 'ulkoasu (kontrasti alas, vaaleat numeroympyrät, pieni '
+        + 'OSM-rivi, hover-seloste pöytäkoneelle), v360 Espanjan '
+        + 'tv-nappi, v359 laguuni, v351/v354/v355 kartat.',
+      seuraavaksi: 'Uusi tehtävä testikierroksen tarpeiden mukaan.',
     },
     {
       tekija: 'Sonnet 1',
@@ -90,6 +88,15 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Kaupunkikarttojen uusi ilme (v362)',
+    ohje: 'Avaa mikä tahansa kuudesta kaupunkikartasta: kartta on '
+      + 'nyt vaaleampi tausta ja numerot pääosassa, ympyröiden '
+      + 'tausta hiekanvaalea, OSM-rivi pikkuruinen. Pöytäkoneella '
+      + 'vie hiiri numeron päälle — kohteen nimi tulee '
+      + 'selosteeseen. Kosketuslaitteella napautus toimii kuten '
+      + 'ennen.',
+  },
   {
     otsikko: 'Espanjan tv-nappi — TESTAA IPADILLA (v360)',
     ohje: 'Avaa Espanjan maalehti: tv-napissa kaksi valintaa, Sää '
