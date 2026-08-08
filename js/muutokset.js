@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 384, teksti: 'Wienille oma lehti: jättiratas, hevoset ja kahvila' },
   { v: 383, teksti: 'Menovinkit Bulgarialle, Kroatialle ja Bosnialle' },
   { v: 383, teksti: 'Saksan menovinkit takaisin kahteenkymmeneen' },
   { v: 382, teksti: 'Maan lehteen pääsee nyt kartalta ja sisällysvalikosta' },

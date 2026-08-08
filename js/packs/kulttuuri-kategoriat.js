@@ -1296,4 +1296,217 @@ export const KULTTUURI_KATEGORIAT = {
       ],
     },
   ],
+  wien: [
+    {
+      id: 'kaupunki',
+      nimi: 'Wien',
+      johdanto: 'Kaupunki, jossa keisari söi aamiaista eläintarhan keskellä ja '
+        + 'jonka kuuluisin ratas kulkee hitaammin kuin sinä kävelet.',
+      kansikuvat: [
+        {
+          tiedosto: 'Wien Stephansdom dach.jpg',
+          selite: 'Stephansdomin kattoa läheltä: siihen on ladottu noin 250 000 '
+            + 'lasitettua tiiltä kymmenessä eri värissä. Kuoriosan '
+            + 'eteläpuolella levittää siipiään kaksipäinen keisarinkotka, ja '
+            + 'sen ympärillä lukee nurkka kerrallaan 1-8-3-1, katon '
+            + 'uusimisvuosi.',
+          lahde: 'Andrzej Otrębski, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Schönbrunn September 2023 1.jpg',
+          selite: 'Schönbrunnin keltainen kesäpalatsi ja sen tyhjä kunniapiha '
+            + 'iltapäivän valossa. Palatsin takana olevassa puistossa toimii '
+            + 'maailman vanhin eläintarha.',
+          lahde: 'Conny Duck, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: '2019 - Wiener Staatsoper im Morgengrauen.jpg',
+          selite: 'Valtionoopperan talo aamuhämärässä, taivas vielä punaisena. '
+            + 'Sen editse kaartaa Ring — kehäkatu, joka rakennettiin puretun '
+            + 'kaupunginmuurin paikalle ja jolla kulkevat raitiovaunun '
+            + 'kiskot.',
+          lahde: 'Moahim, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Ratas, joka kulkee kävelyä hitaammin',
+          tiedosto: 'Riesenrad Wiener Prater 2020-07-12 d.jpg',
+          teksti: 'Praterin jättiratas nousi vuonna 1897 keisari Frans Joosefin '
+            + '50-vuotisen hallitsijajuhlan kunniaksi. Se ei ole ympyrä vaan '
+            + 'kolmikymmenkulmio: yksi kulma jokaista alkuperäistä vaunua '
+            + 'kohti. Vaunuja oli kolmekymmentä, kunnes ratas paloi '
+            + 'huhtikuussa 1945. Kun se avattiin uudelleen 1947, vaunuja '
+            + 'ripustettiin takaisin vain viisitoista — ja niin ne roikkuvat '
+            + 'siitä asti joka toisessa kulmassa. Ratas kulkee 2,7 kilometriä '
+            + 'tunnissa.',
+          selite: 'Punainen vaunu numero 4 riippuu rattaan kaarevasta kehästä. '
+            + 'Vaunut ovat pieniä puutaloja ovineen ja ikkunoineen, eivät '
+            + 'avoimia istuimia.',
+          lahde: 'Manfred Werner (Tsui), Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Prater',
+          galleria: [
+            {
+              otsikko: 'Koko ratas kerralla',
+              tiedosto: 'Wiener Riesenrad DSC02378.JPG',
+              selite: 'Jättiratas ukkospilvien edessä: valkoinen teräskehä, jonka '
+                + 'reunalla roikkuu viisitoista punaista vaunua tasavälein, '
+                + 'ja alla kaksi jalkaa kuin A-kirjain.',
+              lahde: 'David Monniaux, Wikimedia Commons (CC BY-SA 3.0)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Keisarin aamiaishuone eläintarhan keskellä',
+          tiedosto: 'Tiergarten Schönbrunn Kaiserpavillion 2.jpg',
+          teksti: 'Maria Teresian puoliso Frans Stefan teetti Schönbrunnin '
+            + 'puistoon eläintarhan, joka esiteltiin vieraille kesällä 1752. '
+            + 'Se on maailman vanhin yhä toimiva eläintarha. Keskelle '
+            + 'valmistui 1759 kahdeksankulmainen paviljonki, jonka '
+            + 'keisariperhe rakennutti aamiaishuoneekseen. Sen ympärille oli '
+            + 'asetettu kaksitoista samankokoista tarhaa kuin kakunpalat, '
+            + 'joten pöydästä näki joka suuntaan eläimiä. Paviljonki on '
+            + 'nykyään ravintola.',
+          selite: 'Kahdeksankulmainen keisaripaviljonki: vaaleankeltainen '
+            + 'julkisivu, vihreäksi hapettunut kuparikatto ja portaiden '
+            + 'edessä ravintolan valkoisia päivänvarjoja.',
+          lahde: 'Geolina163, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Tiergarten Schönbrunn',
+          galleria: [
+            {
+              otsikko: 'Norsut paviljongin edessä',
+              tiedosto: 'Historisches Bild Elefanten.jpg',
+              selite: 'Vanha postikorttimaalaus Schönbrunnin norsutarhasta: kolme '
+                + 'aikuista norsua ja yksi poikanen hiekkakentällä, aidan '
+                + 'takana katsojia ja taustalla keisaripaviljongin kupoli.',
+              lahde: 'Ludwig Hans Fischer, Wikimedia Commons (PD)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Valkoiset hevoset syntyvät tummina',
+          tiedosto: 'Kawecan.jpg',
+          teksti: 'Hofburgin palatsissa toimii ratsastuskoulu, jonne '
+            + 'lipizzanoriit tuodaan nelivuotiaina Piberin siitostallilta '
+            + 'Steiermarkista. Valkoisia ne eivät silloin vielä ole: varsat '
+            + 'syntyvät ruunikkoina tai mustina ja vaalenevat vuosi vuodelta, '
+            + 'kunnes ovat 6–10 vuoden iässä valkoisia. Perinne vaatii, että '
+            + 'tallissa on aina myös yksi ruunikko. Ratsastajat tervehtivät '
+            + 'salin seinällä olevaa keisari Kaarle VI:n muotokuvaa ennen '
+            + 'kuin ratsastavat.',
+          selite: 'Valkoisen lipizzanoriin pää lähikuvassa Stallburgin pihalla. '
+            + 'Kuonon ympärillä on nahkainen kapistin, ja takana kohoaa '
+            + 'kolmikerroksinen kaarikäytävä, jonka takana ovat tallit.',
+          lahde: 'Eerschay, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Espanjalainen ratsastuskoulu',
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Valssi, jonka toinen isku tulee etuajassa, ja satuooppera, joka '
+        + 'kirjoitettiin esikaupungin puiselle näyttämölle.',
+      nostot: [
+        {
+          otsikko: 'Kaupunki sävelsi oman jokensa',
+          tiedosto: 'Johann Strauss II by Fritz Luckhardt.jpg',
+          teksti: 'Johann Strauss nuoremman valssi Tonava kaunoinen '
+            + 'kantaesitettiin Wienissä 15. helmikuuta 1867 — ensin '
+            + 'mieskuorolle, vasta myöhemmin pelkälle orkesterille. '
+            + 'Wieniläisvalssissa toinen isku tulee hitusen etuajassa, joten '
+            + 'se ei mene metronomin kanssa tasan: sitä ei voi laskea, se '
+            + 'pitää tuntea. Strauss sävelsi noin viisisataa teosta ja johti '
+            + 'orkesteriaan viulu kädessä, soittaen ja tahdittaen yhtä aikaa.',
+          selite: 'Johann Strauss nuorempi ateljeekuvassa vuodelta 1899, hänen '
+            + 'viimeiseltä elinvuodeltaan: tumma takki ja liivi, leveä kihara '
+            + 'parta ja ylös kaartuvat viikset. Kortin alareunaan on painettu '
+            + 'valokuvaamon nimi.',
+          lahde: 'Fritz Luckhardt, Wikimedia Commons (PD)',
+          wiki: 'Johann Strauss nuorempi',
+          musiikki: 'https://music.apple.com/fi/search?term=Johann%20Strauss%20Donauwalzer',
+          musiikkiNimi: 'Tonava kaunoinen Apple Musicissa',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/d/de/%22An_der_sch%C3%B6nen%2C_blauen_Donau%22%2C_performed_by_the_US_Marine_Band.mp3',
+          musiikkiNayteNimi: 'Strauss: Tonava kaunoinen — United States Marine Band (PD)',
+        },
+        {
+          otsikko: 'Taikahuilu tehtiin esikaupungin teatteriin',
+          tiedosto: 'Karl Friedrich Schinkel - Die Sternenhalle der Königin der Nacht (ca. 1815).jpg',
+          teksti: 'Mozartin viimeinen ooppera ei syntynyt hovia varten. '
+            + 'Taikahuilu sai ensi-iltansa 30. syyskuuta 1791 Emanuel '
+            + 'Schikanederin teatterissa Wienin Wiedenin esikaupungissa, ja '
+            + 'se laulettiin saksaksi eikä italiaksi — tavallisen wieniläisen '
+            + 'kielellä. Schikaneder kirjoitti sanat itse ja näytteli '
+            + 'linnustaja Papagenoa. Mozart kuoli kaksi kuukautta myöhemmin. '
+            + 'Kymmenen vuoden päästä Schikaneder avasi kaupunkiin uuden '
+            + 'teatterin ja antoi veistää itsensä Papagenona sen portin '
+            + 'päälle.',
+          selite: 'Yön kuningattaren tähtisali, Karl Friedrich Schinkelin '
+            + 'lavastusmaalaus noin vuodelta 1815: syvänsininen kupoli on '
+            + 'ladottu täyteen tähtiä tasaisiin riveihin, ja alhaalla '
+            + 'kuunsirpin päällä seisoo pieni tumma hahmo.',
+          lahde: 'Karl Friedrich Schinkel, Wikimedia Commons (PD)',
+          wiki: 'Taikahuilu',
+          musiikki: 'https://music.apple.com/fi/search?term=Mozart%20Zauberfl%C3%B6te%20K%C3%B6nigin%20der%20Nacht',
+          musiikkiNimi: 'Taikahuilu Apple Musicissa',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/d/de/W._A._Mozart_-_Die_Zauberfl%C3%B6te_-_18._Der_H%C3%B6lle_Rache_kocht_in_meinem_Herzen_%28Ferenc_Fricsay%2C_1953%29.ogg/W._A._Mozart_-_Die_Zauberfl%C3%B6te_-_18._Der_H%C3%B6lle_Rache_kocht_in_meinem_Herzen_%28Ferenc_Fricsay%2C_1953%29.ogg.mp3',
+          musiikkiNayteNimi: 'Mozart: Yön kuningattaren aaria — johtaa Ferenc Fricsay, äänitetty 1953 (PD)',
+          galleria: [
+            {
+              otsikko: 'Papagenon portti',
+              tiedosto: 'Theater an der Wien.jpg',
+              selite: 'Kivinen veistosryhmä Theater an der Wienin sivuportin '
+                + 'päällä: Schikaneder höyhenpuvussa soittamassa pillejään, '
+                + 'vieressä lintuhäkki ja kolme höyhenpukuista lasta. Kuvattu '
+                + 'kohtaus on Taikahuilun jatko-osasta Das Labyrinth.',
+              lahde: 'Yair Haklai, Wikimedia Commons (CC BY-SA 3.0)',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'arki',
+      nimi: 'Arki ja tavat',
+      johdanto: 'Kaupunki, jossa yhtä kahvikuppia voi venyttää koko iltapäivän ja '
+        + 'jossa kaupunki itse ryhtyi rakentamaan asuntoja.',
+      nostot: [
+        {
+          otsikko: 'Kahvila on kaupungin olohuone',
+          tiedosto: 'Cafe Central in Vienna interior near portraits.JPG',
+          teksti: 'Wieniläisessä kahvilassa yhden kupin voi venyttää koko '
+            + 'iltapäiväksi, ja lehdet kuuluvat hintaan. Kahvin kanssa '
+            + 'tuodaan aina lasi hanavettä, joka täytetään pyytämättä '
+            + 'uudelleen. Jokaisella kahvilajilla on oma nimensä: melangessa '
+            + 'on maitoa ja maitovaahtoa, ja einspänner tarjoillaan lasissa '
+            + 'kermavaahtohatun alla. Nimi tulee yksivaljakon ajureista, '
+            + 'jotka pitivät lasia toisessa kädessä ja ohjaksia toisessa — '
+            + 'vaahto piti kahvin lämpimänä.',
+          selite: 'Café Centralin holvisali Wienissä. Seinällä on kaksi suurta '
+            + 'muotokuvaa, keisari Frans Joosef ja keisarinna Elisabet, ja '
+            + 'niiden alla istutaan valkoisilla liinoilla katetuissa '
+            + 'pöydissä.',
+          lahde: 'Clayton Tang, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Wien',
+        },
+        {
+          otsikko: 'Kilometrin pituinen kotitalo',
+          tiedosto: 'Karl Marx Hof.jpg',
+          teksti: 'Vuoden 1917 asuntolaskennassa 92 prosentissa Wienin asunnoista '
+            + 'ei ollut omaa vessaa eikä 95 prosentissa vesijohtoa. Kaupunki '
+            + 'ryhtyi silloin itse rakennuttajaksi. Karl-Marx-Hof avattiin '
+            + '12. lokakuuta 1930: se on noin 1 050 metriä pitkä ja siihen '
+            + 'tehtiin 1 382 asuntoa noin viidelletuhannelle asukkaalle. '
+            + 'Tontista rakennettiin vain 23 prosenttia — kaikki muu '
+            + 'jätettiin pihaksi ja leikkikentäksi.',
+          selite: 'Karl-Marx-Hofin julkisivu Döblingin kaupunginosassa. '
+            + 'Punatiilisen rakennuksen läpi johtaa neljä suurta holvikaarta, '
+            + 'torneissa on lipputangot, ja edessä on nurmikko ja kukkiva '
+            + 'kastanja.',
+          lahde: 'Thomas Ledl, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Karl-Marx-Hof',
+        },
+      ],
+    },
+  ],
 };
