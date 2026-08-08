@@ -6442,6 +6442,7 @@ export class UI {
         nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
         lohko.appendChild(nappi);
       }
+      this.lisaaNostonLinkki(lohko, nosto);
       const lahteet = [nosto.lahde, nosto.aaniLahde].filter(Boolean).join(' · ');
       if (lahteet) lohko.appendChild(html('p', 'kulttuuri-lahde', lahteet));
       lista.appendChild(lohko);
@@ -7919,6 +7920,7 @@ export class UI {
         // pohjalle (omistajan toive 5.8.2026).
         leipa.appendChild(nappi);
       }
+      this.lisaaNostonLinkki(leipa, nosto);
       // Selattava teosgalleria noston kuvan ympärille (pilottina
       // Venetsian Canaletto): nuolet vaihtavat teosta, selite ja
       // lähderivi seuraavat mukana.
@@ -8250,6 +8252,30 @@ export class UI {
    * Yksi toteutus molemmille nostomuodoille (litteä ja kategoria) —
    * kaksi kopiota ajautuisi erilleen ensimmäisellä muutoksella.
    */
+  /*
+   * Ulkoinen linkki noston loppuun (Menovinkit-sivut, omistajan
+   * tilaus 8.8.2026: "parhaat menovinkit nettimatkaajalle").
+   *
+   * Tämä on eri asia kuin `wiki`: se avaa Wikipedian tiivistelmän
+   * pelin sisällä, tämä vie museon omaan verkkokokoelmaan uuteen
+   * välilehteen. Siksi oikea elementti on <a> eikä nappi — pelaaja
+   * näkee osoitteen, voi avata sen keskipainikkeella ja tallentaa
+   * kirjanmerkiksi. Ulkoasu on sama tekstilinkki (wiki-btn), jotta
+   * sivu ei täyty erinäköisistä kutsuista.
+   *
+   * linkkiNimi on linkin näkyvä teksti: kohde kannattaa nimetä
+   * ("National Gallery — Auringonkukat zoomattavana"), koska pelkkä
+   * "Avaa sivusto" ei kerro minne ollaan menossa.
+   */
+  lisaaNostonLinkki(kohde, nosto) {
+    if (!nosto.linkki) return;
+    const linkki = html('a', 'wiki-btn nosto-linkki', nosto.linkkiNimi ?? 'Avaa sivusto');
+    linkki.href = nosto.linkki;
+    linkki.target = '_blank';
+    linkki.rel = 'noopener noreferrer';
+    kohde.appendChild(linkki);
+  }
+
   lisaaNostonNapit(otsikkoRivi, nosto) {
     if (nosto.aani) {
       const nappi = html('button', 'kulttuuri-kuuntele');

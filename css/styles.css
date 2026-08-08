@@ -5527,6 +5527,21 @@ body.katselu #newgame-btn { display: none; }
   color: #9c6f1e;
 }
 
+/*
+ * Menovinkkien ulkoinen linkki. Sama tekstilinkin ulkoasu kuin
+ * "Lue lisää", mutta nuoli kertoo että tästä poistutaan pelistä
+ * uuteen välilehteen — pelaajan ei pidä yllättyä.
+ */
+.nosto-linkki {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.nosto-linkki::after { content: ' ↗'; text-decoration: none; }
+
 /* Dialogin sisälläkin Lue lisää on pelkkä tekstilinkki, ei nappi. */
 .dialog .wiki-btn,
 .dialog .wiki-btn:hover:not(:disabled) {
