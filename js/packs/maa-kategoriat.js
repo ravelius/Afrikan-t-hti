@@ -4720,4 +4720,121 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  NLD: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Alankomaat on skannannut itsensä verkkoon: maalaukset '
+        + 'pikselintarkkoina, salainen takahuoneisto kolmiulotteisena, '
+        + 'sanomalehdet vuodesta 1618 ja museo, jossa tyrannosaurus odottaa '
+        + 'ilman pääsylippua.',
+      nostot: [
+        {
+          otsikko: 'Yli puoli miljoonaa esinettä, ja kuvat saa ladata',
+          tiedosto: 'Amsterdam-3418-Rijksmuseum-2008-gje.jpg',
+          teksti: 'Rijksmuseum Amsterdamissa on kuvaillut verkkoon yli puoli '
+            + 'miljoonaa kokoelmansa esinettä ja julkaissut niistä '
+            + 'satojatuhansia valokuvia. Verkkokokoelmassa eli Rijksstudiossa '
+            + 'teokset aukeavat suurina, ja jokaisen vierestä löytyy '
+            + 'latauspainike: kuvan saa omalle koneelle ilmaiseksi. Zoomata '
+            + 'voi niin lähelle, että Vermeerin Maidonkaatajan leivänmurut '
+            + 'erottuvat. Haku toimii myös aiheella, joten voi katsoa vaikka '
+            + 'kaikki museon laivat tai kaikki kissat.',
+          selite: 'Rijksmuseumin punatiilinen päärakennus tornineen Museumpleinin '
+            + 'nurmikon takana; edessä suuret punavalkoiset I amsterdam '
+            + '-kirjaimet.',
+          lahde: 'Gerd Eichmann, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.rijksmuseum.nl/en/collection',
+          linkkiNimi: 'Rijksmuseum — kokoelma ja Rijksstudio verkossa',
+        },
+        {
+          otsikko: '717 miljardin pikselin valokuva yhdestä maalauksesta',
+          tiedosto: 'Rembrandt Night Watch Girl.jpg',
+          teksti: 'Rembrandtin Yövartio vuodelta 1642 valokuvattiin uudelleen, '
+            + 'kun museo alkoi tutkia ja korjata sitä. Tuloksena on 717 '
+            + 'gigapikselin kuva eli 717 000 000 000 pikseliä: suurin ja '
+            + 'tarkin valokuva, joka taideteoksesta on koskaan otettu. Kahden '
+            + 'pikselin väli on viisi mikrometriä, pienempi kuin ihmisen '
+            + 'punasolu. Kuva koottiin 8 439 erillisestä otoksesta, ja '
+            + 'tiedosto on 5,6 teratavua. Verkossa siihen voi zoomata '
+            + 'värihiukkasiin asti.',
+          selite: 'Yksityiskohta Yövartiosta: kultapukuinen tyttö, jonka '
+            + 'hiuksissa on koristepanta ja jonka kasvot on maalattu paksuin '
+            + 'siveltimenvedoin.',
+          lahde: 'Rembrandt, Wikimedia Commons (public domain)',
+          linkki: 'https://www.rijksmuseum.nl/en/stories/operation-night-watch/story/ultra-high-resolution-photo',
+          linkkiNimi: 'Rijksmuseum — Yövartio äärimmäisen tarkkana kuvana',
+        },
+        {
+          otsikko: 'Maailman suurin Van Gogh -kokoelma, yli tuhat teosta',
+          tiedosto: 'Amandelbloesem - s0176V1962 - Van Gogh Museum.jpg',
+          teksti: 'Van Gogh Museum Amsterdamissa omistaa maailman suurimman '
+            + 'Vincent van Goghin kokoelman, ja verkossa siitä on yli tuhat '
+            + 'maalausta, piirustusta ja kirjettä. Teokset voi järjestää '
+            + 'vuosiluvun mukaan ja seurata, miten synkät perunansyöjät '
+            + 'muuttuvat kymmenessä vuodessa auringonkukiksi. Mukana ovat '
+            + 'myös aikalaiset Gauguin, Toulouse-Lautrec ja Redon. Sivustolla '
+            + 'on erillinen osio lapsille.',
+          selite: 'Van Goghin maalaus Amandelbloesem vuodelta 1890: valkoisia '
+            + 'mantelinkukkia ja mutkaisia oksia kirkkaan turkoosia taivasta '
+            + 'vasten.',
+          lahde: 'Vincent van Gogh, Wikimedia Commons (public domain)',
+          linkki: 'https://www.vangoghmuseum.nl/en/collection',
+          linkkiNimi: 'Van Gogh Museum — kokoelma verkossa',
+        },
+        {
+          otsikko: 'Kävele takahuoneistoon, jossa kahdeksan ihmistä piileskeli',
+          tiedosto: 'AnneFrankHouseAmsterdamtheNetherlands.jpg',
+          teksti: 'Frankin perhe siirtyi piiloon heinäkuussa 1942 Prinsengracht '
+            + '263:n takarakennukseen. Viikkoa myöhemmin tuli van Pelsin '
+            + 'perhe ja neljän kuukauden päästä Fritz Pfeffer — kahdeksan '
+            + 'ihmistä yli kahdeksi vuodeksi. Anne Frank Huisin sivulla '
+            + 'huoneistosta on pohjapiirros, jonka jokaista huonetta voi '
+            + 'klikata auki, ja kolmiulotteinen kierros, jolla kuljetaan '
+            + 'kirjahyllyn takaa sisään. Katselu on ilmaista.',
+          selite: 'Anne Frankin talo Prinsengrachtin varrella iltavalossa: kapea '
+            + 'tummanruskea tiilitalo, jonka korkeissa ikkunoissa on '
+            + 'valkoiset karmit.',
+          lahde: 'Massimo Catarinella, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://www.annefrank.org/en/anne-frank/secret-annex/',
+          linkkiNimi: 'Anne Frank Huis — takahuoneisto pohjapiirroksena ja 3D:nä',
+        },
+        {
+          otsikko: 'Sanomalehtiä vuodesta 1618 — valitse mikä tahansa päivä',
+          tiedosto: 'Courante uyt Italien, Duytslandt, &c. 1618-11-23.jpg',
+          teksti: 'Delpher on Alankomaiden kansalliskirjaston hakupalvelu, jossa '
+            + 'on yli kaksi miljoonaa sanomalehteä vuosilta 1618–1995, lähes '
+            + '500 000 aikakauslehteä ja 200 000 kirjaa. Aineisto tulee lähes '
+            + '200 laitoksen kokoelmista, ja sitä voi hakea sana sanalta '
+            + 'ilmaiseksi. Etusivulla on päivämääräkenttä: kirjoita mikä '
+            + 'tahansa päivä ja näet sen aamun lehdet sellaisina kuin ne '
+            + 'painettiin. Sivusto on hollanniksi.',
+          selite: 'Courante uyt Italien, Duytslandt -lehden sivu marraskuulta '
+            + '1618: tiheää vanhaa fraktuuratekstiä kahdessa palstassa ilman '
+            + 'yhtään kuvaa.',
+          lahde: 'Wikimedia Commons (public domain)',
+          linkki: 'https://www.delpher.nl/',
+          linkkiNimi: 'Delpher — hollantilaiset lehdet ja kirjat 1618 alkaen',
+        },
+        {
+          otsikko: '43 miljoonaa esinettä ja tyrannosaurus nimeltä Trix',
+          tiedosto: 'Trix - lateral view.jpg',
+          teksti: 'Naturalis Leidenissä on yksi maailman suurimmista '
+            + 'luonnontieteellisistä kokoelmista: lähes 200 vuodessa '
+            + 'kertyneet 43 miljoonaa esinettä, sammalista dinosauruksiin. '
+            + 'Museon virtuaalikierroksella saleissa liikutaan itse ja '
+            + 'biologit kertovat matkan varrella omista suosikeistaan. '
+            + 'Kierros on ilmainen eikä vaadi kirjautumista. Sen varrella '
+            + 'seisoo Trix, yksi maailman täydellisimmistä tyrannosauruksen '
+            + 'luurangoista.',
+          selite: 'Trix-tyrannosauruksen luuranko pystytettynä näyttelysaliin: '
+            + 'pää painuneena alas, hännän ja kaulan muodostama kaari sinistä '
+            + 'seinää vasten.',
+          lahde: 'Rique, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.naturalis.nl/en/virtualmuseum',
+          linkkiNimi: 'Naturalis — virtuaalimuseo',
+        },
+      ],
+    },
+  ],
 };
