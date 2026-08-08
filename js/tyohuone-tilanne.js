@@ -39,14 +39,13 @@ export const TILANNE = {
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'tyossa',
-      tehtava: 'Espanjan tv-nappi: RTVE ohjaa http-osoitteeseen, '
-        + 'joten uutisproxy-workeriin tehdään https-reitti ensin '
-        + '(rajattu poikkeuslupa Opus 1:n kaistalle), sitten nappi '
-        + '(sää oletuksena, Telediario toisena). Ruotsi ja Italia '
-        + 'ilman nappia, syyt koodissa (#490).',
-      seuraavaksi: 'RTVE-napin julkaisu; omistajan iPad-testi '
-        + 'lopullinen varmistus.',
+      tila: 'odottaa',
+      tehtava: 'Kaista tyhjä. Valmiina: v360 Espanjan tv-nappi '
+        + '(Sää tänään + Uutiset neljässä minuutissa, '
+        + 'worker-reitti #492), v359 Venetsian laguuni, '
+        + 'v351/v354/v355 kartat, tv-kartoitus.',
+      seuraavaksi: 'Uusi tehtävä pilottikatselmuksen ja '
+        + 'testikierroksen tarpeiden mukaan.',
     },
     {
       tekija: 'Sonnet 1',
@@ -85,6 +84,15 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Espanjan tv-nappi — TESTAA IPADILLA (v360)',
+    ohje: 'Avaa Espanjan maalehti: tv-napissa kaksi valintaa, Sää '
+      + 'tänään (38 s) ja Uutiset neljässä minuutissa. Tämä on '
+      + 'juuri se laitetesti, jota kehitysympäristöstä ei voi '
+      + 'tehdä. Jos nappi sanoo "Ei saatu haettua", vika on '
+      + 'todennäköisesti Cloudflaren workerin päivitysviive — '
+      + 'kokeile hetken päästä uudestaan ennen kuin raportoit.',
+  },
   {
     otsikko: 'Berliinin nähtävyysjutut — PILOTTI (v358)',
     ohje: 'Avaa Berliinin kaupunkikartta ja napauta numeroympyröitä: '
