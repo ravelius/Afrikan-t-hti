@@ -4837,4 +4837,124 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  PRT: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Portugalin parhaat paikat ovat verkossa ja ilmaisia: zoomattava '
+        + 'hirviömaalaus, kuninkaan kultavaunut sisältä, kuusituhatta '
+        + 'fadolevyä ja kamera, joka näyttää maailman suurimmat aallot juuri '
+        + 'nyt.',
+      nostot: [
+        {
+          otsikko: 'Kolme paneelia täynnä olentoja, joita ei ole olemassa',
+          tiedosto: 'Temptation of Saint Anthony.jpg',
+          teksti: 'Museu Nacional de Arte Antiga Lissabonissa omistaa Hieronymus '
+            + 'Boschin Pyhän Antoniuksen kiusaukset noin vuodelta 1500. '
+            + 'Kolmiosainen maalaus on Google Arts & Culturessa niin tarkkana '
+            + 'kuvana, että sitä voi zoomata yksityiskohta kerrallaan. '
+            + 'Silloin alkaa löytyä: ilmassa lentää kaloja, kylä palaa '
+            + 'taustalla, ja olennoilla on väärä määrä jalkoja. Museon '
+            + 'kokoelmassa on yli 40 000 esinettä, mutta tämä yksi '
+            + 'tammilevylle maalattu teos riittää pitkäksi aikaa.',
+          selite: 'Boschin kolmiosainen maalaus: keskellä palava kylä ja '
+            + 'raunioitunut torni, sivupaneeleissa ihmisiä ja hirviöitä, '
+            + 'ilmassa lentäviä olentoja.',
+          lahde: 'Hieronymus Bosch, Wikimedia Commons (public domain)',
+          linkki: 'https://artsandculture.google.com/asset/the-temptations-of-st-anthony-jheronymus-bosch/WwHN8Z7G17mnkA',
+          linkkiNimi: 'Google Arts & Culture — Pyhän Antoniuksen kiusaukset zoomattavana',
+        },
+        {
+          otsikko: 'Kuusituhatta esinettä, jotka yksi mies osti itselleen',
+          tiedosto: 'Portugal, Lisbon, Gulbenkian Museum, Peacock Corsage, René Lalique (52593923406).jpg',
+          teksti: 'Calouste Gulbenkian oli öljymies, joka keräsi elämänsä aikana '
+            + 'noin 6 000 taideteosta ja jätti ne Lissabonille. Museon '
+            + 'verkkokatalogi on englanniksi, ja haun voi rajata materiaalin '
+            + 'mukaan: timantti, norsunluu, vuorikristalli, kilpikonnankuori. '
+            + 'Kokoelmassa on Rembrandtia, Monet\'ta ja Turneria, mutta myös '
+            + 'lähes kaksisataa René Laliquen korua ja lasiesinettä, jotka '
+            + 'Gulbenkian osti suoraan tekijältä vuosina 1899–1927. Museon '
+            + 'saleissa on esillä vain noin tuhat esinettä. Loput ovat '
+            + 'verkossa.',
+          selite: 'Laliquen riikinkukkokoriste: kullattu lintu levittää '
+            + 'pyrstönsä, jonka vihreissä emalilehdissä hohtaa opaaleja.',
+          lahde: 'Lark Ascending, Wikimedia Commons (public domain)',
+          linkki: 'https://gulbenkian.pt/museu/en/works_museu/',
+          linkkiNimi: 'Museu Calouste Gulbenkian — perustajan kokoelma verkossa',
+        },
+        {
+          otsikko: 'Vuonna 1572 painettu kirja, jonka voi avata itse',
+          tiedosto: 'Large hall in the Biblioteca Nacional de Portugal.jpg',
+          teksti: 'Portugalin kansalliskirjaston digitaalinen kokoelma avattiin '
+            + 'vuonna 2002, ja ensimmäinen siihen viety teos oli Luís de '
+            + 'Camõesin Os Lusíadas. Merenkulkurunoelma painettiin '
+            + 'Lissabonissa vuonna 1572, ja se on kokoelmassa yhä numero '
+            + 'yksi. Linkki vie suoraan lukijaan, jossa 186 lehteä vanhaa '
+            + 'painojälkeä käännetään kuin kirjaa. Samasta kirjastosta löytyy '
+            + 'myös 2 511 vanhaa karttaa, käsin maalattuja koodekseja ja '
+            + 'satoja vuosia vanhoja sanomalehtiä.',
+          selite: 'Kansalliskirjaston suuri lukusali Lissabonissa: puinen '
+            + 'kasettikatto kattoikkunoineen, takaseinällä iso kudottu '
+            + 'seinävaate ja rivi lukupöytiä.',
+          lahde: 'Threeohsix, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://purl.pt/1/1/',
+          linkkiNimi: 'Biblioteca Nacional Digital — Os Lusíadas vuoden 1572 painoksena',
+        },
+        {
+          otsikko: '6 159 äänitettä, jotka saa kuunnella ilmaiseksi',
+          tiedosto: 'Lisbon. Tribute to Fado legends of Mouraria. (27072597077).jpg',
+          teksti: 'Lissabonin fadomuseon digitaalinen ääniarkisto on Portugalin '
+            + 'suurin äänitekokoelma verkossa: 6 159 raitaa, vanhimmat '
+            + '1900-luvun alusta. Sivun saa englanniksi, ja levyjä selataan '
+            + 'joko laulajan tai laulutyypin mukaan. Kuunteleminen ei vaadi '
+            + 'kirjautumista, ja raidoista voi koota oman soittolistan. '
+            + 'Vanhimmissa nauhoissa kohina kuuluu läpi, koska ne on tehty '
+            + 'yli sata vuotta sitten. Fado pääsi Unescon '
+            + 'kulttuuriperintöluetteloon vuonna 2011.',
+          selite: 'Mourarian kujalla Lissabonissa: talon seinään on kehystetty '
+            + 'suuria mustavalkoisia muotokuvia fadolaulajista, kadulla '
+            + 'kävelee mies.',
+          lahde: 'Vernaccia, Wikimedia Commons (CC BY 2.0)',
+          linkki: 'https://arquivosonoro.museudofado.pt/en',
+          linkkiNimi: 'Museu do Fado — digitaalinen ääniarkisto',
+        },
+        {
+          otsikko: 'Kamera, joka katsoo maailman suurinta aaltoa',
+          tiedosto: '10 meters - Nazaré - Portugal - Flickr - Carlos Eduardo Joos.jpg',
+          teksti: 'Nazarén edustalla merenpohjassa on 230 kilometriä pitkä ja '
+            + 'paikoin 5 000 metriä syvä kanjoni. Se ohjaa Atlantin myrskyjen '
+            + 'voiman suoraan rantaan, ja siksi Praia do Nortessa nousevat '
+            + 'maailman suurimmat surffatut aallot. Ennätys on 26,21 metriä, '
+            + 'ja sen ratsasti Sebastian Steudtner 29. lokakuuta 2020. '
+            + 'Beachcamin kamera näyttää saman paikan suorana, ja ruudun '
+            + 'laidassa lukee aallonkorkeus, tuuli ja meren lämpötila. '
+            + 'Kameroita on Portugalissa 190.',
+          selite: 'Surffaaja vihreällä laudalla laskee jättiaallon rinnettä '
+            + 'Nazarén edustalla; aallon harja murtuu vaahdoksi hänen '
+            + 'yläpuolellaan.',
+          lahde: 'Carlos Eduardo Joos, Wikimedia Commons (CC BY 2.0)',
+          linkki: 'https://beachcam.meo.pt/livecams/praia-do-norte-canhao-nazare/',
+          linkkiNimi: 'Beachcam — Nazaré, Praia do Norte suorana',
+        },
+        {
+          otsikko: 'Kävele niiden vaunujen väliin, jotka lähetettiin paaville 1716',
+          tiedosto: 'Coach of the Oceans (18th century) (37767646395).jpg',
+          teksti: 'Lissabonin vaunumuseo perustettiin vuonna 1905, kun kuningatar '
+            + 'Amélia kokosi kuninkaallisten tallien ajopelit yhteen saliin. '
+            + 'Google Arts & Culturen katunäkymässä museo aukeaa niin, että '
+            + 'vaunujen välissä voi kävellä ja kääntyä ympäri. Komein niistä '
+            + 'on Valtamerten vaunu, joka rakennettiin Roomassa noin vuonna '
+            + '1716 kuningas João V:n suurlähetystöä varten paavi Klemens '
+            + 'XI:n luo. Sen perässä kullatut hahmot esittävät Atlanttia ja '
+            + 'Intian valtamerta.',
+          selite: 'Valtamerten vaunu museosalissa: punainen samettikatos, '
+            + 'valtavat kullatut kaiverretut pyörät ja perässä ryhmä '
+            + 'kullattuja veistoshahmoja.',
+          lahde: 'Pedro Ribeiro Simões, Wikimedia Commons (CC BY 2.0)',
+          linkki: 'https://artsandculture.google.com/streetview/national-coach-museum-the-coaches/UgHIa6HsKttsmA',
+          linkkiNimi: 'Google Arts & Culture — vaunumuseon salit katunäkymänä',
+        },
+      ],
+    },
+  ],
 };
