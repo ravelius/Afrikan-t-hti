@@ -8970,6 +8970,15 @@ body.vertailu-tila .pawns { display: none; }
   max-width: min(58%, 300px);
 }
 
+/*
+ * Ensimmäinen kuva (omistajan ohje 8.8.2026): vaakakuva saa levitä
+ * koko palstalle — se avaa jutun kuin lehden pääkuva. Pystykuva ei
+ * kanna isona kapeassa kortissa, joten se pysyy muita pienempänä.
+ * Suuntaluokan (kuva-vaaka/kuva-pysty) lisää ui.js kuvan latauduttua.
+ */
+.nahtavyys-ensikuva.kuva-vaaka { max-width: 100%; }
+.nahtavyys-ensikuva.kuva-pysty { max-width: min(46%, 240px); }
+
 .nahtavyys-kuva {
   display: block;
   width: 100%;
