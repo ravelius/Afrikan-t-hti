@@ -5694,14 +5694,6 @@ body.katselu #newgame-btn { display: none; }
  * vaan merkintä pergamentilla — se saa reagoida, mutta pinnalla eikä
  * muodolla.
  */
-/* Kehittäjätilassa numeroa vilkuillaan jatkuvasti — isompi koko
- * (omistajan toive 8.8.2026: "versionumero saisi näkyä vähän
- * isommalla kartalla"). */
-.versio-kulma.kehittaja {
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
 .versio-kulma:hover:not(:disabled),
 .versio-kulma:focus-visible {
   background: none;
