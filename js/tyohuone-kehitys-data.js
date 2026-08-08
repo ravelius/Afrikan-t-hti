@@ -377,6 +377,94 @@ export const UUDET_VALIT = {
   ],
 };
 
+/**
+ * Isoisä visaan ja aarteeseen (omistajan idea 8.8. illalla: "isoisän
+ * merkinnät melkein kokonaan pois [saapumisista] ellei siihen ole
+ * todella hyvää syytä. Sen sijaan isoisän voisi siirtää
+ * kysymys/aarre-osioon"). Neljä kokeilua koko kaaresta:
+ *
+ *   1. SAAPUMINEN — pelkkä Reginaldin hetki, ei isoisää.
+ *   2. KOHTAAMINEN TIETOVISASSA — kun pelaaja käy kysymykseen,
+ *      isoisän merkintä johdattaa siihen ja sitoo sen kaupunkiin.
+ *   3. AARTEEN PALJASTUMINEN — kätkön löytyessä isoisän rivi antaa
+ *      palkinnon tunteen ja sulkee saapumisen kuvan.
+ *
+ * Isoisä ei siis katoa — hän siirtyy sinne, missä pelaaja tekee
+ * jotain. Saapuminen jää imuksi, isoisä palkitsee teot.
+ */
+export const VISA_AARRE_KOKEILUT = {
+  johdanto: 'Neljä kokeilua uudesta työnjaosta: saapumismerkintä on '
+    + 'pelkkää Reginaldia KOKO välimitassa (omistajan tarkennus: '
+    + '"pidä yhteismitta matkakirjassa samana, niin nuoren miehen '
+    + 'ääni saa enemmän tilaa"), ja isoisä astuu esiin vasta '
+    + 'tietovisan kohdalla ja aarteen paljastuessa. Visateksti on '
+    + 'kehys pelin oman kysymyksen ympärille; aarreteksti näytetään '
+    + 'kätkön löytyessä.',
+  kohteet: [
+    {
+      id: 'edinburgh',
+      otsikko: 'Edinburgh (jännitys)',
+      saapuminen: 'Kujalla kaasulyhdyn valoympyrän reunalla seisoi '
+        + 'hahmo liikkumatta, ja omat askeleeni kuuluivat liian '
+        + 'kovaa. Astuin lähemmäs — yövartija nosti lakkiaan: '
+        + '"Eksyitte, nuori herra. Täällä kaikki eksyvät ensin." '
+        + 'Kävelin hänen perässään valosta valoon.',
+      visa: 'Isoisä oli merkinnyt sivun reunaan: "Tässä kaupungissa '
+        + 'oikea vastaus on avain — väärä kerros vie väärälle '
+        + 'vuosisadalle." Vastasin kuin koe olisi hänen.',
+      aarre: 'Kätkön pohjalla oli isoisän rivi: "Yövartija saattoi '
+        + 'minutkin kerran oikealle sivulle. Kiitä häntä '
+        + 'puolestani." Kujan päässä lyhty heilahti kuin lakki.',
+    },
+    {
+      id: 'pariisi',
+      otsikko: 'Pariisi (arvoitus)',
+      saapuminen: 'Kioskin myyjä työnsi lehden kainalooni: "Sivu '
+        + 'yhdeksän, monsieur." Sivulla oli ilmoitus: '
+        + '"Löytötavaratoimistossa englantilainen matkalaukku '
+        + 'vuodelta 1873. Noudettava ennen sunnuntaita." Tänään on '
+        + 'lauantai.',
+      visa: 'Löytötavaratoimiston virkailija ei kysynyt nimeäni '
+        + 'vaan sanoi: "Omistaja tunnistetaan kysymyksellä." Isoisä '
+        + 'oli varautunut tähän: sivulle oli kirjoitettu "Vastaa '
+        + 'niin kuin minä vastaisin."',
+      aarre: 'Laukussa oli yksi esine: valokuva kahvilan pöydästä '
+        + 'seitsemän. Taakse oli kirjoitettu: "Tilaa kaakao ja jää '
+        + 'istumaan. Joku tulee aina." Tilasin.',
+    },
+    {
+      id: 'ateena',
+      otsikko: 'Ateena (lämpö)',
+      saapuminen: 'Torin kauppias antoi minun maistaa oliiveja '
+        + 'kolmesta ruukusta ja kysyi, mikä vuori maistui '
+        + 'parhaalta. Nauroin, kunnes hän osoitti rinteitä '
+        + 'kaupungin takana: jokainen ruukku oli omaltaan. Ostin '
+        + 'pussillisen sitä vuorta, jonka nimeä en osannut lausua.',
+      visa: 'Isoisä oli piirtänyt sivulle kolme ruukkua ja '
+        + 'kirjoittanut alle: "Kauppias kysyy kaikilta saman '
+        + 'kysymyksen. Vastaa oikein, niin saat neljännen maun."',
+      aarre: 'Kätkö oli oliivipuun juurella: pieni ruukku, jonka '
+        + 'kyljessä luki isoisän käsialalla: "Vanhinta ei etsitä '
+        + 'museosta. Tämä puu ehti nähdä Sokrateen — ja nyt '
+        + 'sinut."',
+    },
+    {
+      id: 'pietari',
+      otsikko: 'Pietari (ihmetys)',
+      saapuminen: 'Eremitaasin salissa kissa käveli ohitseni kuin '
+        + 'virkamies kiireisellä asialla. Vahtimestari kuiskasi: '
+        + 'kissat ovat vartioineet tauluja keisarinnan ajoista, ja '
+        + 'jokaisella on oma kerros.',
+      visa: 'Vahtimestari saattoi minut salin poikki: "Kissa vie '
+        + 'vieraan oikean taulun luo, jos vieras osaa vastata." '
+        + 'Isoisän kirjassa luki vain: "Luota kissaan."',
+      aarre: 'Taulun takana oli syvennys ja siinä isoisän '
+        + 'merkintä: "Sillat nousivat ja jäin väärälle rannalle. '
+        + 'Paras virhe, jonka tein." Kissa odotti jo ovella.',
+    },
+  ],
+};
+
 export const MANTERE_KOKEILUT = [
   {
     lauta: 'Afrikka — Sansibar (kivilinnun varjo)',
