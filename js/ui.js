@@ -4687,7 +4687,17 @@ export class UI {
     const vb = this.svg?.getAttribute?.('viewBox')?.split(/\s+/);
     const skaala = laatikko?.width && vb?.[2] ? laatikko.width / Number(vb[2]) : (this.zoomSkaala || 1);
     if (!Number.isFinite(skaala) || skaala <= 0) return;
-    const kirjasin = 13 / skaala;
+    /*
+     * Kirjasinkoko on 13 näyttöpikseliä, MUTTA kilpi ei saa kasvaa
+     * maataan suuremmaksi: uloszoomatussa Euroopassa vakiokokoinen
+     * kilpi peitti koko Tšekin ja naapurikaupungit (omistajan
+     * havainto 8.8.2026). Katto johdetaan maan leveydestä ja nimen
+     * pituudesta — kaukaa kilpi kutistuu kartan mukana, läheltä se
+     * pysyy lukukokoisena. Osumapinta pysyy silti aina ≥44 px.
+     */
+    const haluttu = 13 / skaala;
+    const kattoK = (k.maa.leveys * 1.05) / (k.maa.nimi.length * 0.62 + 3.15);
+    const kirjasin = Math.min(haluttu, kattoK);
     k.nimi.setAttribute('font-size', kirjasin.toFixed(1));
     // Nimen leveys mitataan, ei arvata — mutta vasta kirjasinkoon
     // asettamisen jälkeen, jotta mitta vastaa lopullista piirtoa.

@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 406, teksti: 'Maan nimikilpi kutistuu kaukaa katsottuna maan mukana' },
   { v: 405, teksti: 'Lehden vieritys ei enää pompahda takaisin pohjaan' },
   { v: 404, teksti: 'Minitehtävä joka kaupunkilehden aihesivulle' },
   { v: 403, teksti: 'Maan nimi ja i yhtenä selkeänä nappina kartalla' },
