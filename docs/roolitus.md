@@ -74,6 +74,26 @@ jutut (Opus 1:n malli) pysyvät ennallaan. Kaistat eivät koske
 samoihin tiedostoihin; muutokset kaistajakoon sovitaan Fablen
 kautta.
 
+## Kustannuskuri (ultracode käytössä kaikilla Opus/Sonnet-sessioilla)
+
+Omistajan havainto 8.8.2026: Opus 5 lähtee herkästi paisuttamaan
+tehtävää ja kuluttamaan turhaan. Säännöt kaikille:
+
+1. **Tee vain se, mitä tehtävänannossa pyydetään.** Jos huomaat
+   viereisen ongelman, KIRJAA se raporttiin Fablelle — älä korjaa
+   ohimennen, ellei se ole saman PR:n välitön edellytys.
+2. **Pilotti ennen skaalaa:** uusi juttutyyppi tai työtapa tehdään
+   ensin yhdelle kaupungille/maalle ja raportoidaan, ennen kuin
+   sitä monistetaan.
+3. **Rinnakkaiset agenttiparvet vain selvärajaisiin eriin** (esim.
+   viisi maata, joilla on sama resepti) — ei avoimiin hakuihin tai
+   "tutki kaikki" -pyyhkäisyihin ilman Fablen tehtävänantoa.
+4. **Jos tehtävä alkaa paisua** (uusia alitehtäviä, yllättävä
+   rakennemuutos, kolmas korjauskierros samaan vikaan), PYSÄHDY ja
+   raportoi Fablelle ennen jatkamista.
+5. Erä kerrallaan: yksi looginen kokonaisuus valmiiksi ja PR
+   sisään ennen seuraavan aloittamista.
+
 ## Julkaisusäännöt (kaikille rooleille)
 
 1. Yksi looginen kokonaisuus per PR; squash-merge; commit-otsikkoon
