@@ -35,16 +35,17 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'MENOVINKIT VALMIIT: 30/30 maata 6–20-rajassa '
-        + '(Egypti viimeistelyssä). MAALEHDET VALMIIT: syntyvät '
-        + 'rakenteesta automaattisesti. Kaupunkilehdet: täysi '
-        + 'malli Lontoo+Praha+Wien; seuraavaksi Madrid, Berliini, '
-        + 'Venetsia ja Tukholma täyteen malliin, sitten loput ~30 '
-        + '(Ateena ja Amsterdam jo tekeillä).',
-      seuraavaksi: 'v390: maan i pysyvästi laudalla (koko lasketaan '
-        + 'kartan skaalasta) ja sisällys alareunan pop-upina. '
-        + 'Seuraavaksi Berliinin+Venetsian aihesivut, Tukholma, '
-        + 'sitten Ateena/Amsterdam/Egypti agenteilta.',
+      tehtava: 'MAALEHDET VALMIIT, menovinkit 29/30 (Egypti '
+        + 'agentilla). Kaupunkilehdet: 8 täydessä mallissa — '
+        + 'Lontoo, Praha, Wien, Madrid, Berliini, Venetsia, '
+        + 'Tukholma (v394/396) ja Pariisi (v398). Kaikki neljä '
+        + 'karttakaupunkia tehty sovitussa järjestyksessä; kannet '
+        + 'siirtyivät sanatarkasti, tarkistettu koneellisesti.',
+      seuraavaksi: 'Loput ~30 kaupunkia vapaassa järjestyksessä '
+        + '3–4 agentin erissä (Ateena, Amsterdam ja Egypti '
+        + 'käynnissä). Samalla minitehtävä jokaiselle '
+        + 'kaupunkilehden aihesivulle (tietopisteet, v399:n '
+        + 'mekanismi) — myös jo valmiisiin takautuvasti.',
     },
     {
       tekija: 'Opus 2',
@@ -66,7 +67,13 @@ export const TILANNE = {
         + 'testiä. Valmiina: v356 työhuoneen kokonaisuudistus (5 '
         + 'välilehteä, Testaa-välilehti pelilinkkeineen), v352 '
         + 'Kehitys-välilehti.',
-      seuraavaksi: 'QA-raportti Fablelle; löydöt korjauslistaksi.',
+      seuraavaksi: 'QA-raportti Fablelle; löydöt korjauslistaksi. '
+        + 'Briefiin kertyneet erityiskohteet: Mercator-vääristymä '
+        + 'karttapisteissä, Opus 2:n curl+karttapiste-tarkistus, '
+        + 'haikara/Vasa-kuvakaksoiskappaleet, roskapolkutesti ja '
+        + 'Flickr Commonsin "No restrictions" -lisenssimerkintä '
+        + '(Tukholman Elias Martin -galleria; tarkistin ei tunne '
+        + 'merkintää, vaikka se on käytännössä PD).',
     },
     {
       tekija: 'Sonnet 2',
@@ -94,6 +101,22 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Visoista tietopisteitä rahan sijaan (v399)',
+    ohje: 'Vastaa minkä tahansa lehden kulttuurivisaan tai '
+      + 'minitehtävään: oikeasta tulee nyt tietopisteitä (2 tai 1), '
+      + 'ei puntia, ja kertymä näkyy passissa Kokemuksen alla. '
+      + 'Palkintologiikka odottaa päätöstäsi — ehdotukset ovat '
+      + 'Fablen viestissä.',
+  },
+  {
+    otsikko: 'Kaupunkilehtiä nyt kahdeksalla (v394–v398)',
+    ohje: 'Berliini, Venetsia, Tukholma ja Pariisi saivat täyden '
+      + 'lehtimallin (kansi + aihesivut): mm. Tukholman Kadut ja '
+      + 'sulut sekä Eläimet kaupungissa, Pariisin kukko ja '
+      + 'kellotorni. Aihesivut väistävät maalehtien aiheita — '
+      + 'sama juttu ei toistu kahdessa lehdessä.',
+  },
   {
     otsikko: 'Uudet väliversiot tyhjältä pöydältä (työhuone)',
     ohje: 'Työhuone → Kehitys → Uudet väliversiot: kuusi kaupunkia '

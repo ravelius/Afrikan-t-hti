@@ -94,6 +94,21 @@ export const XP_PUZZLE = 25; // isoisän luonnoskirjan pulma ratkaistu
 export const XP_EXPLORE = 15; // kaupungin tutkiminen ilman laattaa
 export const EXPLORE_REWARD = 50; // löytöpalkkio oikeasta tutkimisvastauksesta
 
+/*
+ * Tietopisteet (omistajan päätös 8.8.2026): lehtien visoista ei saa
+ * rahaa vaan tietopisteitä. Ne ovat oma laskurinsa kokemuspisteiden
+ * rinnalla — kokemus kertyy matkasta, tieto lukemisesta. Palkinto-
+ * logiikka tietopisteille päätetään myöhemmin; siihen asti laskuri
+ * vain kertyy ja näkyy passissa.
+ */
+export const TIETOPISTE_KULTTUURIVISA = 2;
+export const TIETOPISTE_MINITEHTAVA = 1;
+
+/** "+1 tietopiste" / "+3 tietopistettä" — sama taivutus joka paikkaan. */
+export function tietopisteTeksti(n) {
+  return n === 1 ? '+1 tietopiste' : `+${n} tietopistettä`;
+}
+
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 export function questionLevel(question) {
   return question.level ?? 2;
@@ -160,6 +175,9 @@ export class Game {
       // nyt, jotta lokista ja laukusta näkee matkan oman saaliin.
       linssit: [],
       xp: 0,
+      // Lehtien visoista kertyvät tietopisteet (palkintologiikka tulee
+      // myöhemmin — ks. TIETOPISTE_KULTTUURIVISA).
+      tietopisteet: 0,
       // Tietoprosentin laskurit: mukana sekä tietovisat että kaksintaistelut.
       quizAsked: 0,
       quizCorrect: 0,
@@ -684,13 +702,18 @@ export class Game {
    * palkkion. Väärä ei maksa mitään, mutta uutta yritystä samaan
    * kaupunkiin ei saa — palkkiota ei voi kalastella.
    */
-  actionKulttuuri(cityId, oikein, palkkio = 25) {
+  /*
+   * Visoista ei saa rahaa vaan tietopisteitä (omistajan päätös
+   * 8.8.2026: "ei näistä voisi saada rahaa. Näistä pitäisi saada
+   * tietopisteitä"). Raha on matkakassa, tieto on oma mittarinsa.
+   */
+  actionKulttuuri(cityId, oikein, pisteet = TIETOPISTE_KULTTUURIVISA) {
     const avain = `${this.pack.id}:${cityId}`;
     if (this.kulttuuriVastatut.has(avain)) return { ok: false, error: 'Jo vastattu' };
     this.kulttuuriVastatut.add(avain);
     if (oikein) {
-      this.player.money += palkkio;
-      this.say(this.player.id, `${this.player.name} tunsi paikallista kulttuuria (+${palkkio} puntaa).`);
+      this.player.tietopisteet = (this.player.tietopisteet ?? 0) + pisteet;
+      this.say(this.player.id, `${this.player.name} tunsi paikallista kulttuuria (${tietopisteTeksti(pisteet)}).`);
     }
     return { ok: true, palkittu: !!oikein };
   }
@@ -702,13 +725,13 @@ export class Game {
    * kaupunkia kohti — maan yhteinen aihesivu voi silti palkita
    * uudelleen maan toisessa kaupungissa, koska lehti on eri.
    */
-  actionMinitehtava(cityId, aiheId, oikein, palkkio = 10) {
+  actionMinitehtava(cityId, aiheId, oikein, pisteet = TIETOPISTE_MINITEHTAVA) {
     const avain = `${this.pack.id}:${cityId}:${aiheId}`;
     if (this.minitehtavatVastatut.has(avain)) return { ok: false, error: 'Jo vastattu' };
     this.minitehtavatVastatut.add(avain);
     if (oikein) {
-      this.player.money += palkkio;
-      this.say(this.player.id, `${this.player.name} ratkaisi lehden minitehtävän (+${palkkio} puntaa).`);
+      this.player.tietopisteet = (this.player.tietopisteet ?? 0) + pisteet;
+      this.say(this.player.id, `${this.player.name} ratkaisi lehden minitehtävän (${tietopisteTeksti(pisteet)}).`);
     }
     return { ok: true, palkittu: !!oikein };
   }
@@ -2007,6 +2030,7 @@ export class Game {
     game.players = data.players.map((p) => ({
       packId: rootPack.id,
       xp: 0,
+      tietopisteet: 0,
       quizAsked: 0,
       quizCorrect: 0,
       linssit: [],

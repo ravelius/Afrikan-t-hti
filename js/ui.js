@@ -14,6 +14,7 @@ import {
 import {
   DUEL_BYPASS_SHOES, DUEL_PRIZE, EXPLORE_REWARD, FIFTY_FIFTY_PRICE, FLIGHT_PRICE,
   HARD_BONUS, HINT_EVERY_TURNS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
+  TIETOPISTE_KULTTUURIVISA, TIETOPISTE_MINITEHTAVA, tietopisteTeksti,
 } from './game.js';
 import {
   factSource, factText, factVoice, isSourceUrl, PACKS, packById, sourceLabel, voiceTitle,
@@ -45,7 +46,7 @@ import {
   asetaKuva, peiliPetti, peilinLaji, aaniOsoite, onPeilista,
 } from './media.js';
 import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
-import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js';
+import { AFRICA_KULTTUURI } from './packs/africa-kulttuuri.js';
 import { EUROPE_SAAPUMISET } from './packs/europe-saapumiset.js';
 import { ASIA_SAAPUMISET } from './packs/asia-saapumiset.js';
 import { NORTHAMERICA_SAAPUMISET } from './packs/northamerica-saapumiset.js';
@@ -926,9 +927,6 @@ const ZOOM_PEHMENNYS = 'cubic-bezier(0.68, 0, 0.3, 1)';
 // Hiljainen hetki ennen zoomausta, jotta moottoriääni erottuu.
 // Tutki-sivun ylä- ja alareunan kaista, joka vierittää päähän.
 const TUTKI_KAISTA_PX = 64;
-// Lehden minitehtävän palkkio: pienempi kuin kulttuurivisan, koska
-// vastaus lukee samalla sivulla.
-const MINITEHTAVA_PALKKIO = 10;
 const ZOOM_TAUKO_MS = 260;
 /*
  * Hiiren rullan vähimmäisväli. Tarkka rulla ja trackpad lähettävät
@@ -1171,6 +1169,8 @@ const VIIVA_IKONIT = {
   kallo: '<path d="M12 3.8c-3.9 0-6.5 2.7-6.5 6.1 0 2 .9 3.3 2.1 4.2v2.5h8.8v-2.5c1.2-.9 2.1-2.2 2.1-4.2 0-3.4-2.6-6.1-6.5-6.1z"/><g class="taytto"><circle cx="9.6" cy="10.1" r="1.3"/><circle cx="14.4" cy="10.1" r="1.3"/></g><path d="M10.3 16.6v2.4M13.7 16.6v2.4"/>',
   kenka: '<path d="M5.2 19.6h4.3v-3.2a5.7 5.7 0 1 1 5 0v3.2h4.3"/>',
   kukkaro: '<path d="M9.6 6.9 8.3 4.2h7.4L14.4 6.9"/><path d="M9.6 6.9h4.8c2.5 1.6 4.1 4.2 4.1 7 0 3.3-2.5 5.4-6.5 5.4s-6.5-2.1-6.5-5.4c0-2.8 1.6-5.4 4.1-7z"/>',
+  // Avoin kirja tietopisteille: tieto tulee lukemisesta, ei kukkarosta.
+  kirja: '<path d="M12 5.6C10.2 4.2 7.7 3.6 4.2 3.6v13.8c3.5 0 6 .6 7.8 2 1.8-1.4 4.3-2 7.8-2V3.6c-3.5 0-6 .6-7.8 2z"/><path d="M12 5.6v13.8"/>',
   estetty: '<circle cx="12" cy="12" r="8.4"/><path d="M6.3 6.3l11.4 11.4"/>',
   ankkuri: '<circle cx="12" cy="5" r="1.8"/><path d="M12 6.8v12.6M8.7 9.6h6.6"/><path d="M5.2 13.8c.3 3.9 3.2 6.3 6.8 6.3s6.5-2.4 6.8-6.3"/><path d="M5.2 13.8 3.5 12.6M18.8 13.8l1.7-1.2"/>',
   mitali: '<path d="M9.6 3.6 8.2 9.2M14.4 3.6l1.4 5.6"/><circle cx="12" cy="14.4" r="5.2"/><circle class="taytto" cx="12" cy="14.4" r="1.1"/>',
@@ -4952,6 +4952,9 @@ export class UI {
     rivi('Sijainti', p.pos.type === 'edge' ? `matkalla — ${city.name}` : city.name);
     rivi('Kukkaro', `£${p.money}`);
     rivi('Kokemus', `${p.xp ?? 0} kp`);
+    // Lehtien visoista kertyvä tieto. Palkintologiikka päätetään
+    // myöhemmin — siihen asti passi näyttää vain kertymän.
+    rivi('Tietopisteet', `${p.tietopisteet ?? 0}`);
     const tieto = game.knowledgePercent(p);
     if (tieto !== null) rivi('Tieto tästä laudasta', `${tieto} %`);
   }
@@ -6679,8 +6682,8 @@ export class UI {
      * avata, ja syventävä sisältö kuuluu sinne.
      *
      * Kulttuurivisa jää tänne, koska se on pelitoiminto eikä
-     * luettavaa: siitä saa puntia, ja se kuuluu samaan hetkeen kuin
-     * "Etsi kätkö".
+     * luettavaa: siitä saa tietopisteitä, ja se kuuluu samaan
+     * hetkeen kuin "Etsi kätkö".
      */
     this.arrivalKulttuuriLista.textContent = '';
 
@@ -6704,7 +6707,7 @@ export class UI {
       nappi.type = 'button';
       nappi.addEventListener('click', () => {
         const oikein = i === kysymys.correct;
-        const vastaus = this.game.actionKulttuuri(city.id, oikein, KULTTUURI_PALKKIO);
+        const vastaus = this.game.actionKulttuuri(city.id, oikein, TIETOPISTE_KULTTUURIVISA);
         this.arrivalKulttuuriVaihtoehdot.textContent = '';
         this.arrivalKulttuuriKysymys.textContent = kysymys.q;
         this.arrivalKulttuuriTulos.hidden = false;
@@ -6719,7 +6722,7 @@ export class UI {
           ? 'kulttuuri-tulos oikein-tulos'
           : 'kulttuuri-tulos vaarin-tulos';
         this.arrivalKulttuuriTulos.textContent = (oikein
-          ? `Oikein! +${KULTTUURI_PALKKIO} puntaa. `
+          ? `Oikein! ${tietopisteTeksti(TIETOPISTE_KULTTUURIVISA)}. `
           : `Oikea vastaus: ${kysymys.options[kysymys.correct]}. `) + (kysymys.fact ?? '');
         // Palaute vieritetään näkyviin — kysymys elää dialogin alalaidassa.
         this.arrivalKulttuuriTulos.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -6729,8 +6732,8 @@ export class UI {
         if (oikein) {
           const box = this.buildToast({
             kind: 'stamp',
-            icon: 'kukkaro',
-            text: `+${KULTTUURI_PALKKIO} puntaa`,
+            icon: 'kirja',
+            text: tietopisteTeksti(TIETOPISTE_KULTTUURIVISA),
             sub: 'Tunsit paikallista kulttuuria',
           });
           setTimeout(() => this.removeToast(box), TOAST_MS.default);
@@ -7345,7 +7348,7 @@ export class UI {
      * 5.8.2026). Muilla kaupungeilla visa pysyy etusivulla.
      */
     /*
-     * Visa on saapumisen pelitoiminto: siitä saa puntia siitä
+     * Visa on saapumisen pelitoiminto: siitä saa tietopisteitä siitä
      * kaupungista, johon pelaaja juuri saapui. Maalehti avataan
      * kartalta mistä tahansa maasta, joten siellä visa olisi väärässä
      * paikassa — ja Maiden tiedot -varusteella sen voisi pelata
@@ -8707,7 +8710,7 @@ export class UI {
   /**
    * Lehden minitehtävä: kehystetty tehtäväpalsta sivun lopussa kuin
    * sanomalehden ristikkonurkka. Kysymykseen osaa vastata luettuaan
-   * saman sivun — ja oikeasta vastauksesta saa pienen rahapalkkion,
+   * saman sivun — ja oikeasta vastauksesta saa tietopisteen,
    * kerran per lehti (game.actionMinitehtava). Maan yhteinen aihesivu
    * voi palkita uudelleen saman maan toisessa kaupungissa.
    */
@@ -8733,7 +8736,7 @@ export class UI {
       nappi.addEventListener('click', () => {
         const oikein = i === tehtava.oikea;
         const vastaus = this.game.actionMinitehtava(
-          cityId, kategoria.id, oikein, MINITEHTAVA_PALKKIO,
+          cityId, kategoria.id, oikein, TIETOPISTE_MINITEHTAVA,
         );
         if (!vastaus.ok) return;
         vaihtoehdot.replaceChildren();
@@ -8742,7 +8745,7 @@ export class UI {
           ? 'kulttuuri-tulos oikein-tulos'
           : 'kulttuuri-tulos vaarin-tulos';
         tulos.textContent = (oikein
-          ? `Oikein! +${MINITEHTAVA_PALKKIO} puntaa. `
+          ? `Oikein! ${tietopisteTeksti(TIETOPISTE_MINITEHTAVA)}. `
           : `Oikea vastaus: ${tehtava.vaihtoehdot[tehtava.oikea]}. `)
           + (tehtava.fakta ?? '');
         sfx.play(oikein ? 'correct' : 'wrong');
@@ -8751,8 +8754,8 @@ export class UI {
         if (oikein) {
           const box = this.buildToast({
             kind: 'stamp',
-            icon: 'kukkaro',
-            text: `+${MINITEHTAVA_PALKKIO} puntaa`,
+            icon: 'kirja',
+            text: tietopisteTeksti(TIETOPISTE_MINITEHTAVA),
             sub: 'Lehden minitehtävä ratkesi',
           });
           setTimeout(() => this.removeToast(box), TOAST_MS.default);
