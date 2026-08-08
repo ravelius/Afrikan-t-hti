@@ -3850,98 +3850,106 @@ export const MAA_KATEGORIAT = {
     },
     {
       id: 'ruoka',
-      nimi: 'Ruoka',
-      johdanto: 'Saksalainen ruoka on leipää ja makkaraa — mutta myös '
-        + 'maailman tunnetuimpia karkkeja ja kebab, joka sai nykyisen '
-        + 'muotonsa Berliinissä.',
-      /*
-       * Currywurst siirtyi tänne Berliinin litteistä nostoista
-       * (europe-kulttuuri.js): maan ruokasivu palvelee samaa lehteä,
-       * ja kannessa sen paikan vei visan aihe Ampelmännchen.
-       */
+      nimi: 'Ruokaa ja tapakulttuuria',
+      johdanto: 'Saksassa ruoka ja tavat kulkevat yhdessä: leipää on tuhansia '
+        + 'lajeja, kahvi juodaan kakun kanssa tiettyyn kellonaikaan, ja '
+        + 'joulumarkkinat avataan joka vuosi samana päivänä.',
       nostot: [
         {
-          otsikko: 'Makkara, jolla on oma pykälä',
-          tiedosto: 'Currywurst von Curry 36 Berlin (2023 Okt) - Bild 01.jpg',
-          teksti: 'Herta Heuwer sekoitti kioskillaan Charlottenburgissa '
-            + '4. syyskuuta 1949 kastikkeen ketsupista, currystä ja '
-            + 'mausteista ja kaatoi sen paistetun makkaran päälle. '
-            + 'Nimen Chillup hän rekisteröi 1959. Nykyään suolittoman '
-            + 'berliininmakkaran nimi on suojattu, ja hakemuksen '
-            + 'käsittely kesti kolmetoista vuotta. Berliiniläiset '
-            + 'syövät currywurstia arviolta seitsemänkymmentä miljoonaa '
-            + 'annosta vuodessa — ja jopa Volkswagenin autotehdas '
-            + 'valmistaa omaa currywurstiaan, jolla on virallinen '
-            + 'varaosanumero.',
-          selite: 'Currywurst ja ranskalaiset berliiniläisellä '
-            + 'kioskilla. Makkara paistetaan kokonaisena, leikataan '
-            + 'paloiksi vasta annokseen ja peitetään kastikkeella ja '
-            + 'currymausteella.',
-          lahde: 'Chainwit, Wikimedia Commons (CC BY 4.0)',
-          wiki: 'Currywurst',
-        },
-        {
-          otsikko: 'Leipämaa vääntää taikinansa solmuun',
+          otsikko: 'Kolmetuhatta leipää, ja jokaisella oma nimi',
           tiedosto: 'Brezel l Bäckerei-Raisch.jpg',
-          teksti: 'Saksassa leivotaan yli kolmeatuhatta erilaista '
-            + 'leipää, ja saksalainen leipäkulttuuri on kirjattu '
-            + 'Unescon aineettoman kulttuuriperinnön luetteloon. '
-            + 'Tunnetuin muoto on Brezel, solmulle väännetty taikina, '
-            + 'joka kastetaan ennen paistamista lipeäveteen — siitä '
-            + 'tulee kuoren tumma kiilto. Tarun mukaan leipuri sai '
-            + 'armahduksen keksimällä leivän, jonka läpi aurinko '
-            + 'paistaa kolmesti. Etelä-Saksassa Brezel kuuluu '
-            + 'aamiaiselle, ja leipurin kyltissä se on roikkunut '
-            + 'keskiajalta asti.',
-          selite: 'Vastapaistettuja Brezeleitä leipomon pöydällä '
-            + 'Schwabenissa. Karkea suola painetaan pintaan ennen '
-            + 'uunia.',
+          teksti: 'Saksan leipomoiden yhdistys pitää rekisteriä maan '
+            + 'leipälajeista, ja niitä on yli kolmetuhatta. Se on enemmän '
+            + 'kuin missään muualla maailmassa. Unesco otti saksalaisen '
+            + 'leipäkulttuurin aineettoman kulttuuriperinnön listalleen '
+            + 'vuonna 2014. Brezel eli rinkeli on niistä tunnetuin: '
+            + 'taikinanauha vedetään pitkäksi, solmitaan kädenkäänteessä ja '
+            + 'kastetaan lipeään, joka antaa kuoreen ruskean värin ja oman '
+            + 'makunsa.',
+          selite: 'Vastapaistettuja Brezeleitä leipomon pöydällä. Karkea suola '
+            + 'painetaan pintaan ennen uunia.',
           lahde: 'LenaRaisch, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Pretzel',
         },
         {
+          otsikko: 'Kello kolme juodaan kahvit ja syödään kakkua',
+          aika: '1900-luku',
+          tiedosto: 'Kirchner - Kaffetafel - 1907.jpeg',
+          teksti: 'Kaffee und Kuchen on saksalainen tapa, ei ateria: iltapäivällä '
+            + 'noin kolmen aikaan istutaan alas, keitetään kahvi ja syödään '
+            + 'pala kakkua. Sunnuntaisin siihen kutsutaan vieraita. Tapa '
+            + 'syntyi 1800-luvulla, kun kahvista tuli tavallisen väen juoma, '
+            + 'ja se näkyy yhä siinä, että konditoriat ovat täynnä juuri '
+            + 'iltapäivällä. Kakku on usein hedelmäpiirakka tai Schwarzwaldin '
+            + 'kirsikkakakku.',
+          selite: 'Ernst Ludwig Kirchnerin maalaus vuodelta 1907: kolme naista '
+            + 'keltaisen pöytäliinan ääressä, kahvipannu ja kupit edessään.',
+          lahde: 'Ernst Ludwig Kirchner, Wikimedia Commons (public domain)',
+          wiki: 'Ernst Ludwig Kirchner',
+        },
+        {
+          otsikko: 'Markkinat, jotka avataan joka vuosi samana päivänä',
+          aika: '1628',
+          tiedosto: 'Wilhelm Ritter - Weihnachtsmarkt auf der vorderen Insel Schütt 1930.jpg',
+          teksti: 'Joulumarkkinat ovat Saksassa oma vuodenaikansa. Nürnbergin '
+            + 'Christkindlesmarkt on niistä kuuluisin, ja se mainitaan '
+            + 'asiakirjoissa jo vuonna 1628. Markkinat avataan adventin alla '
+            + 'ja suljetaan jouluaattona. Kojuissa myydään puisia leluja, '
+            + 'kynttilöitä, paahdettuja manteleita ja Glühweiniä, joka on '
+            + 'kuumaa maustettua viiniä — lapsille sama juoma tehdään ilman '
+            + 'viiniä ja se on nimeltään Kinderpunsch.',
+          selite: 'Wilhelm Ritterin maalaus Nürnbergin joulumarkkinoilta vuodelta '
+            + '1930: lumiset katot, valaistut kojut ja kuusta kantava mies.',
+          lahde: 'Wilhelm Ritter, Wikimedia Commons (public domain)',
+          wiki: 'Joulumarkkinat',
+        },
+        {
+          otsikko: 'Piparkakkusydän, jossa lukee mitä et uskalla sanoa',
+          tiedosto: 'Lebkuchenherzen verziert.jpg',
+          teksti: 'Lebkuchenherz on sydämen muotoinen piparkakku, jonka pintaan '
+            + 'on kirjoitettu kuorrutuksella lyhyt lause ja johon on '
+            + 'pujotettu nauha kaulaan ripustamista varten. Niitä myydään '
+            + 'joulumarkkinoilla ja Oktoberfestissä. Tekstit ovat useimmiten '
+            + 'hellyttäviä tai kiusoittelevia, ja sydän annetaan lahjaksi sen '
+            + 'sijaan että asia sanottaisiin ääneen. Syödä sitä ei ole pakko '
+            + '— moni säilyttää sydämen vuosia.',
+          selite: 'Rivi koristeltuja piparkakkusydämiä nauhoissaan markkinakojun '
+            + 'katossa, kuorrutetut tekstit näkyvissä.',
+          lahde: 'Naturpuur, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
           otsikko: 'Karhu, joka syntyi kotikeittiössä',
+          aika: '1922',
           tiedosto: 'Gummi bears in a row.jpg',
-          teksti: 'Bonnilainen karamellinkeittäjä Hans Riegel aloitti '
-            + '1920 yrityksen, jonka koko omaisuus oli säkki sokeria, '
-            + 'kuparikattila ja jakkara. Kaksi vuotta myöhemmin hän '
-            + 'valoi liivatteesta pienen tanssivan karhun — esikuvana '
-            + 'markkinoilla temppuja tehneet oikeat tanssikarhut. '
-            + 'Vaimo Gertrud kuljetti tilaukset asiakkaille '
-            + 'polkupyörällä. Yhtiön nimi HARIBO tulee sanoista Hans '
-            + 'Riegel Bonn, ja kumikarhuja valmistetaan nykyään noin '
-            + 'sata miljoonaa päivässä.',
-          selite: 'Kumikarhut rivissä. Alkuperäinen Tanzbär oli '
-            + 'nykyistä karhua kookkaampi ja hoikempi.',
+          teksti: 'Hans Riegel perusti Bonnissa vuonna 1922 pienen makeistehtaan, '
+            + 'jonka koko omaisuus oli säkki sokeria, kuparipata ja '
+            + 'marmorilaatta. Kaksi vuotta myöhemmin hän muotoili '
+            + 'gelatiinista tanssivan karhun ja nimesi sen Tanzbäriksi. '
+            + 'Yrityksen nimi Haribo tulee perustajan nimestä ja '
+            + 'kotikaupungista: HAns RIegel, BOnn. Karhu on sittemmin '
+            + 'kutistunut ja pyöristynyt nykyiseen muotoonsa.',
+          selite: 'Kumikarhut rivissä. Alkuperäinen Tanzbär oli nykyistä karhua '
+            + 'kookkaampi ja hoikempi.',
           lahde: 'Indoor-Fanatiker, Wikimedia Commons (CC BY-SA 3.0)',
           wiki: 'Haribo',
         },
         {
           otsikko: 'Kebab sai leivän Berliinissä',
+          aika: '1970-luku',
           tiedosto: 'Döner Kebab, Berlin, 2010 (01).jpg',
-          teksti: 'Turkkilainen siirtolainen Kadir Nurman alkoi 1972 '
-            + 'myydä Berliinin eläintarhan aseman kupeessa jotakin '
-            + 'uutta: vartaassa paistettua lihaa ei lautaselle vaan '
-            + 'leivän väliin, jotta kiireinen kaupunkilainen voi syödä '
-            + 'kävellessään. Ajatus levisi kioski kioskilta, ja '
-            + 'salaatti, kastikkeet ja vihannekset tulivat matkan '
-            + 'varrella mukaan. Nykyään Berliinissä sanotaan olevan '
-            + 'enemmän döner-paikkoja kuin Istanbulissa, ja döner on '
-            + 'yksi koko Saksan suosituimmista pikaruoista.',
-          selite: 'Döner berliiniläisittäin: paahdettu leipä täytetään '
-            + 'lihalla, salaatilla, tomaatilla ja kastikkeella.',
+          teksti: 'Pystyvartaassa paistettu liha on vanha turkkilainen tapa, '
+            + 'mutta ajatus tunkea se leivän sisään ja syödä kävellen syntyi '
+            + 'Berliinissä 1970-luvulla. Turkkilaiset siirtolaiset myivät '
+            + 'annosta tehdastyöläisille, joilla oli lyhyt ruokatunti. Nyt '
+            + 'döner on Saksan myydyimpiä pikaruokia, ja Berliinissä siitä '
+            + 'kiistellään yhä: kuka keksi, mitä kuuluu sisään ja mikä kioski '
+            + 'on paras.',
+          selite: 'Döner berliiniläisittäin: paahdettu leipä täytetään lihalla, '
+            + 'salaatilla, tomaatilla ja kastikkeella.',
           lahde: 'AleGranholm, Wikimedia Commons (CC BY 2.0)',
           wiki: 'Kebab',
         },
       ],
-      tehtava: {
-        kysymys: 'Mistä sanoista karkkitehdas HARIBO on saanut nimensä?',
-        vaihtoehdot: ['Hans Riegel Bonn', 'Haus der Riesenbonbons', 'Hartes Bonbon'],
-        oikea: 0,
-        fakta: 'HARIBO on lyhenne perustajan nimestä ja kotikaupungista: '
-          + 'HAns RIegel BOnn. Ensimmäinen kumikarhu, Tanzbär, syntyi '
-          + 'vuonna 1922.',
-      },
     },
     {
       id: 'musiikki',
@@ -4310,64 +4318,6 @@ export const MAA_KATEGORIAT = {
      * leipomokuje: se on kirjan lempeimpiä. Kuvat silmätarkistettu
      * 480 px:ssä 7.8.2026.
      */
-    {
-      id: 'sarjakuva',
-      nimi: 'Sarjakuva',
-      johdanto: 'Lehden lopussa on tietenkin sarjakuva — ja juuri '
-        + 'Saksasta on kotoisin koko sarjakuvan esi-isä.',
-      nostot: [
-        {
-          otsikko: 'Max ja Morits leipurin uunissa',
-          aika: '1865',
-          tiedosto: 'Max und Moritz (Busch) 065.png',
-          selite: 'Leipuri lukitsee ovensa — mutta savupiippu jää '
-            + 'auki. Selaa nuolista, miten kujeen käy.',
-          lahde: 'Wilhelm Busch, Wikimedia Commons (Public domain)',
-          galleria: [
-            {
-              otsikko: 'Savupiippuun',
-              tiedosto: 'Max und Moritz (Busch) 066.png',
-              selite: 'Max ja Morits kiipeävät katolle ja sukeltavat '
-                + 'savupiippuun.',
-              lahde: 'Wilhelm Busch, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Jauhoarkkuun',
-              tiedosto: 'Max und Moritz (Busch) 067.png',
-              selite: 'Suinpäin jauhoarkkuun — ja pojat ovat yhtäkkiä '
-                + 'valkoisia kuin jauhopussit.',
-              lahde: 'Wilhelm Busch, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Rinkeleitä kohti',
-              tiedosto: 'Max und Moritz (Busch) 070.png',
-              selite: 'Jauhoisina he kiipeävät tuolille kohti hyllyn '
-                + 'rinkeleitä…',
-              lahde: 'Wilhelm Busch, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Taikinaan',
-              tiedosto: 'Max und Moritz (Busch) 071.png',
-              selite: '…ja rysähtävät tuolineen päivineen suoraan '
-                + 'taikinakaukaloon.',
-              lahde: 'Wilhelm Busch, Wikimedia Commons (Public domain)',
-            },
-          ],
-          teksti: 'Wilhelm Buschin kuvakertomus Max und Moritz (1865) '
-            + 'on koko sarjakuvan esi-isiä: seitsemän kujetta, jotka '
-            + 'kerrotaan kuvien jonolla ja loppusoinnuilla. '
-            + 'Leipomokujeessa taikinaan pudonneet pojat leivotaan '
-            + 'vahingossa leiviksi — mutta he syövät tiensä ulos '
-            + 'kuorten sisältä ja livistävät. Kirja on käännetty '
-            + 'kymmenille kielille, suomeksikin jo 1800-luvulla, ja '
-            + 'kun amerikkalaiset sanomalehdet aloittivat '
-            + 'sarjakuvasivunsa 1897, ensimmäisiä sarjoja oli suoraan '
-            + 'Buschin pojista mallinsa saanut Katzenjammer Kids — '
-            + 'piirtäjäkin oli saksalaissiirtolainen.',
-          wiki: 'Wilhelm Busch',
-        },
-      ],
-    },
     /*
      * Valokuvaus on oma osionsa (omistajan linjaus 7.8.2026), EI
      * lisäys maa-etusivun loppuun — ja sivu tehdään vain maille,
@@ -4377,60 +4327,6 @@ export const MAA_KATEGORIAT = {
      * samassa kansiossa) — ui.js liittää sen id:n 'valokuvaus'
      * perusteella.
      */
-    {
-      id: 'valokuvaus',
-      nimi: 'Valokuvaus',
-      johdanto: 'Kun valokuva oli nuori, kuvattavan piti istua '
-        + 'liikkumatta pitkä tovi. Saksassa kamera oppi nappaamaan '
-        + 'liikkeen — kesken lennon.',
-      nostot: [
-        {
-          otsikko: 'Mies, joka pysäytti haikaran lennon',
-          aika: '1884',
-          tiedosto: 'Ottomar Anschütz (cropped).jpg',
-          teksti: 'Valokuvan alkuaikoina kuvattava istui liikkumatta '
-            + 'jopa minuutin — muuten kuvasta tuli sumea. Ottomar '
-            + 'Anschütz rakensi sulkimen, joka välähti '
-            + 'tuhannesosasekunnissa, ja kuvasi kesällä 1884 '
-            + 'haikaroita pesällään: ensimmäiset terävät kuvat '
-            + 'suuresta linnusta kesken lennon. Sitten hän pani '
-            + 'kuvasarjansa pyörivään katselulaitteeseen, jossa '
-            + 'ruudut heräsivät eloon — elokuva oli enää askeleen '
-            + 'päässä.',
-          selite: 'Pikavalokuvauksen uranuurtaja Ottomar Anschütz '
-            + '(1846–1907).',
-          lahde: 'Wikimedia Commons (Public domain)',
-          galleria: [
-            {
-              otsikko: 'Haikarat ruutu ruudulta',
-              // Yhdellä rivillä: peilaustyökalu poimii tiedosto-kentät
-              // yksirivisellä hakukuviolla (tools/peilaa-media.mjs).
-              tiedosto: 'Anschütz, Ottomar - Störche. Aus einer Serie von Reihenaufnahmen, Berlin (Zeno Fotografie).jpg',
-              selite: 'Kahdeksan peräkkäistä ruutua haikaranpesältä: '
-                + 'siivet asennosta toiseen kuin sarjakuvassa. '
-                + 'Tällaisista sarjoista liike opittiin lukemaan.',
-              lahde: 'Ottomar Anschütz, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Haikara laskeutuu',
-              tiedosto: 'Ottomar Anschütz - Untitled (Storks) - 1884.jpg',
-              selite: 'Haikara jarruttaa siivillään juuri ennen '
-                + 'pesää — kuva, jollaista kukaan ei ollut ennen '
-                + 'nähnyt terävänä.',
-              lahde: 'Ottomar Anschütz, Wikimedia Commons (Public domain)',
-            },
-            {
-              otsikko: 'Kissa ja hiirenloukku',
-              tiedosto: 'Ottomar Anschütz Cat with mousetrap.jpg',
-              selite: 'Anschütz kuvasi myös arkea: kissa tutkii '
-                + 'hiirenloukkua. Nopea suljin piirsi '
-                + 'viiksikarvatkin terävinä.',
-              lahde: 'Ottomar Anschütz, Wikimedia Commons (Public domain)',
-            },
-          ],
-        },
-      ],
-    },
     {
       id: 'menovinkit',
       nimi: 'Menovinkit',

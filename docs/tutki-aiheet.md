@@ -371,3 +371,19 @@ virkkeeseen + kommentti, että lehden maaosasto nojaa siihen yksin.
 3. Versionosto, muutokset.js-rivit, standalone, PR, squash-merge,
    haaran nollaus. Merkitse maa tehdyksi tämän tiedoston
    monistusjärjestykseen (✅).
+
+## Sarjakuva kuuluu Belgiaan ja Ranskaan (omistajan huomio 8.8.2026)
+
+Saksalla oli oma sarjakuvasivu (Max ja Moritz). Se poistettiin
+v364:ssä, koska yhden nostoin sivu on ohut eikä sarjakuva ole
+Saksan vahvin aihe.
+
+**Kun Belgia ja Ranska saavat maalehtensä, sarjakuva on niillä
+aiheena vahva** — bande dessinée on molemmissa maissa oma
+taiteenlajinsa kirjastoineen, museoineen ja katutaiteineen.
+Saksan Max ja Moritz voi silloin palata mainintana siihen, mistä
+kuvakertomus alkoi, sen sijaan että se kantaisi omaa sivuaan.
+
+Sama koskee valokuvausta: sekin oli Saksalla yhden noston sivu ja
+poistettiin. Yhden noston aihesivu on lähes aina merkki siitä, että
+aihe kuuluu jonkin toisen sivun sisään tai toiseen maahan.
