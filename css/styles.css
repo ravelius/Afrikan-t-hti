@@ -3744,21 +3744,27 @@ body.radio-tila .board-hint {
   fill: rgba(90, 70, 40, 0.13);
   stroke: none;
 }
-.country-name {
-  font-family: var(--font-kauno);
-  font-style: italic;
-  letter-spacing: 0.12em;
-  fill: rgba(70, 51, 31, 0.42);
+/*
+ * Maan nimikilpi: nimi ja i yhtenä nappina valitun maan keskellä
+ * (omistajan tarkennus 8.8.2026: "yksi yhteinen nappi jossa nimi ja
+ * i symboli, mutta aina vain sen maan kohdalla joka on valittuna").
+ * Korvasi haalean kaunokirjoitusnimen + irrallisen i-ympyrän, jotka
+ * näkyivät välillä huonosti ja hyppivät erilleen.
+ */
+.maa-kilpi { cursor: pointer; }
+
+.maa-kilpi-tausta {
+  fill: rgba(245, 231, 200, 0.94);
+  stroke: rgba(70, 51, 31, 0.65);
 }
 
-/*
- * "i" maan nimen perässä avaa maan lehden (omistajan toive 8.8.2026).
- *
- * Nimi itse on tarkoituksella haalea kartan koriste. Nappi ei ole
- * koriste vaan ainoa pysyvä reitti maalehteen laudalta, joten se on
- * selvästi tummempi — muuten se katoaa samaan sävyyn kuin nimi.
- */
-.maa-i { cursor: pointer; }
+.maa-kilpi-nimi {
+  fill: rgba(70, 51, 31, 0.92);
+  font-family: var(--font-type);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
 
 .maa-i-kehä {
   fill: rgba(245, 231, 200, 0.92);
@@ -3773,19 +3779,22 @@ body.radio-tila .board-hint {
   pointer-events: none;
 }
 
-/* Läpinäkyvä osumapinta: nappi näyttää pieneltä, mutta osuu sormella. */
+/* Läpinäkyvä osumapinta: kilpi näyttää sirolta, mutta osuu sormella. */
 .maa-i-osuma { fill: transparent; }
 
-.maa-i:hover .maa-i-kehä,
-.maa-i:focus-visible .maa-i-kehä {
+.maa-kilpi:hover .maa-i-kehä,
+.maa-kilpi:focus-visible .maa-i-kehä {
   fill: var(--map-ink);
   stroke: var(--map-ink);
 }
 
-.maa-i:hover .maa-i-kirjain,
-.maa-i:focus-visible .maa-i-kirjain { fill: rgba(245, 231, 200, 0.95); }
+.maa-kilpi:hover .maa-i-kirjain,
+.maa-kilpi:focus-visible .maa-i-kirjain { fill: rgba(245, 231, 200, 0.95); }
 
-.maa-i:focus-visible { outline: none; }
+.maa-kilpi:hover .maa-kilpi-tausta,
+.maa-kilpi:focus-visible .maa-kilpi-tausta { stroke: var(--map-ink); }
+
+.maa-kilpi:focus-visible { outline: none; }
 
 .wave { fill: none; stroke: var(--sea-ink); stroke-width: 2; opacity: 0.45; stroke-linecap: round; }
 
@@ -8426,7 +8435,10 @@ body.vertailu-tila .pawns { display: none; }
 /* Kulmalinkki lehden etusivulta maaosioon ("Saksa-osio ›"). */
 .dialog button.maa-linkki {
   position: absolute;
-  top: 0.7rem;
+  /* Safe-area mukaan: lehti täyttää koko ruudun, ja ilman varaa
+   * linkki jäi iPadilla kameraloven korkeudelle eikä siihen voinut
+   * osua (omistajan havainto 8.8.2026). */
+  top: calc(0.7rem + env(safe-area-inset-top, 0px));
   right: 0.75rem;
   z-index: 4;
   border: 0;
