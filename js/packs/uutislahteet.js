@@ -208,38 +208,52 @@ export const TV_KANAVAT = {
    * sivun HTML:stä, eikä rainews.it:n JSON-polku anna mp4:ää.
    */
   /*
-   * ESPANJAN TV-NAPPI: KAKSI ESTETTÄ, JOISTA TOINEN ON RATKAISTU JA
-   * TOINEN EI (8.8.2026). Nappia ei siksi ole.
+   * RTVE:n tallenteet (8.8.2026). Espanja on Saksan jälkeen toinen
+   * maa, jolla on tv-nappi — ja samasta syystä: lähetys saadaan
+   * oikeana mp4-tiedostona, ei upotuksena.
    *
-   * Lähde olisi hyvä. `api.rtve.es/api/programas/135931/videos.json`
-   * (Telediario Matinal) vastaa CORS `*`:lla, listaa uusimman ensin ja
-   * sisältää sekä 3–4 minuutin koosteen ("Telediario Matinal en 4'" /
-   * "…en cuatro minutos") että alle minuutin säätiedotteen
-   * ("El tiempo hoy…"), joka olisi lapselle uutislähetystä parempi.
-   * Tallenne haetaan osoitteesta `ztnr.rtve.es/ztnr/<id>.mp4`.
+   * Haku menee ohjelman videolistaan (`api.rtve.es`, CORS `*`, uusin
+   * ensin), josta poimitaan tuoreimman jakson id. Tallenne on
+   * osoitteessa `ztnr.rtve.es/ztnr/<id>.mp4`.
    *
-   * ESTE 1 — SEKASISÄLTÖ. Ratkaistu. ztnr ohjaa `http://`-osoitteeseen,
-   * eikä sitä muuta Origin-, Referer- eikä
-   * Upgrade-Insecure-Requests-otsake. Workerissa on nyt `?ohjaus=`
-   * -reitti, joka kysyy ohjauksen palvelimen puolella ja palauttaa
-   * osoitteen https:nä (tools/uutisproxy/worker.js).
+   * SE OSOITE EI MENE SELLAISENAAN VIDEO-ELEMENTTIIN: ztnr ohjaa
+   * `http://`-osoitteeseen, ja https:llä tarjoiltavassa pelissä se
+   * olisi sekasisältöä (mitattu; Origin-, Referer- eikä
+   * Upgrade-Insecure-Requests-otsake ei muuta sitä). Ohjaus
+   * selvitetään siksi workerissa, joka palauttaa saman osoitteen
+   * https:nä — ks. `?ohjaus=`-reitti tools/uutisproxy/worker.js:ssä.
+   * Video itse tulee suoraan RTVE:ltä selaimeen; worker välittää vain
+   * osoitteen.
    *
-   * ESTE 2 — 410 GONE. Ratkaisematta, ja tämä on se, jonka takia
-   * nappia ei ole. Mediapalvelin antoi ensimmäisillä hauilla oikeat
-   * mp4-tavut (206, `ftypisom…moov`), mutta toistuvissa kokeissa se
-   * vastaa lähes aina `410 Gone` — riippumatta jakson iästä, ja myös
-   * yksittäisinä hakuina tauon päässä toisistaan. Ilmiö näyttää
-   * IP-kohtaiselta rajoitukselta, mutta sitä EI voi todentaa täältä:
-   * ketjun keskimmäinen hyppy on plain http, jonka kehitysympäristön
-   * verkkokäytäntö estää, eikä selain tavoita ulkoisia palvelimia
-   * lainkaan (ERR_CONNECTION_RESET, sama rajoite kuin v257:ssä).
+   * SÄÄ ON ENSIMMÄISENÄ TARKOITUKSELLA (omistajan päätös 8.8.2026):
+   * se on alle minuutin mittainen, kuvassa on Espanjan kartta eikä
+   * uutisaiheita, ja lehden avaava lapsi saa sen oletuksena. Kooste
+   * on toinen valinta samalla perusteella kuin tagesschau Saksassa.
    *
-   * Nappi jäisi siis toimimaan tai olemaan toimimatta sen mukaan,
-   * mikä RTVE:n rajoitus kulloinkin on — ja sääntö on, että sellainen
-   * nappi on huonompi kuin ei nappia. Toteutus on valmiina odottamassa
-   * (lista + otsikkotunnistimet testattu oikeaa rajapintaa vasten,
-   * molemmat valinnat osuivat tuoreimpaan jaksoon); vain tämä este on
-   * tiellä. Ratkeaa yhdellä testillä oikealla laitteella oikeasta
-   * verkosta.
+   * `kanava` on tässä otsikon tunnistin, ei kanavan nimi: RTVE nimeää
+   * saman ohjelman kahdella tavalla ("Telediario Matinal en 4'" ja
+   * "Telediario matinal en cuatro minutos"), joten molemmat on
+   * lueteltava pystyviivalla erotettuna. Ks. haeTallenne
+   * (js/uutiset.js).
+   *
+   * MITATTU 410 GONE, JA MIKSI SE EI ESTÄ TÄTÄ: mediapalvelin vastaa
+   * `410 Gone`, jos samasta osoitteesta haetaan monta tallennetta
+   * peräkkäin — kokeessa 17 jaksoa putkeen tuotti täsmälleen yhden
+   * onnistumisen. Yksittäisinä, tauon päässä toisistaan tehtyinä
+   * hakuina ketju antaa aina 206:n ja oikeat mp4-tavut
+   * (`ftypisom…moov`), myös workerin kautta. Rajoitus on siis
+   * ryöppysuoja, ja pelin käyttö on juuri päinvastaista: yksi
+   * napinpainallus kerrallaan. Jos haku silti epäonnistuu, nappi
+   * kertoo sen ("Ei saatu haettua") eikä jää mustaksi ruuduksi.
    */
+  ESP: {
+    nimi: 'RTVE',
+    tallenteet: {
+      api: 'https://api.rtve.es/api/programas/135931/videos.json?size=20',
+      valinnat: [
+        { nappi: 'Sää tänään', kanava: 'el tiempo' },
+        { nappi: 'Uutiset neljässä minuutissa', kanava: "en 4'|cuatro minutos" },
+      ],
+    },
+  },
 };
