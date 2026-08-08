@@ -8718,8 +8718,16 @@ export class UI {
     laatikko.appendChild(html('p', 'minitehtava-otsikko', 'Lehden minitehtävä'));
     const avain = `${this.game.pack.id}:${cityId}:${kategoria.id}`;
     if (this.game.minitehtavatVastatut?.has(avain)) {
+      /*
+       * "Tämän SIVUN", ei "tämän lehden": palkkioavain on
+       * pakka:kaupunki:aihe (game.js actionMinitehtava), eli jokainen
+       * aihesivu on oma tehtävänsä. Kun kaupunkilehden molemmat
+       * aihesivut saivat tehtävän (omistajan toive 8.8.2026), vanha
+       * teksti alkoi valehdella: se väitti koko lehden ratkaistuksi,
+       * vaikka toisella sivulla oli tehtävä yhä auki.
+       */
       laatikko.appendChild(html('p', 'minitehtava-kysymys',
-        'Tämän lehden minitehtävä on jo ratkaistu.'));
+        'Tämän sivun minitehtävä on jo ratkaistu.'));
       kohde.appendChild(laatikko);
       return;
     }

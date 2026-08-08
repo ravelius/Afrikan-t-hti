@@ -361,9 +361,11 @@ export const KULTTUURI_KATEGORIAT = {
           otsikko: 'Guernica maksoi parin saappaita',
           tiedosto: 'Tree of Life, Whitechapel Gallery (8132640664).jpg',
           teksti: 'Whitechapelin galleria avattiin vuonna 1901, jotta itäisen '
-            + 'Lontoon työläiset pääsisivät näkemään taidetta. Tammikuussa '
-            + '1939 siellä oli esillä Picasson Guernica — ainoa kerta, kun '
-            + 'teos on ollut Britanniassa. Pääsymaksuksi kelpasi pari '
+            + 'Lontoon työläiset pääsisivät näkemään taidetta. Vuonna 1938 '
+            + 'siellä oli esillä Picasson Guernica, joka kiersi Britanniaa '
+            + 'keräämässä apua Espanjan sisällissodan uhreille — Lontoon '
+            + 'jälkeen se nähtiin Leedsissä, Liverpoolissa ja Manchesterissa. '
+            + 'Pääsymaksuksi kelpasi pari '
             + 'kunnollisia saappaita, jotka lähetettiin Espanjan '
             + 'sisällissodan tasavaltalaisille. Kahdessa viikossa maalauksen '
             + 'eteen kertyi satoja saapaspareja ja galleriaan yli 15 000 '
