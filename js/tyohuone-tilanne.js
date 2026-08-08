@@ -28,18 +28,15 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Maalehden rakenneuudistus (omistajan palaute 8.8.): '
-        + 'etusivulle sisällysluettelo kahdessa palstassa kartan '
-        + 'tilalle, hampurilaisvalikko, alavalikko kuntoon, '
-        + 'sivuaiheet nappien alle. Saksasta pois päivän kuva, '
-        + 'valokuvaus ja sarjakuva; ruokasivu uusiksi muotoon '
-        + 'Ruokaa ja tapakulttuuria. Lehden nimeksi Unohdettu '
-        + 'aarre (ent. Matkasanomat). Lisäksi tietovisa '
-        + 'iloisemmaksi ja menovinkit listamalliin (23 maata, erä '
-        + '1/3 mainissa v361).',
-      seuraavaksi: 'Pohja ensin, sitten loput menovinkkierät '
-        + 'uudelle pohjalle. Maalehtien syvyys päätetään omistajan '
-        + 'testikierroksen jälkeen.',
+      tehtava: 'Maalehden rakenneuudistus (sisällysluettelo '
+        + 'etusivulle, hampurilaisvalikko, sivuaiheet nappien '
+        + 'alle, Saksan siivous, Ruokaa ja tapakulttuuria, lehden '
+        + 'nimeksi Unohdettu aarre). Valmiina: v361 menovinkit 8 '
+        + 'maalle, v363 listamalli (4 maata, Suomi pilottina) + '
+        + 'alapalkin järjestys + visa omana korttinaan.',
+      seuraavaksi: 'Loput maat listamallilla; lopuksi v361-maat ja '
+        + 'lehtimaat samaan malliin (kaksi mallia näkyy hetken '
+        + 'rinnakkain, tarkoituksella).',
     },
     {
       tekija: 'Opus 2',
@@ -91,6 +88,15 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Menovinkkien listamalli ja iloisempi visa (v363)',
+    ohje: 'Katso Suomen menovinkit: uusi listamalli ryhmäotsikoin '
+      + '(pikkukuva + nimi linkkinä + lause pari). Alapalkissa '
+      + 'Poistu on nyt aina vasemmalla ja Seuraava oikealla, ja '
+      + 'tietovisa on oma lämpimänvaalea korttinsa. Osa maista '
+      + 'näyttää vielä vanhaa nostomallia — muunnos on jonossa. '
+      + 'Menovinkit löytyvät nyt 12 uudelta maalta.',
+  },
   {
     otsikko: 'Kaupunkikarttojen uusi ilme (v362)',
     ohje: 'Avaa mikä tahansa kuudesta kaupunkikartasta: kartta on '
