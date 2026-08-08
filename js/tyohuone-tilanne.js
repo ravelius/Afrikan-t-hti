@@ -33,15 +33,14 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Loppukiri: menovinkkimalli HYVÄKSYTTY (v373 Saksa; '
-        + 'raja nyt 6–20/maa, katsottavuus edellä). Seuraavaksi '
-        + 'neljä varastomaata mainiin (kuvat silmin ensin), loput '
-        + 'maat, maalehdet ja kaupunkilehdet. Lisäksi maalehden '
-        + 'löydettävyyskolmikko: kartalta ilman varustetta, '
-        + 'sisällysluetteloon ja hampurilaisvalikkoon rivi '
-        + '(omistaja ei löytänyt lehteä kulmalinkistä).',
-      seuraavaksi: 'Välitilanneraportti puolivälissä; loppuraportti '
-        + 'kun Eurooppa on valmis.',
+      tehtava: 'Loppukiri etenee: v382 löydettävyyskolmikko '
+        + '(Maiden lehdet -nappi kartalla, hampurilaisvalikko myös '
+        + 'kaupunkilehteen, maaosio rivinä), v378 Prahan '
+        + 'kaupunkilehti MALLIKAPPALEENA lopuille 35 kaupungille, '
+        + 'v379 menovinkit TUR/RUS/UKR/ROU. Saksa palautettu 20 '
+        + 'kohteeseen (julkaisu seuraavassa erässä).',
+      seuraavaksi: 'HRV+BIH julkaisuun, BGR ja Wien agenteilla; '
+        + 'sitten loput maalehdet ja kaupunkilehdet.',
     },
     {
       tekija: 'Opus 2',
@@ -90,6 +89,19 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Maalehteen kolme reittiä (v382)',
+    ohje: 'Kartan oikeassa ylälaidassa on nyt Maiden lehdet -nappi '
+      + '(avoin kirja + i): rajat näkyviin, maan nimen i avaa '
+      + 'lehden — ilman varustetta. Kaupunkilehdessä on nyt myös '
+      + 'hampurilaisvalikko, jossa maan osio on omana rivinään.',
+  },
+  {
+    otsikko: 'Prahan kaupunkilehti — uusien kaupunkien malli (v378)',
+    ohje: 'Matkusta Prahaan: kansi, Musiikki, Arki ja tavat, '
+      + 'menovinkit ja luvut — tämä viisisivuinen malli monistuu '
+      + 'lopuille 35 kaupungille. Katso kelpaako jälki.',
+  },
   {
     otsikko: 'Nähtävyysjutut kaikissa karttakaupungeissa (v376–v381)',
     ohje: 'Avaa Kairon, Venetsian, Madridin, Tukholman tai Lontoon '
