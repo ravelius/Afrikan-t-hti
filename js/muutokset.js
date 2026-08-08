@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 388, teksti: 'Versiokulmassa pelkkä numero, ei kehittäjä-tekstiä' },
   { v: 387, teksti: 'Kartta aukeaa pelaajan kohdalle, kehittäjänumero isommalla' },
   { v: 386, teksti: 'Kaupunkilehdestä pois turha sisällysvalikko' },
   { v: 385, teksti: 'Ranskan menovinkit viidestä neljääntoista' },

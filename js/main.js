@@ -19,7 +19,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-const APP_VERSION = '2026-08-08.387';
+const APP_VERSION = '2026-08-08.388';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -333,10 +333,9 @@ document.getElementById('app-version').textContent = APP_VERSION;
 const versioKulma = document.getElementById('versio-kulma');
 function paivitaVersioKulma() {
   const numero = `v${APP_VERSION.split('.').pop()}`;
-  versioKulma.textContent = kehittajaTilaPaalla() ? `${numero} : kehittäjä` : numero;
-  // Kehittäjätilassa numero isommalla (omistajan toive 8.8.2026) —
-  // sitä vilkuillaan jatkuvasti version varmistamiseksi.
-  versioKulma.classList.toggle('kehittaja', kehittajaTilaPaalla());
+  // Pelkkä numero myös kehittäjätilassa (omistajan päätös 8.8.2026:
+  // "Kehittäjä tekstin voi ottaa pois. Tunnistan tilan kyllä itse").
+  versioKulma.textContent = numero;
 }
 paivitaVersioKulma();
 
