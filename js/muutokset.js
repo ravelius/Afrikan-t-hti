@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 402, teksti: 'Työhuone hakee aina tuoreimman sisällön verkosta' },
   { v: 401, teksti: 'Guernica-jutun vuosiluku ja Britannian-kierros oikein' },
   { v: 401, teksti: 'Minitehtävä kertoo nyt sivun, ei koko lehden, ratkaistuksi' },
   { v: 400, teksti: 'Visat palkitsevat taas puntina — yksi valuutta' },

@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-08.401';
+const CACHE = 'matkakirja-2026-08-08.402';
 const SHELL = [
   './',
   './index.html',
@@ -728,7 +728,14 @@ self.addEventListener('fetch', (event) => {
   if (TYOHUONE(osoite)) {
     event.respondWith((async () => {
       try {
-        const vastaus = await fetch(event.request);
+        /*
+         * no-cache ohittaa selaimen http-välimuistin: GitHub Pages
+         * antaa tiedostoille max-age=600, ja ilman tätä omistaja
+         * näki jopa 10 minuuttia vanhaa työhuonetta heti julkaisun
+         * jälkeen (havainto 8.8.2026). ETag-tarkistus pitää haun
+         * kevyenä — muuttumaton tiedosto palaa 304:nä.
+         */
+        const vastaus = await fetch(event.request, { cache: 'no-cache' });
         if (vastaus && vastaus.ok) {
           const kopio = vastaus.clone();
           caches.open(CACHE).then((kori) => kori.put(event.request, kopio));
