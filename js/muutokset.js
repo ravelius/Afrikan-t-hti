@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 351, teksti: 'Työhuoneeseen Kehitys-välilehti: kaari, näytteet, Eurooppa' },
   { v: 350, teksti: 'Kaupunki- ja maalehti erikseen, kohtaaminen viimeisenä' },
   { v: 350, teksti: 'Maiden tiedot -varuste: maan lehti suoraan kartalta' },
   { v: 350, teksti: 'Menovinkit: parhaat kokoelmat nettimatkaajalle' },
