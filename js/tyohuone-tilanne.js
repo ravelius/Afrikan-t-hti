@@ -67,13 +67,13 @@ export const TILANNE = {
     {
       tekija: 'Sonnet 2',
       rooli: 'nähtävyysjutut',
-      tila: 'tyossa',
-      tehtava: 'MALLI HYVÄKSYTTY (omistaja 8.8. ilta) — monistus '
-        + 'lukitulla speksillä: Kairo, Venetsia, Madrid ja '
-        + 'Tukholma saavat nähtävyysjutut, lopuksi Lontoon vanhat '
-        + 'muunnetaan samaan malliin. Agentit sallittu (kaupunki '
-        + 'per agentti).',
-      seuraavaksi: 'Eräraportit Fablelle (1–2 kaupunkia per PR).',
+      tila: 'valmis',
+      tehtava: 'NÄHTÄVYYSJUTUT VALMIIT KAIKISSA KARTTAKAUPUNGEISSA: '
+        + 'v376 Kairo+Venetsia, v377 Madrid+Tukholma, v381 Lontoon '
+        + 'vanhat muunnettu lukittuun malliin. 30 kohdetta '
+        + 'tarkistettu kolmessa näyttökoossa.',
+      seuraavaksi: 'Kaista tyhjä — jatkuu, kun Opus 2 tekee uusia '
+        + 'kaupunkikarttoja (nähtävyysvaihe).',
     },
   ],
   odottaaPaatosta: [
@@ -90,6 +90,14 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Nähtävyysjutut kaikissa karttakaupungeissa (v376–v381)',
+    ohje: 'Avaa Kairon, Venetsian, Madridin, Tukholman tai Lontoon '
+      + 'kaupunkikartta ja napauta numeroita: jokaisella kuudella '
+      + 'kohteella on nyt Berliinin mallin mukainen juttu — myös '
+      + 'Lontoon vanhat pitkät jutut on tiivistetty samaan '
+      + 'muotoon (lainaukset säilyivät).',
+  },
   {
     otsikko: 'Saksan menovinkit — ARVIOI MALLI (v373)',
     ohje: 'Avaa Saksan menovinkit: 21 kohdetta kuudessa ryhmässä, '
