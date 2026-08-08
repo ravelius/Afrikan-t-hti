@@ -5672,4 +5672,243 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  FIN: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Suomi on skannannut itsensä verkkoon tarkemmin kuin arvaisi: '
+        + 'sanomalehdet 1770-luvulta, 12 000 vapaata taideteoskuvaa, '
+        + 'satatuhatta valokuvaa vanhasta Helsingistä ja kartta, jolla näkyy '
+        + 'jokainen muinaisjäännös.',
+      nostot: [
+        {
+          otsikko: 'Lue oman kotipaikkakuntasi uutiset vuodelta 1873',
+          tiedosto: '1847-10-19 Suometar 42 19 10 1847.jpg',
+          teksti: 'Kansalliskirjasto on skannannut Suomen sanomalehdet sivu '
+            + 'sivulta, ja kaikki ennen vuotta 1940 ilmestynyt on verkossa '
+            + 'ilmaiseksi. Haku toimii kuin hakukone: kirjoita oman kunnan '
+            + 'nimi, rajaa vuosi ja katso mitä silloin tapahtui. Vanhimmat '
+            + 'lehdet ovat 1770-luvulta. Sivut aukeavat sellaisina kuin ne '
+            + 'painettiin, fraktuurakirjaimilla ja ilmoituksineen. Suomen '
+            + 'ruotsinkieliset lehdet ovat vapaita vuoteen 1949 asti.',
+          selite: 'Suometar-lehden etusivu 19. lokakuuta 1847: kaksi tiheää '
+            + 'palstaa fraktuurakirjaimia, vasemmalla runo Kanteleeni synty '
+            + 'ja oikealla osasto Sanomia Ulkomaalta.',
+          lahde: 'Paavo Tikkanen, Wikimedia Commons (public domain)',
+          linkki: 'https://digi.kansalliskirjasto.fi/search?formats=NEWSPAPER',
+          linkkiNimi: 'Kansalliskirjasto — digitoidut sanomalehdet',
+        },
+        {
+          otsikko: '12 000 taideteoskuvaa, jotka saa ladata omalle koneelle',
+          tiedosto: 'Albert Edelfelt - Leikkiviä poikia rannalla.jpg',
+          teksti: 'Kansallisgalleria on Ateneum, Kiasma ja Sinebrychoffin '
+            + 'taidemuseo yhdessä, ja sen kokoelmaan kuuluu yli 43 000 '
+            + 'taideteosta. Verkkokokoelmassa niitä selataan taiteilijan, '
+            + 'vuoden tai aiheen mukaan, ja teokset aukeavat suurina kuvina. '
+            + 'Noin 12 000 tekijänoikeusvapaata teoskuvaa on julkaistu '
+            + 'CC0-lisenssillä: ne saa ladata ja käyttää täysin vapaasti, '
+            + 'myös koulutyössä. Mukana ovat muun muassa Edelfelt, '
+            + 'Schjerfbeck ja Simberg.',
+          selite: 'Albert Edelfeltin maalaus Leikkiviä poikia rannalla vuodelta '
+            + '1884: kolme poikaa kahlaa kivikkorannalla ja työntää puisia '
+            + 'leikkilaivoja veteen, taustalla purjelaivoja.',
+          lahde: 'Albert Edelfelt, Wikimedia Commons (public domain)',
+          linkki: 'https://kokoelma.kansallisgalleria.fi/fi/search',
+          linkkiNimi: 'Kansallisgallerian kokoelma — haku',
+        },
+        {
+          otsikko: '111 000 valokuvaa Helsingistä, ja melkein kaikki saa ottaa',
+          tiedosto: 'Munkkisaari, Helsinki 1907.jpg',
+          teksti: 'Helsingin kaupunginmuseon kuva-arkisto on kokonaan verkossa: '
+            + 'yli 111 000 kuvaa, joista noin 110 000 on tekijänoikeusvapaita '
+            + 'tai CC BY -lisenssillä. Hakuun voi kirjoittaa kadun nimen ja '
+            + 'katsoa, miltä se näytti sata vuotta sitten. Yli tuhat kuvaa on '
+            + 'Signe Branderin ottamia. Muinaismuistolautakunta palkkasi '
+            + 'hänet 1900-luvun alussa kuvaamaan kaupunkia, joka oli juuri '
+            + 'katoamassa purkutöiden alle.',
+          selite: 'Signe Branderin valokuva Munkkisaaren salmesta vuonna 1907: '
+            + 'naiset huuhtovat pyykkiä puulaiturilla, edessä rivi '
+            + 'soutuveneitä ja taustalla höyrylaiva.',
+          lahde: 'Signe Brander, Wikimedia Commons (public domain)',
+          linkki: 'https://hkm.finna.fi/',
+          linkkiNimi: 'Helsingin kaupunginmuseo — kuva-arkisto Finnassa',
+        },
+        {
+          otsikko: 'Yli 40 000 muinaisjäännöstä kartalla — katso mikä on lähinnä kotiasi',
+          tiedosto: 'Sammallahdenmäki 1.jpg',
+          teksti: 'Museovirasto pitää rekisteriä Suomen kiinteistä '
+            + 'muinaisjäännöksistä, ja niitä on yli 40 000. Joukossa on '
+            + 'pronssikautisia hautaröykkiöitä, kivikauden asuinpaikkoja, '
+            + 'jatulintarhoja, linnavuoria ja autioituneita kylänpaikkoja. '
+            + 'Kulttuuriympäristön palveluikkunassa haun rajaa omalla '
+            + 'kunnalla, ja jokaisesta kohteesta aukeaa kuvaus, ajoitus ja '
+            + 'kartta. Melkein joka kunnasta löytyy useita — myös kaupunkien '
+            + 'keskeltä.',
+          selite: 'Sammallahdenmäen pronssikautinen hautaröykkiö Raumalla: '
+            + 'harmaista lohkareista ladottu suorakulmainen kiviladelma '
+            + 'kalliolla männikön keskellä.',
+          lahde: 'kallerna, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://www.kyppi.fi/palveluikkuna/mjreki/read/asp/r_default.aspx',
+          linkkiNimi: 'Kulttuuriympäristön palveluikkuna — muinaisjäännösrekisteri',
+        },
+        {
+          otsikko: 'Runot, joista Kalevala tehtiin — 34 kirjaa haettavana',
+          tiedosto: 'Runonlaulaja Petri Shemeikka, Ristivaara 1907 (KK3490-590).tif',
+          teksti: 'Elias Lönnrot ei keksinyt Kalevalaa vaan kokosi sen '
+            + 'kansanrunoista. Ne runot ovat verkossa. Suomen Kansan Vanhat '
+            + 'Runot on 34-osainen kokoelma karjalaista, inkeriläistä ja '
+            + 'suomalaista runoutta, jota kerättiin 1500-luvulta 1930-luvulle '
+            + 'asti. Kirjat ilmestyivät 1908–1948 ja täydennysosa 1997. '
+            + 'Tietokannasta haetaan paikkakunnan, laulajan tai vuoden '
+            + 'mukaan, ja jokaisen runon alta näkyy kuka sen lauloi ja missä.',
+          selite: 'Runonlaulaja Petri Shemeikka istuu hirsirakennuksen edessä '
+            + 'Ristivaarassa vuonna 1907: pitkä valkoinen parta, liivi ja '
+            + 'polveen ulottuvat nahkasaappaat.',
+          lahde: 'Samuli Paulaharju, Wikimedia Commons (CC BY 4.0)',
+          linkki: 'https://aineistot.finlit.fi/exist/apps/skvr/index.html',
+          linkkiNimi: 'SKVR — Suomen Kansan Vanhat Runot',
+        },
+        {
+          otsikko: 'Onko taivaalla revontulia juuri nyt? Kartta vastaa',
+          tiedosto: 'Aurora borealis over Saana fell.jpg',
+          teksti: 'Ilmatieteen laitos mittaa maan magneettikenttää '
+            + 'havaintoasemilla ympäri Suomea. Revontulet ja avaruussää '
+            + '-sivun kartta näyttää jokaisen aseman kohdalla, ovatko '
+            + 'revontulet juuri nyt todennäköisiä, mahdollisia vai '
+            + 'epätodennäköisiä. Alta löytyy kuluneen vuorokauden '
+            + 'mittauskäyrä ja sanallinen ennuste seuraaviksi öiksi. Lapissa '
+            + 'revontulia näkyy usein rauhallisenakin yönä, etelässä '
+            + 'harvemmin.',
+          selite: 'Revontulet Saanatunturin yllä Kilpisjärvellä: vihreät nauhat '
+            + 'kaartuvat tähtitaivaalla lumisen tunturin ja paljaiden '
+            + 'koivujen yläpuolella.',
+          lahde: 'WikiLucas00, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.ilmatieteenlaitos.fi/revontulet-ja-avaruussaa',
+          linkkiNimi: 'Ilmatieteen laitos — revontulet ja avaruussää',
+        },
+      ],
+    },
+  ],
+  CZE: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Tšekki on siirtänyt menneisyytensä ruudulle: 1300-luvun '
+        + 'kuvaraamattu aukeaa sivu kerrallaan, Prahan tähtikelloa saa itse '
+        + 'kelata, kolmesataatuhatta museoesinettä on yhdessä haussa ja '
+        + 'norsuihin näkee suorana.',
+      nostot: [
+        {
+          otsikko: '747 kuvaa ja tuskin lainkaan tekstiä',
+          tiedosto: 'Velislavova bible, NK ČR sign. XXIII.C.124, fol. 182r.jpg',
+          teksti: 'Velislavin raamattu tehtiin Prahassa noin vuonna 1340, ja se '
+            + 'on keskiajan Keski-Euroopan laajin kuvakirja. '
+            + 'Pergamenttilehtiä on 188 ja piirroksia 747. Teksti on '
+            + 'kutistettu lyhyiksi latinankielisiksi kuvateksteiksi: kuva '
+            + 'kertoo tapahtuman, sanat vain nimeävät hahmot. Siksi kirjaa '
+            + 'sanotaan keskiajan sarjakuvaksi. Alkuperäinen on Tšekin '
+            + 'kansalliskirjastossa, mutta Manuscriptorium esittelee sen '
+            + 'verkossa ja avaa käsikirjoituksen selaimeen sivu kerrallaan.',
+          selite: 'Sivu Velislavin raamatusta: ylhäällä kaksi hahmoa ja '
+            + 'punakattoinen kirkko, jonka seinää vasten nojaa tikkaat. '
+            + 'Alhaalla neljä hahmoa, joista yhdellä on punainen kirja. '
+            + 'Latinankieliset rivit erottavat kuvakentät toisistaan.',
+          lahde: 'Tuntematon tekijä, Wikimedia Commons (public domain)',
+          linkki: 'https://www.manuscriptorium.com/en/digital-library-treasures/-/velislav-bible/',
+          linkkiNimi: 'Manuscriptorium — Velislavin raamattu',
+        },
+        {
+          otsikko: 'Prahan tähtikello, jonka aikaa saa itse kelata',
+          tiedosto: 'Czech-2013-Prague-Astronomical clock face.jpg',
+          teksti: 'Prahan raatihuoneen tähtitieteellinen kello on vuodelta 1410 '
+            + 'ja käy yhä. Vanhempaa toimivaa tähtikelloa ei maailmassa ole. '
+            + 'Orloj.org on siitä tehty tarkka simulaattori, joka pyörii '
+            + 'selaimessa ilman kirjautumista. Oletuksena se näyttää Prahan '
+            + 'nykyhetken, mutta yhden rastin poistamalla ajan voi siirtää '
+            + 'mihin tahansa päivään ja katsoa, miten aurinkokäsi, kuupallo '
+            + 'ja eläinrata liikkuvat. Sivupaneelissa juoksevat aurinkoaika, '
+            + 'tähtiaika, böömiläinen aika ja kuun vaihe.',
+          selite: 'Orlojin kellotaulu lähikuvassa: kultainen eläinrataympyrä, '
+            + 'sinivalkoinen taivaskiekko, auringon kuva käsivarren päässä ja '
+            + 'musta kuupallo. Reunoilla kullatut veistokset, oikealla '
+            + 'luuranko.',
+          lahde: 'Godot13, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.orloj.org/orloj/en-US/',
+          linkkiNimi: 'Orloj.org — Prahan tähtikellon simulaattori',
+        },
+        {
+          otsikko: '302 118 museoesinettä 148 museosta yhdessä haussa',
+          tiedosto: 'Praha, Nové Město, Václavské náměstí, Národní muzeum.jpg',
+          teksti: 'eSbírky kokoaa tšekkiläisten museoiden kokoelmat samaan '
+            + 'paikkaan: 302 118 esinettä 148 laitoksesta. Sivustoa ylläpitää '
+            + 'Tšekin kansallismuseo, ja hakuun pääsee ilman tunnuksia. '
+            + 'Esineitä voi selata museon ja aiheen mukaan, ja kuvat aukeavat '
+            + 'suurina. Mukana on myös virtuaalinäyttelyitä — '
+            + 'apteekkipurkkeja vuodelta 1721, tšekkiläisiä linnoja, '
+            + 'kansanuskon suojeluesineitä — ja kierroksia, joissa '
+            + 'museosaleissa kävellään ruudulla.',
+          selite: 'Tšekin kansallismuseo Václavin aukion päässä Prahassa: '
+            + 'kupolillinen 1800-luvun rakennus, edessä pyhän Vaclavin '
+            + 'ratsastajapatsas ja etualalla valko-keltainen ruusupenkki.',
+          lahde: 'PatrikPaprika, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://www.esbirky.cz/',
+          linkkiNimi: 'eSbírky — Tšekin museokokoelmat verkossa',
+        },
+        {
+          otsikko: '333 Muchan työtä, varhaisin piirretty lapsena',
+          tiedosto: 'Alphonse Mucha - Zodiac, 1869.jpg',
+          teksti: 'Alfons Mucha teki Pariisissa julisteita, joiden kaartuvat '
+            + 'kukat, kehykset ja pitkät hiukset määrittelivät koko '
+            + 'jugendtyylin. Mucha Foundationin galleriassa on 333 teosta '
+            + 'aikajärjestyksessä: maalauksia, julisteita, '
+            + 'koristesuunnitelmia, kirjankuvituksia, piirroksia ja '
+            + 'valokuvia. Ensimmäinen on ristiinnaulitseminen, jonka Mucha '
+            + 'piirsi lapsena noin vuonna 1868. Sivusto toimii englanniksi ja '
+            + 'tšekiksi, eikä mitään tarvitse maksaa.',
+          selite: 'Muchan Zodiac-juliste: punatukkainen nainen profiilissa, '
+            + 'päässä koristeellinen otsapanta, taustalla kultainen kehä, '
+            + 'jonka sisällä kiertävät kaksitoista eläinradan merkkiä.',
+          lahde: 'Alphonse Mucha, Wikimedia Commons (public domain)',
+          linkki: 'https://www.muchafoundation.org/gallery/browse-works',
+          linkkiNimi: 'Mucha Foundation — Browse Works',
+        },
+        {
+          otsikko: 'Kahdeksan kameraa yhdessä norsulaaksossa',
+          tiedosto: 'ZOO Praha, Elephas maximus, 03.jpg',
+          teksti: 'Prahan eläintarhan Norsulaakso lähettää suoraa kuvaa '
+            + 'kahdeksasta kamerasta. Kamerat 1–3 ovat sisällä naaraiden '
+            + 'pavilongissa, kamerat 4–8 ulkotarhassa, ja kamera 7 näyttää '
+            + 'uroksen oman tilan. Kuvan tarkkuudeksi valitaan 432p tai 720p, '
+            + 'joten hidaskin yhteys riittää. Lähetys käy ympäri vuorokauden, '
+            + 'mutta illalla kello 20–22 pavilonkia huolletaan eikä silloin '
+            + 'kannata odottaa paljon. Kirjautumista ei tarvita.',
+          selite: 'Kaksi aasiannorsua Prahan eläintarhan ulkotarhassa: etummainen '
+            + 'kääntyy kohti kameraa, takana toinen norsu betoniseinän '
+            + 'edessä, maassa risuja ja oksia.',
+          lahde: 'Honza Groh (Jagro), Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://www.zoopraha.cz/en/animals/live-from-elephant-valley',
+          linkkiNimi: 'Prahan eläintarha — Norsulaakso suorana',
+        },
+        {
+          otsikko: 'Yli 10 000 nukkea, joista osa tuli lahjaksi Suomesta',
+          tiedosto: 'Chrudim, Muzeum loutkářských kultur (3).JPG',
+          teksti: 'Chrudimin nukketeatterimuseolla on yli 50 000 '
+            + 'kokoelmaesinettä, ja pelkkiä nukkeja on yli 10 000 eri '
+            + 'puolilta maailmaa. Vanhimmat ovat 1800-luvun kiertävien '
+            + 'kansannukketeatterien marionetteja. Museo sai lahjoituksia '
+            + 'kansainvälisen nukketeatterijärjestön UNIMAn kansallisilta '
+            + 'keskuksilta, myös Suomesta. Kokoelman verkkoportaalissa on 1 '
+            + '805 esinekuvausta ja 4 845 digitoitua kuvaa: nukkeja, '
+            + 'lavasteita, maalattuja esirippuja ja julisteita.',
+          selite: 'Vitriini Chrudimin nukketeatterimuseossa: valkoiseen '
+            + 'pitsipukuun puettu morsiusnukke, silinteripäinen herra '
+            + 'istumassa ja rivi sotilas- ja naishahmoja vihreällä '
+            + 'korokkeella.',
+          lahde: 'Palickap, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://puppets.bach.cz/vademecum/',
+          linkkiNimi: 'Muzeum loutkářských kultur — kokoelma verkossa',
+        },
+      ],
+    },
+  ],
 };
