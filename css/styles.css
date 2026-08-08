@@ -1991,6 +1991,49 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   padding-top: 0.4rem;
 }
 
+/*
+ * VISA LEHDESSÄ (omistajan ohje 8.8.2026: "pomppaa ja houkuttelee
+ * vastaamaan").
+ *
+ * Visa oli tähän asti pelkän katkoviivan erottama jatke sivun
+ * pohjalla, eli se näytti siltä mitä sivulla oli jäljellä — ei
+ * siltä, että siinä on jotain tehtävää. Nyt se on oma kortti:
+ * lämmin vaalea pohja, pehmeä kehys ja reilusti ilmaa.
+ *
+ * Väri on pergamentin lämpimämpi sävy eikä huomioväri: peli on
+ * paperinen, ja neon rikkoisi sen. Erottuminen tulee kontrastista
+ * taustaan ja tyhjästä tilasta, ei kirkkaudesta.
+ */
+.dialog.lehti .arrival-kulttuuri {
+  border-top: 0;
+  margin: 1.6rem 0 0.4rem;
+  padding: 1.15rem 1.25rem 1.3rem;
+  background: linear-gradient(180deg, rgba(255, 246, 214, 0.92), rgba(252, 236, 196, 0.82));
+  border: 1px solid rgba(150, 116, 52, 0.4);
+  border-radius: 10px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 8px rgba(70, 51, 31, 0.09);
+}
+
+/* Kysymys isommaksi: se on kortin otsikko, ei väliotsikko. */
+.dialog.lehti .arrival-kulttuuri .kulttuuri-otsikko {
+  font-size: 1.06rem;
+  line-height: 1.35;
+  margin-bottom: 0.35rem;
+}
+
+/* Vastausnapit väljemmin ja valkoisemmalle pohjalle, jotta ne
+   erottuvat kortin lämpimästä taustasta napeiksi eivätkä laatikoiksi. */
+.dialog.lehti .arrival-kulttuuri .kulttuuri-vaihtoehdot {
+  gap: 0.7rem;
+  margin: 0.9rem 0 0.2rem;
+}
+
+.dialog.lehti .arrival-kulttuuri .kulttuuri-vaihtoehdot button {
+  padding: 0.62rem 1.25rem;
+  background: rgba(255, 253, 246, 0.92);
+}
+
 .arrival-kulttuuri > summary {
   cursor: pointer;
   font-family: var(--font-type);
@@ -8831,6 +8874,28 @@ body.vertailu-tila .pawns { display: none; }
 .tutki-alanappi {
   font-family: var(--font-type);
 }
+
+/*
+ * LEHDEN ALAPALKIN JÄRJESTYS (omistajan ohje 8.8.2026): Poistu aina
+ * vasemmassa reunassa, eteenpäin vievä nappi aina oikeassa — joka
+ * sivulla ja molemmissa lehdissä.
+ *
+ * Ilman tätä järjestys tuli DOM:sta: kohtaaminen oli ensimmäisenä ja
+ * Poistu viimeisenä, eli lopetusnappi oli siinä reunassa, jota kohti
+ * peukalo liikkuu edetessään. Sivua kääntävä ja lehdestä poistuva
+ * nappi olivat vierekkäin ja vaihtoivat paikkaa sivun mukaan.
+ *
+ * Toteutus on order-arvoilla eikä DOM-järjestyksellä, koska
+ * .tutki-alanapit on display: contents — napit ovat saman flexin
+ * jäseniä, vaikka ne asuvat eri elementeissä. Näkyvä oikeanpuoleisin
+ * on aina se, joka vie eteenpäin: sivuilla Seuraava, viimeisellä
+ * sivulla kohtaaminen (Seuraava on silloin piilossa).
+ */
+.dialog.lehti .dialog-actions { justify-content: space-between; }
+.dialog.lehti .dialog-actions #arrival-no { order: 0; margin-right: auto; }
+.dialog.lehti .dialog-actions .tutki-alanappi.edellinen { order: 1; }
+.dialog.lehti .dialog-actions .tutki-alanappi.seuraava { order: 2; }
+.dialog.lehti .dialog-actions #arrival-yes { order: 3; }
 
 /* ── MAIDEN TIEDOT -TILA ───────────────────────────────────────────────
  *
