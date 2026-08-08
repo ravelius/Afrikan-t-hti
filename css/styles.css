@@ -8852,14 +8852,35 @@ body.vertailu-tila .pawns { display: none; }
  * Taitto on lehtijutun taitto: kapea palsta, ilmavat kappalevälit,
  * kuvat omina lohkoinaan tekstin seassa. Sama paperi ja kirjasin kuin
  * muualla lehdessä — arkki-luokka hoitaa pohjan.
+ *
+ * Nähtävyys on kelluva paperikortti kartan päällä, EI koko ruudun
+ * lehtiarkki (kuten #arrival-maa:n newspaper-lukunäkymä). Se jakaa
+ * silti arkki-luokan (sama paperi/kirjasin), ja arkki-luokalla on omat
+ * leveys/korkeussääntönsä 700 px:stä ylöspäin (.dialog.arkki, .dialog.arkki
+ * .dialog-card — rivi ~6625), jotka tekevät lehdestä koko ruudun
+ * korkuisen ja -levyisen. Ilman tätä omaa kumoavaa sääntöä nähtävyys
+ * peri saman: kortti täytti koko näytön leveyden JA korkeuden myös
+ * tabletilla, tausta ei näkynyt reunoilla ja yläreuna painui pois
+ * näkyvistä (omistajan löytö iPadilla 8.8.2026, kaappaus 834×1114).
+ * Leveys+korkeus+marginaali on siis kumottava täällä nimenomaisesti,
+ * samalla erottelutarkkuudella (dialog+arkki+nahtavyys-arkki = kolme
+ * luokkaa) kuin kumottava sääntö, jotta myöhempi sijainti tiedostossa
+ * ratkaisee. JOKAINEN kumottava ominaisuus (height, width, max-width)
+ * on nollattava eksplisiittisesti — jos jättää yhdenkin asettamatta,
+ * kaskadi hakee sen yhä aiemmasta arkki-säännöstä, koska "en aseta
+ * mitään" ei voita "asetin jonkin arvon" samalla erottelutarkkuudella.
  */
 .dialog.nahtavyys-arkki {
-  width: min(100vw, 820px);
-  margin: 0 auto;
-  padding: 0;
+  width: min(90vw, 640px);
+  height: auto;
+  max-height: 92dvh;
 }
 
-.nahtavyys-kortti {
+.dialog.nahtavyys-arkki .nahtavyys-kortti {
+  width: auto;
+  max-width: none;
+  height: auto;
+  max-height: 92dvh;
   padding: 1.2rem 1.15rem 1rem;
 }
 
@@ -8917,15 +8938,22 @@ body.vertailu-tila .pawns { display: none; }
   color: rgba(70, 51, 31, 0.72);
 }
 
-/* Kuva tekstin seassa: täysi palstanleveys, selite ja lähde alle. */
+/*
+ * Kuva tekstin seassa: PIENI, ei koko palstan levyinen (omistajan
+ * korjaus 8.8.2026: "kuvat aivan liian isoja... pieni kuva tekstin
+ * lomassa, ei koko palstan levyinen"). Keskitetty oma lohkonsa, selite
+ * ja lähde mahtuvat samaan kapeaan mittaan kuvan alle.
+ */
 .nahtavyys-kuvakehys {
-  margin: 0 0 1rem;
+  margin: 0 auto 1rem;
+  max-width: min(58%, 300px);
 }
 
 .nahtavyys-kuva {
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 4px;
   cursor: zoom-in;
 }
 
@@ -8957,9 +8985,14 @@ body.vertailu-tila .pawns { display: none; }
   color: rgba(70, 51, 31, 0.66);
 }
 
-/* Leveällä ruudulla juttu ei saa venyä liian pitkäksi riviksi. */
+/*
+ * Leveällä ruudulla juttu ei saa venyä liian pitkäksi riviksi.
+ * Erottelutarkkuus (dialog.nahtavyys-arkki .nahtavyys-kortti) on sama
+ * kuin yllä olevalla kumoavalla säännöllä, jotta tämä leveän ruudun
+ * pehmuste voittaa sen eikä jää sen alle.
+ */
 @media (min-width: 700px) {
-  .nahtavyys-kortti { padding: 1.5rem 2rem 1.2rem; }
+  .dialog.nahtavyys-arkki .nahtavyys-kortti { padding: 1.5rem 2rem 1.2rem; }
   .nahtavyys-kappale { font-size: 1.02rem; }
 }
 
