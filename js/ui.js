@@ -3360,6 +3360,9 @@ export class UI {
     this.svg.style.alignSelf = 'flex-start';
     this.viewBoxSize = { vw: nakyvaYks, vh: korkeusYks };
     this.zoomSkaala = skaala;
+    // Maan "i" -napin osumapinta on SVG-yksiköissä: se on mitoitettava
+    // uudestaan aina kun skaala muuttuu, tai se kutistuu loitonnettaessa.
+    this.paivitaMaaIOsuma();
     this.zoomYlaReuna = ylaReuna;
     this.panJakso = this.kiertava() ? jakso : 0;
     this.panVara = this.kiertava() ? 0 : Math.max(0, leveys - paneW);
@@ -4626,6 +4629,90 @@ export class UI {
       'font-size': koko.toFixed(0),
     }, this.countryNameLayer);
     nimi.textContent = maa.nimi;
+    this.piirraMaaNimenNappi(maa, iso, koko, nimi);
+  }
+
+  /**
+   * "i" maan nimen perään: maalehti auki suoraan laudalta.
+   *
+   * Omistajan havainto 8.8.2026: *"Kartalla ei vieläkään näy kohtaa
+   * mistä pääsisin maan lehteen. Pitäisi olla i maan nimen perässä."*
+   *
+   * v382:n Maiden lehdet -nappi avaa saman lehden minkä tahansa maan
+   * kohdalla, mutta se vaatii tilan kytkemisen ensin. Tämä on
+   * pysyvästi näkyvissä sille maalle, jossa pelaaja juuri on — eli
+   * juuri siinä kohdassa, jota omistaja katsoi kun ei löytänyt mitään.
+   *
+   * Nimi on kaunokirjoitusta ja hyvin haalea; nappi ei saa olla yhtä
+   * haalea, tai sitä ei löydä sekään joka tietää sen olevan siinä.
+   */
+  piirraMaaNimenNappi(maa, iso, koko, nimi) {
+    // Nimen leveys mitataan, ei arvata: kaunokirjoituksen leveys ei
+    // johdu merkkimäärästä suoraviivaisesti.
+    let leveys = 0;
+    try { leveys = nimi.getComputedTextLength?.() ?? 0; } catch { leveys = 0; }
+    if (!leveys) leveys = maa.nimi.length * koko * 0.5;
+    const r = Math.max(7, koko * 0.42);
+    const x = maa.keskus[0] + leveys / 2 + r * 1.8;
+    const y = maa.keskus[1] - koko * 0.28;
+    const nappi = el('g', {
+      class: 'maa-i',
+      role: 'button',
+      tabindex: '0',
+      'aria-label': `${maa.nimi}: avaa maan lehti`,
+    }, this.countryNameLayer);
+    // Näkyvä kehä ja kirjain.
+    const keha = el('circle', { cx: x, cy: y, r: r.toFixed(1), class: 'maa-i-kehä' }, nappi);
+    const kirjain = el('text', {
+      x, y, class: 'maa-i-kirjain', 'text-anchor': 'middle', 'dominant-baseline': 'central',
+    }, nappi);
+    kirjain.textContent = 'i';
+    this.maaINappi = { keha, kirjain, x, y, vahin: r };
+    /*
+     * Osumapinta läpinäkyvänä kehän päälle.
+     *
+     * Säde on SVG-yksiköissä, joten sen näyttökoko riippuu kartan
+     * zoomista: kiinteä 15 mitattiin 390 px:n ruudulla yhdentoista
+     * pikselin ympyräksi. Siksi säde lasketaan nykyisestä skaalasta —
+     * ja päivitetään uudestaan joka zoomilla (paivitaMaaIOsuma).
+     */
+    this.maaIOsuma = el('circle', { cx: x, cy: y, r: r.toFixed(1), class: 'maa-i-osuma' }, nappi);
+    this.paivitaMaaIOsuma();
+    const avaa = (e) => {
+      // Napautus ei saa vuotaa kartalle: kartta zoomaisi tai
+      // päiväkirja kutistuisi saman eleen päälle.
+      e.stopPropagation();
+      e.preventDefault();
+      this.avaaMaalehti(iso);
+    };
+    nappi.addEventListener('click', avaa);
+    nappi.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') avaa(e); });
+  }
+
+  /**
+   * Napin mitat nykyiseen kartan skaalaan.
+   *
+   * Säteet ovat SVG-yksiköissä, joten niiden NÄYTTÖkoko riippuu siitä,
+   * kuinka pieneksi kartta on kutistettu. Kiinteillä yksiköillä nappi
+   * oli 390 pikselin ruudulla yhdentoista pikselin ympyrä — mitattu,
+   * ei arvattu. Siksi molemmat lasketaan tavoitepikseleistä taaksepäin:
+   * kehä noin 24 px halkaisijaltaan (näkyy), osumapinta 44 px (sormi).
+   *
+   * Skaala luetaan suoraan DOMista (leveys / viewBoxin leveys) eikä
+   * this.zoomSkaalasta: se ei ole asetettu kaikilla laudoilla, ja
+   * väärä oletus 1 oli juuri se, mikä kutisti napin.
+   */
+  paivitaMaaIOsuma() {
+    if (!this.maaIOsuma || !this.maaINappi) return;
+    const laatikko = this.svg?.getBoundingClientRect?.();
+    const vb = this.svg?.getAttribute?.('viewBox')?.split(/\s+/);
+    const skaala = laatikko?.width && vb?.[2] ? laatikko.width / Number(vb[2]) : (this.zoomSkaala || 1);
+    if (!Number.isFinite(skaala) || skaala <= 0) return;
+    const { keha, kirjain, vahin } = this.maaINappi;
+    const nakyvaR = Math.max(vahin, 12 / skaala);
+    keha.setAttribute('r', nakyvaR.toFixed(1));
+    kirjain.setAttribute('font-size', (nakyvaR * 1.25).toFixed(1));
+    this.maaIOsuma.setAttribute('r', Math.max(nakyvaR, 22 / skaala).toFixed(1));
   }
 
   /** Kartalla näkyvät vain käännetyt laatat omina kuvakkeinaan. */
@@ -7282,8 +7369,7 @@ export class UI {
     // Karttasivu ja tilastosivu piirtyvät omilla piirroillaan — ne
     // ovat karttaa ja käyriä, eivät nostolistoja.
     this.arrivalKategoria.classList.toggle('maa-etusivu', Boolean(kategoria?.kartta));
-    if (kategoria?.sisallys) this.piirraSisallys(kategoria);
-    else if (kategoria?.kartta) this.piirraMaaEtusivu(kategoria);
+    if (kategoria?.kartta) this.piirraMaaEtusivu(kategoria);
     else if (kategoria?.numerot) this.piirraMaaNumerotSivu(kategoria);
     else this.piirraKategoria(kategoria);
     this.arrivalKategoria.hidden = !kategoria;
@@ -7335,17 +7421,17 @@ export class UI {
     const otsikko = nimi ?? maa.nimi;
     const sivut = [];
     /*
-     * ETUSIVU ON SISÄLLYSLUETTELO (omistajan päätös 8.8.2026: "koko
-     * etusivu on turha" nykyisellään).
+     * SISÄLLYSLUETTELOSIVUA EI OLE (omistajan päätös 8.8.2026: "Tämän
+     * sivun voi ottaa pois kokonaan kun hampurilainen korvaa tuon").
      *
-     * Ennen tässä oli maan korkokartta. Kartta on hyvä kuva mutta
-     * huono etusivu: se ei kerro, mitä lehdessä on, eikä siitä pääse
-     * mihinkään. Maalehteen tullaan kartalta hakemaan tietoa, ja
-     * silloin ensimmäisen sivun tehtävä on näyttää valikoima ja
-     * päästää perille yhdellä napautuksella.
+     * Vaiheet: ennen v366:ta etusivuna oli maan korkokartta, sitten
+     * sisällysluettelo, ja nyt ei kumpaakaan omana sivunaan. Sama
+     * luettelo aukeaa alapalkin hampurilaisesta pop-uppina miltä
+     * tahansa sivulta, joten oma sivu oli vain yksi ylimääräinen
+     * käännös ennen sisältöä.
      *
-     * Kartta ei katoa: se siirtyy omaksi sivukseen sisällysluettelon
-     * jälkeen niillä mailla, joilla se on.
+     * Kartta ei katoa: se on lehden ensimmäinen sivu niillä mailla,
+     * joilla se on.
      */
     const kartta = MAAKARTAT[iso];
     const aiheet = (MAA_KATEGORIAT[iso] ?? [])
@@ -7357,7 +7443,6 @@ export class UI {
       numerot,
     ];
     if (!sisalto.length) return;
-    sivut.push({ id: 'maa-sisallys', nimi: otsikko, sisallys: sisalto });
     sivut.push(...sisalto);
 
     /*
@@ -7503,7 +7588,10 @@ export class UI {
 
     // Aihe nappien alle: mihin sivulle kumpikin suunta vie.
     const sivunNimi = (i) => {
-      if (i <= 0) return this.tutkiTila === 'maa' ? 'Sisällys' : 'Etusivu';
+      // Sivu 0 on molemmissa lehdissä nimiö ja esittely. Maalehdessä
+      // se luki ennen "Sisällys", koska sisällysluettelo oli oma
+      // sivunsa — nyt luettelo on vain alapalkin pop-upissa.
+      if (i <= 0) return 'Etusivu';
       return this.tutkiSivut?.[i - 1]?.nimi ?? '';
     };
     const nyt = this.tutkiSivu ?? 0;
@@ -7536,8 +7624,8 @@ export class UI {
   avaaSisallysvalikko() {
     const vanha = this.arrivalDialog.querySelector(':scope > .sisallys-levy');
     if (vanha) { vanha.remove(); return; }
-    const sisallys = this.tutkiSivut?.find?.((s) => s.sisallys)?.sisallys
-      ?? this.tutkiSivut ?? [];
+    // Sisällyssivua ei enää ole: lehden sivut OVAT sisällys.
+    const sisallys = this.tutkiSivut ?? [];
     const levy = html('div', 'sisallys-levy');
     const sulje = () => levy.remove();
     const otsikkoRivi = html('div', 'sisallys-levy-ylä');
@@ -8113,22 +8201,6 @@ export class UI {
     const johdanto = osa.johdanto ?? ensimmainen?.teksti ?? '';
     const virke = (johdanto.match(/[^.!?]+[.!?]/) ?? [johdanto])[0].trim();
     return { kuva: ensimmainen?.tiedosto ?? null, ingressi: virke };
-  }
-
-  /**
-   * Maalehden etusivu: sisällysluettelo kahdessa palstassa.
-   *
-   * Jokainen rivi on linkki suoraan sivulle, joten lehteä ei tarvitse
-   * selata järjestyksessä. Sama luettelo aukeaa alapalkin valikosta
-   * (ks. avaaSisallysvalikko), jotta hyppy onnistuu miltä tahansa
-   * sivulta eikä vain etusivulta.
-   */
-  piirraSisallys(kategoria) {
-    const kohde = this.arrivalKategoria;
-    kohde.replaceChildren();
-    kohde.appendChild(html('h3', 'aihe-nimi', kategoria.nimi));
-    kohde.appendChild(html('p', 'johdanto', 'Tämän numeron sisältö:'));
-    kohde.appendChild(this.rakennaSisallysLista(kategoria.sisallys));
   }
 
   /** Sisällysluettelon rivit. Käytetään sekä etusivulla että valikossa. */
