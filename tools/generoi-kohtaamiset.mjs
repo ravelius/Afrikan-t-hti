@@ -69,13 +69,18 @@ for (const id of kaupungit) {
       console.error(`${id}: ${nimi}Luenta puuttuu — ohitetaan.`);
       continue;
     }
-    const inputs = osat.map((osa) => {
+    const inputs = osat.map((osa, i) => {
       const voice = aani(id, osa.rooli);
       if (!voice) {
         console.error(`${id}: roolille "${osa.rooli}" ei ole ääntä (HAHMOT-taulukko).`);
         process.exit(1);
       }
-      return { text: osa.teksti, voice_id: voice };
+      /* Viimeisen osan perään lopputauko, jotta tiedosto ei leikkaudu
+       * heti puheen päälle (naksahdus — omistajan havainto 8.8.2026). */
+      const teksti = i === osat.length - 1
+        ? `${osa.teksti} <break time="1.0s" />`
+        : osa.teksti;
+      return { text: teksti, voice_id: voice };
     });
     console.log(`${id}/${nimi}: generoidaan (${inputs.length} puhujaosaa)…`);
     const vastaus = await fetch(

@@ -13,7 +13,7 @@ dekkarin.
 
 ## Työnjako (sitova)
 
-**Matkakirja on imu, Matkasanomat on tieto.** Saapumismerkinnöissä ei
+**Matkakirja on imu, lehti (Unohdettu aarre) on tieto.** Saapumismerkinnöissä ei
 ole opetussisältöä: ei vuosilukuja opettamisen vuoksi, ei tunnuslukuja,
 ei "tiesitkö että" -aineksia. Fakta saa esiintyä vain, jos se kantaa
 tunnelmaa — ja silloinkin sen on oltava tosi (tarina.md:n sääntö).

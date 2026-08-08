@@ -21,37 +21,35 @@ export const TILANNE = {
       tehtava: 'Koordinointi ja raporttien kokoaminen. Euroopan '
         + 'tarinatekstit valmiit: 41 dekkarimerkintää äänineen, '
         + 'aarrevihjeet ilmansuunnittain, Lontoon kohtaamisluennat.',
-      seuraavaksi: 'Uusi työtapa 8.8.: uuden jutun ensimmäisen '
-        + 'kierroksen tekee Fable itse omistajan kanssa valmiiksi, '
-        + 'monistus pienemmille vasta täydellä speksillä. '
-        + 'Berliinin pop-upien viimeistely siirtyy Fablelle '
-        + 'Sonnetin korjauskierroksen jälkeen. Lisäksi '
-        + 'kohtaamisluennat, kun äänet on valittu.',
+      seuraavaksi: 'Lyhyet tekstiversiot ovat Kehitys-välilehdellä '
+        + '(8 kokeilua, isoisä-vuorottelu) — luennat generoidaan '
+        + 'heti kun omistaja lähettää valitun äänen. Sitten koko '
+        + 'Euroopan lyhennys samalla kaavalla. Berliinin pop-upien '
+        + 'viimeistely Fablelle Sonnetin korjauskierroksen '
+        + 'jälkeen.',
     },
     {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Maalehden rakenneuudistus (sisällysluettelo '
-        + 'etusivulle, hampurilaisvalikko, sivuaiheet nappien '
-        + 'alle, Saksan siivous, Ruokaa ja tapakulttuuria, lehden '
-        + 'nimeksi Unohdettu aarre). Valmiina: v361 menovinkit 8 '
-        + 'maalle, v363 listamalli (4 maata, Suomi pilottina) + '
-        + 'alapalkin järjestys + visa omana korttinaan.',
-      seuraavaksi: 'Loput maat listamallilla; lopuksi v361-maat ja '
-        + 'lehtimaat samaan malliin (kaksi mallia näkyy hetken '
-        + 'rinnakkain, tarkoituksella).',
+      tehtava: 'JÄRJESTYS MUUTTUI (omistajan palaute 8.8. ilta): '
+        + 'kuusi lehtimaata listamalliin HETI, DEU ensin — '
+        + 'Berliinin menovinkit näyttivät vielä vanhaa nostomallia. '
+        + 'Sitten v361-maat, vasta lopuksi 19 uutta maata. '
+        + 'Valmiina: v366 rakenneuudistus, v363 listamalli, v361.',
+      seuraavaksi: 'Raportti DEU:sta heti kun valmis, jotta '
+        + 'omistaja voi katsoa Berliinin uudestaan.',
     },
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'tyossa',
-      tehtava: 'Pieni hiontaerä: selitelistan pallot samaan '
-        + 'hiekansävyyn kuin kartan ympyrät ja linkkitekstien '
-        + 'alleviivaus kevyemmäksi. Valmiina: v362 karttojen '
-        + 'ulkoasu, v360 Espanjan tv-nappi (iPad-testi OK), v359 '
-        + 'laguuni.',
-      seuraavaksi: 'Raportti Fablelle.',
+      tila: 'odottaa',
+      tehtava: 'Kaista tyhjä. Valmiina: v364 selitepallot kartan '
+        + 'sävyyn ja linkkien kevyempi alleviivaus (lehti ja '
+        + 'karttanäkymä; aloitusnäkymän linkki jätetty vahvaksi '
+        + 'luettavuuden takia), v362 karttojen ilme, v360 Espanjan '
+        + 'tv-nappi.',
+      seuraavaksi: 'Uusi tehtävä testikierroksen tarpeiden mukaan.',
     },
     {
       tekija: 'Sonnet 1',
@@ -66,14 +64,14 @@ export const TILANNE = {
     {
       tekija: 'Sonnet 2',
       rooli: 'nähtävyysjutut',
-      tila: 'tyossa',
-      tehtava: 'Pilotin korjauskierros omistajan katselmuksesta '
-        + '8.8.: dialogi istumaan näytölle (iPadilla yläreuna '
-        + 'leikkautui eikä taustasivu näkynyt), kuvat selvästi '
-        + 'pienemmiksi (1/juttu lähtökohtana), jutut noin puoleen '
-        + 'mittaan. Sisältö todettiin hyväksi.',
-      seuraavaksi: 'Omistaja katsoo Berliinin uudestaan; muut '
-        + 'kaupungit vasta sen jälkeen.',
+      tila: 'odottaa',
+      tehtava: 'Berliinin korjauskierros valmis (v367): dialogin '
+        + 'perimä koko ruudun sääntö kumottu (vika oli jaetussa '
+        + 'arkki-luokassa), kuvat pieniksi lohkoiksi (max 300 px, '
+        + '1–2/juttu), jutut 2–3 kappaleeseen, lainaukset '
+        + 'säilyivät. Testattu neljässä näyttökoossa.',
+      seuraavaksi: 'Omistajan uusi katselmus; hionta Fablen kautta, '
+        + 'muut kaupungit vasta valmiilla mallilla.',
     },
   ],
   odottaaPaatosta: [
@@ -92,6 +90,25 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Berliinin nähtävyysjutut korjattu — KATSO UUDESTAAN (v367)',
+    ohje: 'Avaa Berliinin kaupunkikartta ja napauta numeroita: '
+      + 'pop-up istuu nyt näytölle (tausta näkyy reunoilla, '
+      + 'yläreuna ei leikkaudu — testattu myös iPadin mitoissa), '
+      + 'kuvat ovat pieniä lohkoja tekstin välissä ja jutut '
+      + 'puolta lyhyemmät. Lainaukset säilyivät. Jos jokin vielä '
+      + 'häiritsee, kerro Fablelle — hionta tehdään suoraan.',
+  },
+  {
+    otsikko: 'Maalehti uusiksi: sisällysluettelo ja Unohdettu aarre (v366)',
+    ohje: 'Avaa Saksan lehti: etusivu on nyt sisällysluettelo '
+      + '(pikkukuva + otsikko + ingressi kahdessa palstassa), '
+      + 'kartta omalla sivullaan, hampurilaisnappi avaa saman '
+      + 'luettelon mistä tahansa. Nappien alla lukee minne ne '
+      + 'vievät. Ruokasivu on nyt Ruokaa ja tapakulttuuria '
+      + '(Kirchnerin ja Ritterin maalaukset), ja lehden nimi on '
+      + 'kaikkialla Unohdettu aarre.',
+  },
   {
     otsikko: 'Menovinkkien listamalli ja iloisempi visa (v363)',
     ohje: 'Katso Suomen menovinkit: uusi listamalli ryhmäotsikoin '

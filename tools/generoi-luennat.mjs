@@ -36,6 +36,14 @@ const JUURI = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AANI = 'Sz0tRTEpybtDJ9ru2kgD'; // Viisas Kertoja
 const MALLI = 'eleven_v3';
 const STABILITY = 0.5;
+/*
+ * Lopputauko (omistajan havainto 8.8.2026: tiedosto leikkautuu heti
+ * viimeisen sanan perään ja loppuun jää naksahdus). Break-tagi
+ * pyytää mallilta hiljaisuutta äänen loppuun, jolloin naksun voi
+ * leikata pois rikkomatta puhetta. Tarkista ensimmäisestä ajosta
+ * kuuntelemalla, että tauko todella syntyy — jos ei, kasvata aikaa.
+ */
+const LOPPUTAUKO = ' <break time="1.0s" />';
 
 const avain = process.env.ELEVEN_API_KEY ?? process.env.ELEVENLABS_API_KEY;
 if (!avain) {
@@ -64,7 +72,7 @@ for (const id of kaupungit) {
       method: 'POST',
       headers: { 'xi-api-key': avain, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        inputs: [{ text: merkinta.luenta, voice_id: AANI }],
+        inputs: [{ text: merkinta.luenta + LOPPUTAUKO, voice_id: AANI }],
         model_id: MALLI,
         settings: { stability: STABILITY },
       }),
