@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 366, teksti: 'Lehden nimi on nyt Unohdettu aarre' },
+  { v: 366, teksti: 'Maalehden etusivulle sisällysluettelo kartan tilalle' },
+  { v: 366, teksti: 'Sisällys myös alapalkin valikosta, aiheet nappien alle' },
+  { v: 366, teksti: 'Saksalle Ruokaa ja tapakulttuuria, kuvat kauniimmiksi' },
   { v: 365, teksti: 'Siivous: orvot äänet pois, vanhat suunnitelmat arkistoon' },
   { v: 364, teksti: 'Selitepallot kartan sävyyn, linkit kevyemmin viivattu' },
   { v: 363, teksti: 'Menovinkit listaksi: enemmän linkkejä, pienemmät kuvat' },
