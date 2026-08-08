@@ -170,4 +170,69 @@ export const TV_KANAVAT = {
       ],
     },
   },
+  /*
+   * RUOTSILLA EI OLE TV-NAPPIA (kartoitettu 8.8.2026).
+   *
+   * SVT olisi muuten kelvollinen: `https://api.svt.se/video/<id>`
+   * vastaa CORS `*`:lla, eikä sisältö ole suojattua tai rajattua
+   * (`drmCopyProtection: false`, `geoBlockedSweden: false`,
+   * `preventExternalEmbed: false`, osoitteessa jopa `/world/`-polku).
+   *
+   * Este on muoto: videoReferences tarjoaa yksitoista muunnosta, ja
+   * jokainen niistä on HLS tai DASH — mp4:ää ei ole yhtään. HLS soi
+   * natiivisti vain Safarissa ja iOS:ssä; Chrome ja Firefox
+   * vaatisivat hls.js-kirjaston, ja sen lisääminen on oma
+   * päätöksensä (voidaan avata myöhemmin). Nappi, joka toimii
+   * puolella laitteista, on huonompi kuin ei nappia.
+   *
+   * Toinen puute: tuoreimmalle Rapport-lähetykselle ei löytynyt
+   * rajapintaa, vaan id on kaivettava svt.se:n artikkelisivun
+   * HTML:stä — se ei ole tagesschaun kaltainen siisti lista.
+   */
+  /*
+   * ITALIALLA EI OLE TV-NAPPIA (kartoitettu 8.8.2026, omistajan
+   * päätös: ei jatkohakua RAI:n ulkopuolelta).
+   *
+   * RAI:n video tulee relinkerin kautta
+   * (`mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=<token>`),
+   * ja siinä on kolme estettä, joista jokainen yksin riittäisi:
+   *
+   * 1. Vastaus on XML, jonka sisällä on m3u8 — ei mp4:ää.
+   * 2. Osoitteessa on Akamai-token (`hdnea=st=…~exp=…`), jonka
+   *    voimassaolo oli mitattuna noin 150 sekuntia. Peliin ei voi
+   *    kirjoittaa osoitetta, joka vanhenee kahdessa minuutissa.
+   * 3. Relinker ei palauta `access-control-allow-origin`-otsaketta
+   *    lainkaan, joten selain ei saa hakea sitä pelin origonista.
+   *
+   * Lisäksi `cont`-arvo on obfuskoitu merkkijono, joka on kaivettava
+   * sivun HTML:stä, eikä rainews.it:n JSON-polku anna mp4:ää.
+   */
+  /*
+   * ESPANJAN TV-NAPPI ON VALMIS TEHTÄVÄKSI MUTTA ODOTTAA PÄÄTÖSTÄ
+   * (kartoitettu 8.8.2026).
+   *
+   * RTVE on ainoa löydetty lähde Saksan jälkeen, joka antaa oikeaa
+   * mp4:ää. Haku: `api.rtve.es/api/programas/135931/videos.json`
+   * (ohjelma Telediario Matinal), CORS `*`, uusin ensin. Sieltä
+   * löytyy sekä 3–4 minuutin kooste ("Telediario Matinal en 4'" /
+   * "…en cuatro minutos") että alle minuutin säätiedote
+   * ("El tiempo hoy…"). Toisto: `ztnr.rtve.es/ztnr/<id>.mp4`.
+   *
+   * ESTE: ztnr ohjaa `http://`-osoitteeseen, ei https:ään. Mitattu
+   * useaan kertaan, myös Origin-, Referer- ja
+   * Upgrade-Insecure-Requests-otsakkeiden kanssa — vastaus on aina
+   * sama. Peli tarjoillaan https:llä, joten kyse on sekasisällöstä:
+   * Chrome ja Firefox nostavat mediapyynnön automaattisesti
+   * https:ään (ja se toimii — mediapalvelin vastaa https:llä 206 ja
+   * oikeilla mp4-tavuilla, testattu Espanjan ulkopuolelta), mutta
+   * iOS:n Safari on niistä epävarmin, ja se on omistajan pääasiallinen
+   * laite. Selainkäytöstä EI voi mitata tästä ympäristöstä: selain ei
+   * pääse ulkoisiin palvelimiin lainkaan (ERR_CONNECTION_RESET, sama
+   * rajoite kuin v257:ssä).
+   *
+   * Siisti ratkaisu on olemassa eikä se ole iso: uutisproxy-worker
+   * seuraa ohjauksen ja palauttaa lopullisen https-osoitteen, jolloin
+   * sekasisältöä ei synny lainkaan. Se on kuitenkin oma eränsä
+   * (worker + reitti + julkaisu), joten se päätetään erikseen.
+   */
 };
