@@ -68,19 +68,16 @@ export const TILANNE = {
     {
       tekija: 'Sonnet 2',
       rooli: 'nähtävyysjutut',
-      tila: 'odottaa',
-      tehtava: 'Berliinin korjauskierros valmis (v367): dialogin '
-        + 'perimä koko ruudun sääntö kumottu (vika oli jaetussa '
-        + 'arkki-luokassa), kuvat pieniksi lohkoiksi (max 300 px, '
-        + '1–2/juttu), jutut 2–3 kappaleeseen, lainaukset '
-        + 'säilyivät. Testattu neljässä näyttökoossa.',
-      seuraavaksi: 'Omistajan uusi katselmus; hionta Fablen kautta, '
-        + 'muut kaupungit vasta valmiilla mallilla.',
+      tila: 'tyossa',
+      tehtava: 'MALLI HYVÄKSYTTY (omistaja 8.8. ilta) — monistus '
+        + 'lukitulla speksillä: Kairo, Venetsia, Madrid ja '
+        + 'Tukholma saavat nähtävyysjutut, lopuksi Lontoon vanhat '
+        + 'muunnetaan samaan malliin. Agentit sallittu (kaupunki '
+        + 'per agentti).',
+      seuraavaksi: 'Eräraportit Fablelle (1–2 kaupunkia per PR).',
     },
   ],
   odottaaPaatosta: [
-    'Berliinin nähtävyyspilotin UUSI katselmus, kun korjauskierros '
-      + '(dialogi, kuvakoot, mitta) on mainissa',
     'Kertoja- ja hahmoäänten valinta (kuuntele Kehitys-välilehden '
       + 'näytteet)',
     'Sateenvarjomiehen henkilöllisyys (ehdotus Kehitys-välilehden '
