@@ -8701,3 +8701,55 @@ body.vertailu-tila .pawns { display: none; }
 .tutki-alanappi {
   font-family: var(--font-type);
 }
+
+/* ── MAIDEN TIEDOT -TILA ───────────────────────────────────────────────
+ *
+ * Omistajan tilaus 8.8.2026: varuste, jolla minkä tahansa maan lehden
+ * saa auki suoraan kartalta ilman että sinne matkustetaan nopalla.
+ *
+ * Sama karttatila kuin vertailussa: kaupungit väistyvät ja maat ovat
+ * napautettavia. Ero on siinä, mitä napautus tarkoittaa — vertailu
+ * kerää maita listalle, tämä avaa yhden maan luettavaksi. Siksi tässä
+ * on korostettuna vain VALITTU maa, ei koko kartan nimistö.
+ */
+body.maatiedot-tila .cities,
+body.maatiedot-tila .tokens,
+body.maatiedot-tila .targets,
+body.maatiedot-tila .pawns { display: none; }
+
+body.maatiedot-tila .fact-card,
+body.maatiedot-tila .board-hint {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.maatiedot-maat { pointer-events: auto; }
+
+.maatiedot-maa {
+  fill: rgba(140, 110, 70, 0.05);
+  stroke: rgba(70, 51, 31, 0.55);
+  stroke-width: 1.1;
+  cursor: pointer;
+}
+
+.maatiedot-maa:hover { fill: rgba(140, 110, 70, 0.13); }
+
+/* Valittu maa: selvästi tummempi reuna ja lämmin täyttö, jotta näkee
+ * heti mihin napautus osui — kartalla osuu helposti naapuriin. */
+.maatiedot-maa.valittu {
+  fill: rgba(176, 34, 34, 0.16);
+  stroke: rgba(140, 30, 30, 0.9);
+  stroke-width: 2.2;
+}
+
+/* Nimi ja "i" vain valitulle maalle; koko lasketaan maan leveydestä. */
+.maatiedot-nimi {
+  fill: #46331f;
+  font-family: var(--font-type);
+  letter-spacing: 0.06em;
+  paint-order: stroke;
+  stroke: rgba(246, 238, 218, 0.85);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+  cursor: pointer;
+}

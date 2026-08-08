@@ -60,6 +60,7 @@ const SHELL = [
   './js/linssit/radio.js',
   './js/linssit/topografia.js',
   './js/linssit/vertailu.js',
+  './js/linssit/maatiedot.js',
   './js/linssit/vesistot.js',
   './js/packs/viritysaanet.js',
   './css/radio.css',

@@ -9739,6 +9739,80 @@ export class UI {
     }
   }
 
+  /**
+   * MAIDEN TIEDOT -TILA (v350).
+   *
+   * Sama kartan tila kuin vertailussa — kaupungit väistyvät ja maat
+   * ovat napautettavia — mutta ele tarkoittaa eri asiaa: vertailu
+   * KERÄÄ maita listalle, tämä AVAA yhden maan luettavaksi.
+   *
+   * Napautus valitsee maan: sen rajat korostuvat ja nimen viereen
+   * ilmestyy "i", josta maan lehti aukeaa. Kaksi vaihetta yhden sijaan
+   * siksi, että kartalla osuu helposti väärään maahan — ensimmäinen
+   * napautus näyttää mihin osui, vasta "i" avaa lehden.
+   */
+  tahdistaMaatiedot(halutaan) {
+    const paalla = document.body.classList.contains('maatiedot-tila');
+    if (halutaan === paalla) return;
+    document.body.classList.toggle('maatiedot-tila', halutaan);
+    if (halutaan) {
+      this.maatiedotValittu = null;
+      this.piirraMaatiedotMaat();
+    } else {
+      this.maatiedotKerros?.remove();
+      this.maatiedotKerros = null;
+      this.maatiedotValittu = null;
+    }
+    this.drawTargets();
+  }
+
+  /** Maiden muodot napautettavina; valitulle nimi ja "i". */
+  piirraMaatiedotMaat() {
+    const muodot = this.game.pack.map?.countryShapes;
+    if (!muodot || !this.svg) return;
+    this.maatiedotKerros?.remove();
+    this.maatiedotKerros = el('g', { class: 'maatiedot-maat' }, this.boardRoot ?? this.svg);
+    for (const [iso, maa] of Object.entries(muodot)) {
+      if (!maa?.renkaat?.length) continue;
+      const d = maa.renkaat
+        .map((r) => `M${r.map(([x, y]) => `${x},${y}`).join(' L')}Z`)
+        .join(' ');
+      const valittu = this.maatiedotValittu === iso;
+      const polku = el('path', {
+        d,
+        class: `maatiedot-maa${valittu ? ' valittu' : ''}`,
+        'aria-label': maa.nimi,
+      }, this.maatiedotKerros);
+      polku.addEventListener('click', (e) => {
+        // Napautus ei saa vuotaa kartalle (zoom, päiväkirjan kutistus).
+        e.stopPropagation();
+        this.maatiedotValittu = valittu ? null : iso;
+        sfx.play('paper');
+        this.piirraMaatiedotMaat();
+      });
+      if (!valittu) continue;
+      /*
+       * Nimi ja "i" vain valitulle maalle. Jos kaikkien maiden nimet
+       * piirrettäisiin, kartta täyttyisi tekstistä eikä valinta
+       * erottuisi mitenkään — ja juuri valinnan näkyminen on tämän
+       * kahden vaiheen koko tarkoitus.
+       */
+      const koko = Math.max(12, Math.min(24, (maa.leveys * 0.8) / Math.max(4, maa.nimi.length)));
+      const nimi = el('text', {
+        x: maa.keskus[0],
+        y: maa.keskus[1],
+        class: 'maatiedot-nimi',
+        'text-anchor': 'middle',
+        'font-size': koko.toFixed(0),
+      }, this.maatiedotKerros);
+      nimi.textContent = `${maa.nimi} ⓘ`;
+      nimi.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.avaaMaalehti(iso);
+      });
+    }
+  }
+
   /** Maa valintaan tai pois siitä. Täysi lista ei ota enempää. */
   valitseVertailuMaa(iso) {
     const lista = this.vertailuValinnat ?? [];
@@ -10091,6 +10165,9 @@ export class UI {
     // Vertailulinssi on radion tavoin kartan TILA eikä karttakerros
     // (kerros: false) — se kytketään tässä samalla tavalla.
     this.tahdistaVertailu(tunnus === 'vertailu');
+    if (this.dead) return;
+    // Maiden tiedot on samaa perhettä: kartan tila, ei kerros.
+    this.tahdistaMaatiedot(tunnus === 'maatiedot');
     if (this.dead) return;
     this.paivitaLinssiNappi();
     this.paivitaLinssiTiedot();
