@@ -585,6 +585,317 @@ export const MAAKARTAT = {
       wiki: 'Suora demokratia',
     },
   },
+  NOR: {
+    /*
+     * ÄLÄ VAIHDA TÄTÄ ISOMPAAN. Commonsissa on suurempi ja kauniimpi
+     * `Norway rel location map.svg`, mutta se on KARTIOKUVAUS — pelin
+     * prosenttiasemointi olettaa tasavälisen ruudukon, joten pisteet
+     * valuisivat sillä vinoon eikä sitä huomaisi ilman tarkistusta.
+     * Tämä on kategorian ainoa koko maan tasavälinen korkokartta.
+     *
+     * Kartta kattaa vain mantereen: Huippuvuoret ja Jan Mayen ovat
+     * omissa moduuleissaan, joten Longyearbyeniä ei voi asemoida
+     * näillä rajoilla. Sama varoitus kuin Ranskalla.
+     */
+    tiedosto: 'Relief Map of Norway.png',
+    lahde: 'Виктор В ja NordNordWest, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 71.5, etela: 57.6, lansi: 4.1, ita: 31.6 },
+    /*
+     * Bergen osuu 4,5 %:n kohdalle ja Kirkkoniemi 94,4 %:iin — molemmat
+     * tarkoituksella laitaan. Ilman niitä kartalta ei näkisi, että maa
+     * on kapea lännessä ja kaartuu pohjoisessa Suomen yläpuolelta itään.
+     */
+    kaupungit: [
+      { nimi: 'Oslo', lat: 59.913, lon: 10.739, paa: true },
+      { nimi: 'Bergen', lat: 60.389, lon: 5.33 },
+      { nimi: 'Stavanger', lat: 58.961, lon: 5.716 },
+      { nimi: 'Trondheim', lat: 63.43, lon: 10.393 },
+      { nimi: 'Tromssa', lat: 69.683, lon: 18.943 },
+      { nimi: 'Kirkkoniemi', lat: 69.717, lon: 30.05 },
+    ],
+    // Intro päättyy siihen, ettei meri kaikkialla mahdu rauhassa
+    // kapeikoista; nosto näyttää paikan, jossa se ei mahdu lainkaan.
+    // Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Maailman voimakkain merivirta pyörii sillan alla',
+      tiedosto: 'Apparent whirlpools of Saltstraumen seen from the air.jpg',
+      teksti: 'Bodøn lähellä kaksi vuonoa on liitetty toisiinsa kolmen '
+        + 'kilometrin pituisella ja vain 150 metriä leveällä salmella. '
+        + 'Kun vuorovesi kääntyy, sen läpi pusertuu kuudessa tunnissa '
+        + 'jopa 400 miljoonaa kuutiometriä merivettä, nopeimmillaan 40 '
+        + 'kilometrin tuntivauhtia. Vesi ei mahdu kulkemaan suoraan '
+        + 'vaan alkaa pyöriä: salmeen syntyy kymmenen metriä leveitä ja '
+        + 'viisi metriä syviä pyörteitä, jotka katoavat yhtä äkkiä. '
+        + 'Saltstraumen on maailman voimakkain vuorovesivirta, ja sen '
+        + 'yli vie tavallinen maantiesilta, jolta pyörteitä katsotaan '
+        + 'kaiteen takaa. Virta on nuori: se syntyi vasta pari kolme '
+        + 'tuhatta vuotta sitten, kun maa nousi jääkauden jälkeen.',
+      selite: 'Saltstraumenin salmi ilmasta: maantiesilta ylittää '
+        + 'kapean väylän, ja vuorovesivirta piirtää veteen vaahtoisia '
+        + 'pyörteitä.',
+      lahde: 'Frankemann, Wikimedia Commons (CC BY-SA 4.0)',
+      wiki: 'Saltstraumen',
+    },
+  },
+  DNK: {
+    /*
+     * Tämän kuvan tiedostosivu ei ilmoita rajoja itse vaan viittaa
+     * sisarkuvaansa (`Denmark location map.svg`), jonka sivu ilmoittaa
+     * ne — ja ne täsmäävät moduuliin. Varmistus on siis yhden hypyn
+     * takana, heikommin kuin muilla mailla, ja siksi se on kirjattu
+     * tähän.
+     *
+     * Kuvassa on oikeassa yläkulmassa korkeusselite-laatikko. Se ei
+     * osu yhdenkään kaupungin päälle. Ainoa vaihtoehto ilman
+     * laatikkoa (Tschubbyn relief) ei dokumentoi koordinaattejaan
+     * lainkaan, joten sitä ei voi käyttää.
+     */
+    tiedosto: 'Denmark physical map.svg',
+    lahde: 'Urutseg, Wikimedia Commons (CC0)',
+    rajat: { pohjoinen: 57.9, etela: 54.3, lansi: 7.8, ita: 15.4 },
+    /*
+     * Grönlanti ja Färsaaret eivät ole tällä kartalla — omat
+     * moduulinsa. Bornholm on, ja siksi Rønne on listalla: se vetää
+     * katseen kartan oikeaan laitaan, jossa Tanskaa on vielä jäljellä.
+     * Skagen jätettiin pois pisteistä tarkoituksella, koska se on
+     * noston aihe — sama ratkaisu kuin San Marino Italian kartalla.
+     */
+    kaupungit: [
+      { nimi: 'Kööpenhamina', lat: 55.667, lon: 12.567, paa: true },
+      { nimi: 'Esbjerg', lat: 55.483, lon: 8.45 },
+      { nimi: 'Aalborg', lat: 57.051, lon: 9.919 },
+      { nimi: 'Aarhus', lat: 56.15, lon: 10.2 },
+      { nimi: 'Odense', lat: 55.4, lon: 10.383 },
+      { nimi: 'Rønne', lat: 55.1, lon: 14.7 },
+    ],
+    // Intro alkaa kolmannessa kappaleessa siitä, että Jyllanti kapenee
+    // pohjoisessa hiekkakieleksi; nosto vie sen kärkeen.
+    // Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Kartan pohjoiskärjessä kaksi merta törmää',
+      tiedosto: 'Grenen (36545893426).jpg',
+      teksti: 'Jyllannin pohjoisin kohta on Grenen, hiekasta kasvanut '
+        + 'kieleke, jonka kärjessä Skagerrak ja Kattegat kohtaavat. '
+        + 'Aallot tulevat kummaltakin puolelta ja iskeytyvät '
+        + 'vastakkain keskellä hiekkaa. Uiminen on kielletty, koska '
+        + 'virta on hengenvaarallinen, mutta kahlata saa: kärjessä voi '
+        + 'seisoa toinen jalka Skagerrakissa ja toinen Kattegatissa. '
+        + 'Kärkeen kävellään tai ajetaan Sandormenilla, traktorin '
+        + 'vetämällä matkustajavaunulla. Kieleke ei ole valmis: meri '
+        + 'kuljettaa hiekkaa pitkin länsirannikkoa pohjoiseen, ja kärki '
+        + 'kasvaa noin kymmenen metriä vuodessa kohti Ruotsia.',
+      selite: 'Grenenin hiekkakärki ilmasta: kävijät kulkevat jonossa '
+        + 'kapeaa kielekettä pitkin, ja aallot murtuvat kummallakin '
+        + 'puolella.',
+      lahde: 'Marcus Hansson, Wikimedia Commons (CC BY 2.0)',
+      // Grenenistä ei ole omaa fi-artikkelia; nimi ohjaa Skageniin.
+      wiki: 'Skagen',
+    },
+  },
+  LVA: {
+    /*
+     * POIKKEUS kuten Tšekillä ja Sveitsillä: moduulin oma image1 on
+     * seittimäinen, koska siihen on piirretty kaikkien noin sadan
+     * kunnan rajat eikä siinä ole jokia. Tämä on saman perheen kuva,
+     * jonka tiedostosivu dokumentoi rajat itse ja jossa Väinäjoki
+     * näkyy — se on maan selkäranka ja kartan ainoa iso viiva.
+     */
+    tiedosto: 'Latvia relief location map.svg',
+    lahde: 'Maximilian Dörrbecker (Chumwa), Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 58.5, etela: 55.5, lansi: 20.5, ita: 28.6 },
+    /*
+     * Kartta on melkein kokonaan vihreä, eikä se ole vika: Latviassa ei
+     * ole vuoria. Ruskeaa on vain kaksi laikkua, ja Cēsis on listalla
+     * merkitsemässä niistä pohjoisempaa — ilman sitä kartalta ei näkisi,
+     * että maassa ylipäätään kohoaa mitään.
+     */
+    kaupungit: [
+      { nimi: 'Riika', lat: 56.947, lon: 24.105, paa: true },
+      { nimi: 'Liepāja', lat: 56.517, lon: 21.0 },
+      { nimi: 'Ventspils', lat: 57.396, lon: 21.567 },
+      { nimi: 'Jelgava', lat: 56.648, lon: 23.714 },
+      { nimi: 'Cēsis', lat: 57.317, lon: 25.267 },
+      { nimi: 'Daugavpils', lat: 55.883, lon: 26.533 },
+    ],
+    // Intro päättyy siihen, että tasainen maa tekee yhden tempun.
+    // Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Kaupunki, jossa lohta sai ilmasta',
+      tiedosto: '20140421-01(Vimbu lekšana Ventas rumbā).jpg',
+      teksti: 'Kuldīgan kohdalla Venta-joki putoaa kalliokynnyksen '
+        + 'yli. Putous on vain noin kaksi metriä korkea mutta 249 '
+        + 'metriä leveä — koko Euroopan levein vesiputous, ja '
+        + 'kevättulvassa se venyy vielä 275-metriseksi. Keväällä kalat '
+        + 'nousevat jokea ylös kutemaan, ja kynnyksen yli on päästävä '
+        + 'hyppäämällä ilmaan. 1600-luvulla Kuurinmaan herttua Jaakob '
+        + 'keksi käyttää sen hyväkseen: hän teetti sata pajukoria, '
+        + 'jotka aseteltiin putouksen alle, ja ylös pääsemättömät '
+        + 'kalat putosivat koreihin. Kuldīgaa sanottiin kaupungiksi, '
+        + 'jossa lohta saa ilmasta. Lohet ovat kadonneet, mutta '
+        + 'vimpoja hyppää yhä joka kevät.',
+      selite: 'Vimpoja hyppää ilmaan Ventas rumban yli Kuldīgassa: '
+        + 'putous on matala mutta leveä, ja kalojen on noustava sen '
+        + 'yli päästäkseen kutupaikoille.',
+      lahde: 'Karlis Ustups, Wikimedia Commons (CC BY-SA 4.0)',
+      // Putouksesta ei ole fi-artikkelia; kaupungilla on.
+      wiki: 'Kuldīga',
+    },
+  },
+  LTU: {
+    /*
+     * Tämä on moduulin oma image1, ja siinä on kaikkien 60 kunnan
+     * rajat — kartta on siis levottomampi kuin naapurin Latvian.
+     * Siistimpi vaihtoehto on olemassa (Tschubbyn relief), mutta sen
+     * tiedostosivu ei dokumentoi reunakoordinaatteja lainkaan eikä sen
+     * kuvasuhde täsmää moduulin rajaukseen, joten pisteet valuisivat
+     * vinoon. Dokumentoitu rajaus voittaa kauniimman kuvan.
+     */
+    tiedosto: 'Relief Map of Lithuania.jpg',
+    lahde: 'NordNordWest ja Виктор В, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 56.7, etela: 53.7, lansi: 20.4, ita: 27.2 },
+    /*
+     * Trakai on tarkoituksella pois: se on vain 0,35 astetta Vilnasta
+     * länteen, joten nimet menisivät päällekkäin — ja se on noston
+     * aihe, eli parempi löytää kuvasta kuin lukea kartalta.
+     */
+    kaupungit: [
+      { nimi: 'Vilna', lat: 54.689, lon: 25.28, paa: true },
+      { nimi: 'Klaipėda', lat: 55.7, lon: 21.133 },
+      { nimi: 'Šiauliai', lat: 55.933, lon: 23.317 },
+      { nimi: 'Panevėžys', lat: 55.733, lon: 24.35 },
+      { nimi: 'Kaunas', lat: 54.9, lon: 23.933 },
+      { nimi: 'Druskininkai', lat: 54.017, lon: 23.967 },
+    ],
+    // Intro päättyy siihen, että yhdellä järvisaarella seisoo
+    // kokonainen linna. Kuva silmätarkistettu 480 px:ssä 8.8.2026;
+    // toinen ehdokas hylättiin, koska torni oli rakennustelineissä.
+    nosto: {
+      otsikko: 'Linna omalla saarellaan keskellä järveä',
+      tiedosto: 'Trakai Island Castle, Lithuania - Diliff.jpg',
+      teksti: 'Vilnasta 28 kilometriä länteen on Trakai, Liettuan '
+        + 'vanha pääkaupunki. Sen ympärillä on yli kaksisataa järveä, '
+        + 'ja suurimman ja syvimmän, Galvėn, saarelle rakennettiin '
+        + 'punatiilinen linna. Sen aloitti suuriruhtinas Kęstutis '
+        + '1300-luvulla ja sai valmiiksi hänen poikansa Vytautas Suuri '
+        + 'noin 1409. Vytautas myös kuoli tässä linnassa 1430, ja hän '
+        + 'oli se ruhtinas, joka toi Krimiltä mukanaan karaiimit — '
+        + 'heitä asuu Trakaissa yhä. Sotien jälkeen linna seisoi '
+        + 'raunioina lähes kolmesataa vuotta, ja se rakennettiin '
+        + 'uudelleen vasta 1950- ja 1960-luvulla.',
+      selite: 'Trakain saarilinna Galvė-järvellä: punatiiliset muurit '
+        + 'ja punakattoiset tornit nousevat suoraan vedestä.',
+      lahde: 'Diliff, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'Trakain linna',
+    },
+  },
+  FIN: {
+    /*
+     * SUOMI ON POIKKEUS, JA SYY ON SYYTÄ LUKEA ENNEN MUUTTAMISTA.
+     *
+     * Suomen sijaintikarttamoduulissa EI OLE rajakoordinaatteja
+     * lainkaan: se on kartioprojektion kaava (sini ja kosini
+     * keskimeridiaanin ympärillä). Sen pari `Finland rel location
+     * map.png` on siis kartiokuvaus, jossa pituuspiirit kaartuvat —
+     * pelin suora prosenttilaskenta heittäisi sillä reunoilla useita
+     * asteita, eikä sitä huomaisi katsomatta.
+     *
+     * Tämä kuva on sen sijaan tasavälinen (Commonsin luokka "Maps with
+     * equirectangular projection"). Rajat tulevat sen sisarkuvalta,
+     * johon tiedostosivu viittaa ("parameters equal to File:Finland
+     * location map.svg"). Ketju on siis yhden hypyn pituinen, ja se on
+     * tarkistettu piirtämällä pisteet kuvan päälle: Helsinki, Turku,
+     * Tampere, Kuopio, Oulu ja Rovaniemi osuvat paikoilleen.
+     */
+    tiedosto: 'Finland physical map.svg',
+    lahde: 'Urutseg, Wikimedia Commons (public domain)',
+    rajat: { pohjoinen: 70.4, etela: 59.5, lansi: 19.0, ita: 32.0 },
+    /*
+     * Laudan Lappi-kohde on tässä Rovaniemi: se istuu napapiirillä eli
+     * kartan opettavaisimmalla näkymättömällä viivalla, ja se on se
+     * Lapin paikka, jonka suomalainen lapsi tuntee.
+     */
+    kaupungit: [
+      { nimi: 'Helsinki', lat: 60.171, lon: 24.938, paa: true },
+      { nimi: 'Turku', lat: 60.451, lon: 22.267 },
+      { nimi: 'Tampere', lat: 61.498, lon: 23.761 },
+      { nimi: 'Kuopio', lat: 62.893, lon: 27.678 },
+      { nimi: 'Oulu', lat: 65.017, lon: 25.467 },
+      { nimi: 'Rovaniemi', lat: 66.5, lon: 25.733 },
+    ],
+    /*
+     * Suomalainen lapsi tietää maastaan paljon, joten nosto on
+     * valittava niin, että se yllättää hänetkin. Merenkurkun
+     * maankohoaminen olisi ollut ilmeinen valinta, mutta se on jo
+     * Suomi-laudan kysymyksissä — tämä ei ole missään.
+     * Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+     */
+    nosto: {
+      otsikko: 'Järvi, jonka alle jäi kolme kylää',
+      tiedosto: 'Lokka reservoir 1.jpg',
+      teksti: 'Kartan pohjoisosassa Sodankylässä on kaksi isoa järveä, '
+        + 'joita ei ole kaivanut jääkausi vaan ihminen. Lokan altaan '
+        + 'täyttö alkoi vuonna 1967 ja Porttipahta valmistui 1970, '
+        + 'jotta Kemijoen voimalaitoksille riittäisi vettä ympäri '
+        + 'vuoden. Lokka on Euroopan unionin suurin tekojärvi: '
+        + 'ylimmällä vedenkorkeudella se peittää 418 neliökilometriä. '
+        + 'Sen alle jäivät Korvasen, Rieston ja Mutenian kylät sekä '
+        + 'Posoaapa, joka oli siihen asti Suomen ja Euroopan suurin '
+        + 'aapasuo. Kaikkia puita ei ehditty kaataa ennen tulvitusta, '
+        + 'ja kantoja on nostettu pohjasta vielä 2000-luvulla.',
+      selite: 'Lokan tekojärvi patotieltä nähtynä; horisontissa '
+        + 'siintävät Nattaset. Veden alla ovat vanhat kylänpaikat ja '
+        + 'suo.',
+      lahde: 'Htm, Wikimedia Commons (CC BY 4.0)',
+      wiki: 'Lokan tekojärvi',
+    },
+  },
+  EST: {
+    /*
+     * POIKKEUS: moduulin oma image1 on vain 833 px leveä, ja peli
+     * pyytää kuvat tuhannen pikselin levyisinä — MediaWiki ei suurenna
+     * rasteria yli alkuperäisen, joten Viro olisi jäänyt pelin
+     * pienimmäksi kartaksi. Tämä on kolme kertaa isompi, ja sen
+     * tiedostosivu ilmoittaa TÄSMÄLLEEN samat rajat kuin moduuli.
+     */
+    tiedosto: 'Reliefkarte Estland.png',
+    lahde: 'Tschubby, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 60.4, etela: 57.2, lansi: 21.5, ita: 28.4 },
+    /*
+     * Võru on listalla siksi, että se on ainoa piste kartan ainoalla
+     * ruskealla alueella — kaakon ylängöillä, joilla Suur Munamägi
+     * kohoaa. Kuressaare merkitsee Saarenmaan, jolla noston kraatteri
+     * on.
+     */
+    kaupungit: [
+      { nimi: 'Tallinna', lat: 59.439, lon: 24.754, paa: true },
+      { nimi: 'Kuressaare', lat: 58.25, lon: 22.483 },
+      { nimi: 'Pärnu', lat: 58.383, lon: 24.5 },
+      { nimi: 'Tartto', lat: 58.38, lon: 26.723 },
+      { nimi: 'Narva', lat: 59.374, lon: 28.187 },
+      { nimi: 'Võru', lat: 57.849, lon: 26.993 },
+    ],
+    // Intro päättyy siihen, että yhdellä saarella on kartalle liian
+    // pieni mutta etsimisen arvoinen kohta.
+    // Kuva silmätarkistettu 480 ja 900 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Taivaalta putosi rautaa keskelle Saarenmaata',
+      tiedosto: 'Kaali kraater1.jpg',
+      teksti: 'Kartan läntisin iso saari on Saarenmaa, ja keskellä sen '
+        + 'metsiä on täysin pyöreä kuoppa. Sen teki rautameteoriitti, '
+        + 'joka hajosi ilmakehässä ja iski maahan yhdeksänä '
+        + 'kappaleena. Suurin kraatteri on noin 110 metriä leveä ja 16 '
+        + 'metriä syvä, ja sen pohjalla on pieni järvi. Saarella '
+        + 'asuttiin jo silloin: kraatterin vallilta on löytynyt '
+        + 'pronssikautisia talonpohjia, ja vallia on vahvistettu '
+        + 'kivimuurilla. Törmäyksen ajankohdasta kiistellään yhä, '
+        + 'sillä arviot vaihtelevat runsaan kahden ja lähes neljän '
+        + 'vuosituhannen välillä.',
+      selite: 'Kaalin kraatteri ylhäältä kuvattuna: pyöreä kuoppa '
+        + 'metsän keskellä, pohjalla vettä.',
+      lahde: 'Monika Michelson-Mõik, Wikimedia Commons (CC BY-SA 4.0)',
+      wiki: 'Kaalin kraatteri',
+    },
+  },
 };
 
 /*
