@@ -21,55 +21,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   marseille: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Monte Criston linnasaari',
-        tiedosto: "Château d'If @ Baie de Marseille 01.jpg",
-        teksti: 'Sataman edustalla olevalle pikkusaarelle rakennettiin '
-          + '1500-luvulla linnoitus, josta tuli pian vankila. Alexandre '
-          + 'Dumas sijoitti sinne Monte Criston kreivin — kirja on niin '
-          + 'tunnettu, että saarelle rakennettiin myöhemmin turisteja '
-          + 'varten "Faria-isän selli", vaikka koko mies on keksitty.',
-        selite: 'Château d\'If Marseillen lahdella. Linnoitus valmistui '
-          + '1531 puolustamaan satamaa; vankilana se toimi yli kolmesataa '
-          + 'vuotta. Saarelta ei tiettävästi ole koskaan paennut kukaan.',
-        lahde: 'Rémih, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: "Château d'If",
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Bouillabaisse alkoi jätekalasta',
-        tiedosto: 'Marseille Filets sur le quai Saint-Jean.jpg',
-        teksti: 'Marseillen kuuluisin ruoka oli alun perin kalastajien '
-          + 'omaa kotiruokaa: kattilaan meni se osa saaliista, jota '
-          + 'kukaan ei ostanut — kivikalat ja muut ruman näköiset. '
-          + 'Nykyään bouillabaisse on kallista, ja kaupungin ravintolat '
-          + 'ovat allekirjoittaneet oman peruskirjansa siitä, mitä '
-          + 'aitoon annokseen kuuluu.',
-        selite: 'Kalastajien verkkoja kuivumassa Marseillen laiturilla '
-          + '1900-luvun alussa. Vanha satama on ollut kaupungin '
-          + 'kalatori keskeytyksettä yli kahdentuhannen vuoden ajan.',
-        lahde: 'Wikimedia Commons (PD)',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Hymni sai nimensä matkalla',
-        tiedosto: 'Pils - Rouget de Lisle chantant la Marseillaise.jpg',
-        teksti: 'Ranskan kansallislaulun sävelsi Rouget de Lisle '
-          + 'Strasbourgissa vuonna 1792 — ei Marseillessa. Nimi tarttui '
-          + 'siihen, koska marseillelaiset vapaaehtoiset lauloivat sitä '
-          + 'marssiessaan Pariisiin, ja pariisilaiset alkoivat kutsua '
-          + 'sitä "sikseen marseillelaisten lauluksi".',
-        selite: 'Isidore Pilsin maalaus (1849): Rouget de Lisle laulaa '
-          + 'juuri säveltämäänsä sotalaulua Strasbourgin pormestarin '
-          + 'salongissa huhtikuussa 1792.',
-        lahde: 'Wikimedia Commons (PD)',
-        wiki: 'La Marseillaise',
-        musiikki: 'https://music.apple.com/fi/search?term=La%20Marseillaise',
-        musiikkiNimi: 'La Marseillaise Apple Musicissa',
-      },
-    ],
+    /*
+     * Marseille sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Miksi Ranskan kansallislaulua kutsutaan Marseillaisiksi, vaikka se sävellettiin Strasbourgissa?',
       options: [
@@ -87,57 +44,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   granada: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Palatsi, jota ei purettu',
-        tiedosto: 'View of the Alhambra and Sierra Nevada - Granada - Spain.jpg',
-        teksti: 'Alhambra oli Granadan emiirikunnan hallintokeskus ja '
-          + 'viimeinen muslimivaltio Iberian niemimaalla. Kun se '
-          + 'luovutettiin vuonna 1492, uudet hallitsijat eivät purkaneet '
-          + 'palatsia vaan muuttivat siihen — siksi sen kipsikoristelu ja '
-          + 'arabiankieliset kirjoitukset ovat yhä paikoillaan.',
-        selite: 'Alhambra kukkulallaan ja takana Sierra Nevada, jonka '
-          + 'huipuilla on lunta vielä kesäkuussa. Vuoret ovat myös syy '
-          + 'palatsin puutarhoihin: sulamisvesi tuotiin kanavaa pitkin '
-          + 'suoraan suihkulähteisiin.',
-        lahde: 'Adam Jones, Ph.D, Wikimedia Commons (CC BY-SA 3.0)',
-        wiki: 'Alhambra',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Säveltäjä, joka muutti Alhambran kylkeen',
-        tiedosto: 'Manuel de Falla.jpg',
-        teksti: 'Manuel de Falla asui vuosia pienessä talossa aivan '
-          + 'Alhambran vieressä ja sävelsi siellä teoksen "Öitä Espanjan '
-          + 'puutarhoissa", jonka ensimmäinen osa on nimeltään '
-          + '"Generalifessa" — se on juuri se puutarha kukkulan päällä. '
-          + 'Hän myös järjesti Granadassa 1922 kilpailun, '
-          + 'jolla pelastettiin vanha cante jondo -flamencolaulu '
-          + 'unohdukselta.',
-        selite: 'Manuel de Falla (1876–1946), Espanjan tunnetuin '
-          + '1900-luvun säveltäjä. Hän oli kotoisin Cádizista mutta '
-          + 'asui Granadassa lähes kaksikymmentä vuotta.',
-        lahde: 'Wikimedia Commons (PD)',
-        wiki: 'Manuel de Falla',
-        musiikki: 'https://music.apple.com/fi/artist/manuel-de-falla/319270',
-        musiikkiNimi: 'Manuel de Falla Apple Musicissa',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Tapas kuuluu hintaan',
-        tiedosto: 'Cerveza y pulpo seco motrileño.jpg',
-        teksti: 'Granadassa juoman mukana tulee tapas ilman eri maksua — '
-          + 'tapa, joka on Espanjassa nykyään harvinainen ja jota '
-          + 'granadalaiset puolustavat kiivaasti. Sanan alkuperä on '
-          + 'kansanselityksen mukaan "kansi": lautanen asetettiin '
-          + 'lasin päälle pitämään kärpäset poissa.',
-        selite: 'Olut ja tapas Granadan seudulla — tässä kuivattua '
-          + 'mustekalaa. Annos vaihtuu joka kierroksella, eikä sitä saa '
-          + 'valita: se on baarin valinta, ei asiakkaan.',
-        lahde: 'Arkangel, Wikimedia Commons (CC BY-SA 2.0)',
-      },
-    ],
+    /*
+     * Granada sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Mikä oli Alhambra ennen kuin siitä tuli museo?',
       options: [
@@ -354,52 +266,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   ateena: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Rebetiko — sataman blues',
-        tiedosto: 'The Famous Quartet of Pireaus about 1934.jpg',
-        teksti: 'Pireuksen satamakortteleissa syntyi 1920-luvulla '
-          + 'rebetiko: pakolaisten ja köyhien laulu, jota soitettiin '
-          + 'bouzoukilla ja jota valtio yritti aikanaan kieltää. Nykyään '
-          + 'se on Unescon suojelemaa kulttuuriperintöä ja soi taas '
-          + 'kaupungin tavernoissa.',
-        selite: 'Pireuksen kuuluisa kvartetti noin 1934: Markos '
-          + 'Vamvakaris ja hänen soittokumppaninsa bouzoukeineen. '
-          + 'Yhtye teki rebetikosta koko Kreikan musiikkia.',
-        lahde: 'Wikimedia Commons (PD)',
-        wiki: 'Rebetiko',
-        musiikki: 'https://music.apple.com/fi/search?term=rebetiko',
-        musiikkiNimi: 'Rebetiko Apple Musicissa',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Souvlaki syödään seisaaltaan',
-        tiedosto: 'Souvlaki in Athens.JPG',
-        teksti: 'Souvlaki on grillattua lihaa vartaassa, ja pita '
-          + 'kääritään sen ympärille tomaatin, sipulin ja tzatzikin '
-          + 'kanssa. Ateenassa se ostetaan luukulta ja syödään kadulla '
-          + 'kävellen — halvin kunnon ateria kaupungissa.',
-        selite: 'Souvlaki-annos ateenalaisessa kojussa: vartaat, pita ja '
-          + 'ranskalaiset samassa käärössä, kuten paikallinen tapa vaatii.',
-        lahde: 'Miyagawa, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Souvlaki',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Evzonit ja tupsukengät',
-        tiedosto: 'Evzones marching, Athens, Greece.jpg',
-        teksti: 'Tuntemattoman sotilaan haudalla vartioivat evzonit '
-          + 'kävelevät hitaasti kuin unessa. Puvussa on 400 laskosta — '
-          + 'yksi jokaista Kreikan ottomaanivallan vuotta kohti — ja '
-          + 'kengät painavat kolme kiloa kappale, sillä niiden pohjissa '
-          + 'on 60 naulaa.',
-        selite: 'Evzonit vaihtavat vartiota parlamenttitalon edessä. '
-          + 'Tupsukenkien nimi on tsarouhia, ja tupsut ovat mustaa villaa.',
-        lahde: 'Wikimedia Commons (CC0)',
-        wiki: 'Eusonit',
-      },
-    ],
+    /*
+     * Ateena sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Mitä evzonin puvun 400 laskosta esittävät?',
       options: [
@@ -765,61 +637,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   edinburgh: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Yhdeksän säveltä, ei yhtään taukoa',
-        tiedosto: 'Piper busking in Edinburgh DSC05049.JPG',
-        teksti: 'Skotlantilaisessa säkkipillissä on melodiapilli ja kolme '
-                  + 'bordunapilliä, jotka soivat koko ajan samaa säveltä. '
-                  + 'Melodiapillistä saa vain yhdeksän säveltä, eikä ääntä voi '
-                  + 'katkaista lainkaan — siksi soittaja erottaa peräkkäiset '
-                  + 'sävelet toisistaan salamannopeilla koristenuoteilla. '
-                  + 'Soitin on tehty ulos: se soi noin 110 desibeliä.',
-        selite: 'Säkkipillinsoittaja Edinburghin kadulla. Säkki on '
-                  + 'kainalossa, puhallusputki suussa ja kolme bordunapilliä '
-                  + 'lepää olkapäällä.',
-        lahde: 'David Monniaux, Wikimedia Commons (CC BY-SA 3.0)',
-        wiki: 'Säkkipilli',
-        musiikki: 'https://music.apple.com/fi/search?term=highland%20bagpipe',
-        musiikkiNimi: 'Skotlantilaista säkkipillimusiikkia Apple Musicissa',
-        musiikkiNayte: 'https://archive.org/download/raretunes_364_beating-retreat-edinburgh-castle/raretunesedretreat.mp3',
-        musiikkiNayteNimi: 'Pipe band, Edinburgh Castle — CC BY-NC-SA',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Haggis, lanttu ja peruna',
-        tiedosto: 'Haggis neeps tatties.JPG',
-        teksti: 'Haggis on lampaan sisäelimistä, kaurasuurimoista, '
-                  + 'sipulista ja mausteista tehty makkara, joka keitetään '
-                  + 'perinteisesti lampaan mahassa. Se syödään lantun ja '
-                  + 'perunan kanssa. Runoilija Robert Burns kirjoitti '
-                  + 'haggisille oman runon 1786, ja siksi joka 25. tammikuuta '
-                  + 'istutaan Burns-illalliselle: runo luetaan ääneen ja '
-                  + 'makkara avataan puukolla.',
-        selite: 'Haggis, neeps ja tatties eli haggis, lanttusose ja '
-                  + 'perunasose ravintola-annoksena. Kotona ne kasataan '
-                  + 'lautaselle vierekkäin, ei päällekkäin.',
-        lahde: 'Metukkalihis, Wikimedia Commons (CC BY-SA 3.0)',
-        wiki: 'Haggis',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Kutsumattomat perustivat festivaalin',
-        tiedosto: 'Fringe 2014 HighSt MG 0026-001.jpg',
-        teksti: 'Vuonna 1947 Edinburghiin perustettiin kansainvälinen '
-                  + 'taidefestivaali. Kahdeksan teatteriryhmää jäi kutsulistan '
-                  + 'ulkopuolelle ja tuli silti — ne esiintyivät reunalla eli '
-                  + 'fringellä. Siitä kasvoi maailman suurin esittävän taiteen '
-                  + 'festivaali: vuonna 2025 ohjelmassa oli 3 893 esitystä 301 '
-                  + 'paikassa. Ohjelmaa ei valitse kukaan: kuka tahansa saa '
-                  + 'esiintyä, jos löytää itselleen esityspaikan.',
-        selite: 'Royal Milen yläpää elokuussa: esiintyjä seisoo pollarin '
-                  + 'päällä ja mainostaa omaa esitystään. Katu on festivaalin '
-                  + 'ajan kokonaan jalankulkijoiden.',
-        lahde: 'Brian McNeil, Wikimedia Commons (CC BY 3.0)',
-      },
-    ],
+    /*
+     * Edinburgh sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Miten Edinburghin Fringe-festivaali sai alkunsa vuonna 1947?',
       options: [
@@ -836,60 +659,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   dublin: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Säkkipilli, jota ei puhalleta',
-        tiedosto: 'Patrick D\'Arcy, musician..jpg',
-        teksti: 'Uilleann-pilli on Irlannin oma säkkipilli, eikä siihen '
-                  + 'puhalleta lainkaan: ilma pumpataan palkeella, joka on '
-                  + 'hihnalla kiinni oikeassa kyynärpäässä. Nimi tuleekin '
-                  + 'irlannin sanasta uillinn eli kyynärpää. Soittaja istuu ja '
-                  + 'pitää melodiapilliä polvellaan. Unesco otti '
-                  + 'uilleann-pillin perinneluetteloonsa vuonna 2017.',
-        selite: 'Uilleann-pillin täysi setti soittajan olalla: '
-                  + 'melodiapilli, kolme bordunapilliä ja kolme säätöpilliä, '
-                  + 'joiden läpillä soitetaan sointuja säestykseksi.',
-        lahde: 'PatDarcy, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Irlantilainen kansanmusiikki',
-        musiikki: 'https://music.apple.com/fi/search?term=uilleann%20pipes',
-        musiikkiNimi: 'Uilleann-pillimusiikkia Apple Musicissa',
-        musiikkiNayte: 'https://archive.org/download/TheKerryJigTheMugOfBrownAle/01_kerry_mug_of_brown_ale_jigs.mp3',
-        musiikkiNayteNimi: 'Irlantilainen jigi ja reel — Tradschool, CC BY-NC-SA',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Coddle on tähteiden pata',
-        tiedosto: 'Irish Coddle.jpg',
-        teksti: 'Coddle on dublinilainen pata: makkarat, pekoni, perunat ja '
-                  + 'sipuli haudutetaan samassa liemessä tiiviin kannen alla. '
-                  + 'Mausteina on yleensä vain suola ja pippuri, eikä mitään '
-                  + 'ruskisteta — siksi ruoka näyttää vaaleammalta kuin '
-                  + 'maistuu. Coddlea tehtiin, jotta viikon tähteet saatiin '
-                  + 'syödyksi, ja se esiintyy myös James Joycen teksteissä.',
-        selite: 'Kulhollinen coddlea. Makkarat ja pekoni antavat liemen, '
-                  + 'perunat imevät sen itseensä, ja kaikki kypsyy samassa '
-                  + 'kattilassa yhtä aikaa.',
-        lahde: 'Wikimedia Commons (CC0)',
-        wiki: 'Irlantilainen keittiö',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Täysi stadion, palkaton joukkue',
-        tiedosto: 'Parade, hurling match.jpg',
-        teksti: 'Hurlingissa lyödään saarnipuisella mailalla sliotar-palloa '
-                  + 'maalin ylitse tai sisään. Peli on irlantilainen ja hyvin '
-                  + 'vanha: siitä kerrotaan jo keskiaikaisissa laeissa. Croke '
-                  + 'Parkiin Dublinissa mahtuu 82 300 katsojaa, mikä on '
-                  + 'Euroopan neljänneksi eniten, mutta yksikään pelaaja ei saa '
-                  + 'palkkaa — kaikki ovat amatöörejä ja käyvät arkena töissä.',
-        selite: 'Joukkueiden marssi ennen hurlingin All-Ireland-välierää '
-                  + 'Croke Parkissa 2017. Pelaajat kiertävät kentän '
-                  + 'soittokunnan perässä ennen aloitusta.',
-        lahde: 'Sheila1988, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Hurling',
-      },
-    ],
+    /*
+     * Dublin sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Miten irlantilaiseen uilleann-säkkipilliin saadaan ilmaa?',
       options: [
@@ -930,65 +705,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   lissabon: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Fado — laulu, jossa on saudade',
-        tiedosto: 'Amalia Rodrigues Portugese fado-zangeres op Schiphol, Bestanddeelnr 916-9840.jpg',
-        teksti: 'Fado on Lissabonin oma laulu: yksi laulaja, klassinen '
-                  + 'kitara ja portugalilainen kitara, jossa on kaksitoista '
-                  + 'kieltä kuutena parina. Aiheena on useimmiten saudade, '
-                  + 'kaipaus jotakin kohti, mitä ei enää ole. Amália Rodrigues '
-                  + 'lauloi fadoa yli viisikymmentä vuotta, ja kun hän kuoli '
-                  + '1999, Portugalissa vietettiin kolme päivää kansallista '
-                  + 'surua.',
-        selite: 'Amália Rodrigues Schipholin lentokentällä lokakuussa 1964 '
-                  + 'kesken kiertueen. Hän esiintyi lähes aina mustissa '
-                  + 'vaatteissa ja huivi hartioilla — asusta tuli fadolaulajan '
-                  + 'tunnusmerkki.',
-        lahde: 'Wikimedia Commons (CC0)',
-        wiki: 'Amália Rodrigues',
-        musiikki: 'https://music.apple.com/fi/search?term=am%C3%A1lia%20rodrigues',
-        musiikkiNimi: 'Amália Rodrigues Apple Musicissa',
-        musiikkiNayte: 'https://archive.org/download/Fado2017/003-don-bosco-students.mp3',
-        musiikkiNayteNimi: 'Fadokilpailu 2017 — Aren Noronha, CC BY-SA',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Pastel de nata on luostarin resepti',
-        tiedosto: 'Pasteles de nata en Pasteis de Belém.jpg',
-        teksti: 'Jerónimosin luostarin munkit paistoivat '
-                  + 'lehtitaikinakuppeja, joissa on munakermatäyte. Kun '
-                  + 'luostarit suljettiin 1834, resepti päätyi viereiselle '
-                  + 'sokerikaupalle, ja Pastéis de Belém on myynyt leivoksia '
-                  + 'vuodesta 1837. Kahvila kertoo paistavansa niitä yli 20 000 '
-                  + 'päivässä. Vain siellä ne saa nimittää pastéis de belém — '
-                  + 'muualla ne ovat pastel de nata.',
-        selite: 'Leivoksia myyntitiskillä Pastéis de Belémissä '
-                  + 'Lissabonissa. Kuoren pitää olla rapea ja täytteen pinnan '
-                  + 'hieman palanut: juuri ne mustat läiskät ovat oikein '
-                  + 'paistetun merkki.',
-        lahde: 'ProtoplasmaKid, Wikimedia Commons (CC BY-SA 4.0)',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Azulejot pitävät talon viileänä',
-        tiedosto: 'Lisboa, azulejos 3.jpg',
-        teksti: 'Lissabonin talot on päällystetty maalatuilla laatoilla. '
-                  + 'Tavallisen azulejon sivu on neljätoista senttiä, ja laatat '
-                  + 'ladotaan seinään kuvioksi. Kyse ei ole vain koristeesta: '
-                  + 'laatta torjuu sadetta ja pitää sisätilan viileämpänä '
-                  + 'helteellä. Sana ei tule espanjan sinistä tarkoittavasta '
-                  + 'sanasta azul vaan arabian sanasta az-zulayj, kiillotettu '
-                  + 'pikkukivi.',
-        selite: 'Lissabonilaisen talon julkisivu läheltä. Sama kuvio '
-                  + 'toistuu laatasta toiseen, ja neljä laattaa muodostaa '
-                  + 'yhdessä yhden suuremman kuvion — siksi ladonnan on '
-                  + 'osuttava kohdalleen.',
-        lahde: 'LBM1948, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Azulejo',
-      },
-    ],
+    /*
+     * Lissabon sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Mistä portugalilaisten seinälaattojen nimi azulejo tulee?',
       options: [
@@ -1031,61 +753,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   barcelona: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Sardanassa askeleet lasketaan',
-        tiedosto: 'Sardana Pla de la Seu.jpg',
-        teksti: 'Sardana tanssitaan piirissä käsi kädessä, ja askeleet '
-                  + 'lasketaan tarkasti: jokaisessa sävelmässä on oma määrä '
-                  + 'lyhyitä ja pitkiä askelia, ja joku piirissä laskee ne '
-                  + 'muiden puolesta. Soittaa cobla, jossa on yksitoista '
-                  + 'soittajaa mutta kaksitoista soitinta — flabiol-huilun '
-                  + 'soittaja lyö samalla käsivarteensa sidottua pikkurumpua.',
-        selite: 'Sardanaa tanssitaan katedraalin edustalla Barcelonassa. '
-                  + 'Tanssijat jättävät laukkunsa ja takkinsa piirin keskelle; '
-                  + 'se kuuluu tapaan yhtä lailla kuin askeleet.',
-        lahde: 'Canaan, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Sardana',
-        musiikki: 'https://music.apple.com/fi/search?term=sardana%20cobla',
-        musiikkiNimi: 'Sardana-musiikkia Apple Musicissa',
-        musiikkiNayte: 'https://archive.org/download/TarannCobla-OdaAlFolklore/01RquiemDeCooper.mp3',
-        musiikkiNayteNimi: 'Cobla soittaa — Tarannà + Cobla, CC BY-NC',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Calçot syödään esiliina kaulassa',
-        tiedosto: 'Calçotada a Valls (Catalonia).jpg',
-        teksti: 'Calçot on pitkäksi kasvatettu kevätsipuli, jota paahdetaan '
-                  + 'avotulella viiniköynnöksen oksista. Musta pinta vedetään '
-                  + 'sormin pois, sipuli kastetaan romesco-kastikkeeseen ja '
-                  + 'pudotetaan suuhun pää takakenossa. Kausi kestää talvesta '
-                  + 'kevääseen, ja Vallsin kaupunki, josta laji on kotoisin, '
-                  + 'järjestää oman calçotada-juhlansa tammikuun viimeisenä '
-                  + 'sunnuntaina.',
-        selite: 'Calçoteja paahdetaan kadulla Vallsissa. Sipulit ladotaan '
-                  + 'ritilälle palavien viiniköynnöksen oksien päälle, ja '
-                  + 'kuoren pitää hiiltyä mustaksi, jotta sisus kypsyy '
-                  + 'höyryssä. Paahtajilla on punainen barretina-lakki.',
-        lahde: 'flydime, Wikimedia Commons (CC BY-SA 2.0)',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Ihmistornin huipulla on lapsi',
-        tiedosto: '4de9f-Colla Jove Xiquets de Tarragona-Concurs2010.jpg',
-        teksti: 'Castell on katalaanien ihmistorni. Pohjalla on pinya, '
-                  + 'satojen ihmisten tiivis kasa, jonka päälle kerrokset '
-                  + 'nousevat; korkeimmissa torneissa on kymmenen kerrosta. '
-                  + 'Huipulle kiipeää lapsi, enxaneta, joka nostaa kätensä ja '
-                  + 'näyttää neljää sormea — yhtä montaa kuin Katalonian '
-                  + 'lipussa on raitaa.',
-        selite: 'Castell nimeltä 4 de 9 amb folre Tarragonan kilpailussa: '
-                  + 'neljä ihmistä joka kerroksessa ja yhdeksän kerrosta. '
-                  + 'Alhaalla näkyy pinya, joka kannattelee tornia ja ottaa sen '
-                  + 'kiinni, jos se sortuu.',
-        lahde: 'Ferran ( fer55 ), Wikimedia Commons (CC BY-SA 2.0)',
-      },
-    ],
+    /*
+     * Barcelona sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Mitä katalaanien ihmistornin huipulle kiipeävä lapsi, enxaneta, '
            + 'tekee päästyään ylös?',
@@ -1104,61 +777,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   amsterdam: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Katu-urut ja kolisevat kolikot',
-        tiedosto: 'Amsterdam. Een draaiorgel op een van de grachten, Bestanddeelnr 901-8132.jpg',
-        teksti: 'Belgialainen Leon Warnies avasi Amsterdamiin katu-urkujen '
-                  + 'vuokraamon vuonna 1875, ja siitä alkoi koko hollantilainen '
-                  + 'perinne. Musiikki tulee taitellusta pahvikirjasta, johon '
-                  + 'on lyöty reikiä: yksi kirja on yksi kappale. Urkuri '
-                  + 'kääntää kampea ja ravistaa toisella kädellä rahalipasta '
-                  + 'ohikulkijoille.',
-        selite: 'Katu-urut kanavan rannalla vuonna 1946. Soitin on '
-                  + 'kokonainen vaunu, jota työnnetään käsin paikasta toiseen — '
-                  + 'soittajan lisäksi mukana on aina rahankerääjä.',
-        lahde: 'Wikimedia Commons (CC0)',
-        wiki: 'Posetiivi',
-        musiikki: 'https://music.apple.com/fi/search?term=draaiorgel',
-        musiikkiNimi: 'Katu-urkumusiikkia Apple Musicissa',
-        musiikkiNayte: 'https://archive.org/download/VPROreisnaarheteinde-draaiorgel/draaiorgel.mp3',
-        musiikkiNayteNimi: 'Katu-urut — VPRO / lolaradio, CC BY-SA',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Silli syödään pyrstöstä',
-        tiedosto: 'Hollandse nieuwe haring eten bij een haringstal in Amsterdam, Bestanddeelnr 932-6068.jpg',
-        teksti: 'Hollandse Nieuwe on kevään ensimmäinen suolasilli, ja sen '
-                  + 'saa myydä vasta kun kalan rasvapitoisuus on noussut noin '
-                  + '16 prosenttiin. Perkauksessa haima jätetään paikalleen: '
-                  + 'sen entsyymit kypsyttävät lihan muutamassa päivässä. '
-                  + 'Kojulla silli kastetaan sipuliin ja lasketaan suuhun '
-                  + 'pyrstöstä pidellen.',
-        selite: 'Silliä syödään amsterdamilaisella kalakojulla vuonna 1983. '
-                  + 'Pää on poistettu ja ruoto vedetty pois, joten kala '
-                  + 'nostetaan pyrstöstä — juuri niin kuin paikallinen tapa '
-                  + 'vaatii.',
-        lahde: 'Wikimedia Commons (CC0)',
-        wiki: 'Silli',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Verotettiin julkisivun leveydestä',
-        tiedosto: 'Detail van de top van de voorgevel, een klokgevel, met hijsbalk - Amsterdam - 20528909 - RCE.jpg',
-        teksti: '1600-luvulla Amsterdamin kiinteistövero laskettiin '
-                  + 'julkisivun leveydestä, joten taloista tehtiin kapeita ja '
-                  + 'syviä. Kapein niistä, Oude Hoogstraat 22, on 2,02 metriä '
-                  + 'leveä ja kuusi metriä syvä. Portaat ovat siksi jyrkät kuin '
-                  + 'tikkaat, ja huonekalut nostetaan yhä ulkokautta ikkunasta '
-                  + 'sisään.',
-        selite: 'Kellonmuotoinen päätykoriste ja siitä ulos työntyvä '
-                  + 'hijsbalk-nostopuu. Talot rakennettiin hieman eteenpäin '
-                  + 'kallelleen, jottei nostettava tavara kolhisi julkisivua.',
-        lahde: 'Rijksdienst voor het Cultureel Erfgoed, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Amsterdam',
-      },
-    ],
+    /*
+     * Amsterdam sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Miksi Amsterdamin vanhat kanavatalot ovat niin kapeita?',
       options: [
@@ -1318,61 +942,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   budapest: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Tanssitalo alkoi yhdestä illasta',
-        tiedosto: 'Muzsikás együttes, Hamar Dániel, ifj. Csooóri Sándor, Sipos Mihály. Fortepan 89430.jpg',
-        teksti: 'Vuonna 1972 muutama budapestilainen soittaja järjesti '
-                  + 'illan, jossa kansantanssia ei katsottu lavalta vaan '
-                  + 'tanssittiin itse, kuten transilvanialaisissa kylissä. '
-                  + 'Ideasta kasvoi táncház eli tanssitalo -liike: soittajat '
-                  + 'istuvat nurkassa, opettaja näyttää askeleet ja loput '
-                  + 'opitaan kädestä pitäen. Unesco nosti liikkeen '
-                  + 'mallikelpoisten suojelutapojen luetteloon vuonna 2011.',
-        selite: 'Muzsikás-yhtye soittaa tanssitalossa vuonna 1978: '
-                  + 'kontrabasso, viuluja ja alttoviulu. Yhtye keräsi '
-                  + 'sävelmänsä matkoilla kyliin, joissa vanhat soittajat vielä '
-                  + 'muistivat ne ulkoa.',
-        lahde: 'FORTEPAN / Urbán Tamás, Wikimedia Commons (CC BY-SA 3.0)',
-        musiikki: 'https://music.apple.com/fi/search?term=muzsikas',
-        musiikkiNimi: 'Muzsikás Apple Musicissa',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Gulassi on Unkarissa keitto',
-        tiedosto: 'Paprika Vendor Budapest big hall.jpg',
-        teksti: 'Se, mitä muualla Euroopassa kutsutaan gulassiksi, on '
-                  + 'Unkarissa pörkölt eli paksu pata. Gulyás taas on keitto: '
-                  + 'lientä, naudanlihaa, perunaa ja paprikaa, ja se syödään '
-                  + 'lusikalla. Paprika saapui maahan ottomaanien mukana '
-                  + '1500-luvulla, ja Budapestin suuressa kauppahallissa, joka '
-                  + 'avattiin vuonna 1897, sitä myydään makeasta tuliseen.',
-        selite: 'Paprikakauppa Budapestin suuressa kauppahallissa. Palot '
-                  + 'riippuvat kuivumassa nauhoissa, ja jauhettu paprika '
-                  + 'myydään irtotavarana — asiakas valitsee vahvuuden, ei '
-                  + 'merkkiä.',
-        lahde: 'Takkk, Wikimedia Commons (CC BY-SA 3.0)',
-        wiki: 'Gulassi',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Shakkia lämpimässä altaassa',
-        tiedosto: 'Széchényi Spa Chess Champions (6991219530).jpg',
-        teksti: 'Budapestin alla on toistasataa lämmintä lähdettä, ja '
-                  + 'kaupunki on rakentanut niiden päälle kylpylöitä '
-                  + 'ottomaanien ajoista asti. Széchenyin kylpylä avattiin '
-                  + 'vuonna 1913, ja sen vesi nousee maasta 74- ja '
-                  + '77-asteisena; altaisiin se jäähdytetään. Ulkoaltaan '
-                  + 'reunalle on muurattu shakkilaudat, ja vakiopelaajat '
-                  + 'tulevat paikalle myös talvella.',
-        selite: 'Shakinpelaajia Széchenyin kylpylän ulkoaltaassa. Laudat on '
-                  + 'kiinnitetty altaan reunaan, ja peli jatkuu vaikka '
-                  + 'ympärillä uidaan.',
-        lahde: 'Christine Zenino, Wikimedia Commons (CC BY 2.0)',
-        wiki: 'Széchenyin kylpylä',
-      },
-    ],
+    /*
+     * Budapest sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Mitä gulyás tarkoittaa Unkarissa?',
       options: [
@@ -2039,60 +1614,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   istanbul: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Maailman vanhin sotilassoittokunta',
-        tiedosto: 'Istanbul Military Museum Mehter show in 2016 25 9327.jpg',
-        teksti: 'Mehter on ottomaanien sotilassoittokunta ja vanhin '
-                  + 'tunnettu marssiva soittokunta maailmassa. Sen jyminä '
-                  + 'kuului Euroopan puolelle asti: Haydn, Mozart ja Beethoven '
-                  + 'kirjoittivat kaikki musiikkia, joka matkii mehterin '
-                  + 'rumpuja ja lautasia. Soittokunta lakkautettiin 1826 ja '
-                  + 'herätettiin henkiin 1911.',
-        selite: 'Mehter-soittokunta esiintyy Istanbulin sotilasmuseossa '
-                  + 'Harbiyessä. Rummut ovat kaksipuolisia davul-rumpuja, ja '
-                  + 'soittajat astelevat hitaasti kääntyen vuoroin oikealle ja '
-                  + 'vasemmalle.',
-        lahde: 'Dosseman, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Mehter',
-        musiikki: 'https://music.apple.com/fi/search?term=mehter',
-        musiikkiNimi: 'Mehter-marsseja Apple Musicissa',
-        musiikkiNayte: 'https://archive.org/download/ceddin-deden/06-Ceddin%20Deden%20%5B1080p%5D.mp3',
-        musiikkiNayteNimi: 'Mehter-marssi "Ceddin Deden" — CC0',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Teetä juodaan enemmän kuin missään',
-        tiedosto: 'Tarihi cinaralti cay bahcesi.jpg',
-        teksti: 'Turkissa juodaan teetä yli kolme kiloa henkeä kohti '
-                  + 'vuodessa — enemmän kuin missään muussa maassa. Tee '
-                  + 'kasvatetaan Mustanmeren rannalla Rizen ympärillä. Se '
-                  + 'tarjoillaan tulppaanin muotoisessa lasissa ilman kahvaa: '
-                  + 'lasista pidetään kiinni reunasta, jottei sormia polta.',
-        selite: 'Teepuutarha Çengelköyssä Istanbulin Aasian puolella. '
-                  + 'Pöydät on aseteltu vanhan plataanin alle, ja jokaisella '
-                  + 'pöydällä on oma pieni teepannu.',
-        lahde: 'M. Fatih Morgül, Wikimedia Commons (CC BY 4.0)',
-        wiki: 'Tee',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Kadun kissat ovat kaikkien kissoja',
-        tiedosto: 'Hagia Sophia Cat Gli.png',
-        teksti: 'Istanbulin katukissoja on arvioitu olevan '
-                  + 'sadastatuhannesta yli miljoonaan. Niitä ei pidetä '
-                  + 'irtolaisina vaan korttelin yhteisinä lemmikkeinä: '
-                  + 'kauppiaat jättävät ovensa eteen vesikupin ja ruokaa. '
-                  + 'Kuuluisin niistä oli Gli, joka asui Hagia Sofiassa '
-                  + 'vuodesta 2004 kuolemaansa 2020 asti.',
-        selite: 'Gli Hagia Sofian marmorilattialla ruokakuppinsa vieressä. '
-                  + 'Kissa syntyi kirkossa, joka oli silloin museo, ja se tuli '
-                  + 'tunnetuksi tuhansien matkailijoiden valokuvista.',
-        lahde: 'Kadı, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Hagia Sofia',
-      },
-    ],
+    /*
+     * Istanbul sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Minkä juoman kulutus henkeä kohti on Turkissa maailman suurin?',
       options: [

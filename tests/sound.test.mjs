@@ -602,9 +602,21 @@ test('kielinäytteet ovat oikeista kaupungeista ja muodoltaan kelvollisia', asyn
 
 test('musiikkinäytteet ovat suoria mp3-osoitteita ja kertovat lisenssin', async () => {
   const { EUROPE_KULTTUURI } = await import('../js/packs/europe-kulttuuri.js');
+  const { KULTTUURI_KATEGORIAT } = await import('../js/packs/kulttuuri-kategoriat.js');
+  // Näyte voi olla kahdessa paikassa. Kun kaupunki saa oman lehden, sen
+  // litteät nostot siirtyvät europe-kulttuuri.js:stä kategorioihin ja
+  // näyte siirtyy mukana. Pelaajalle se on sama nappi samassa jutussa,
+  // joten testin on laskettava molemmat — muuten lukumäärän vahti
+  // laukeaa siirrosta eikä siitä, että näytteitä oikeasti katosi.
+  const kaikki = [
+    ...Object.entries(EUROPE_KULTTUURI)
+      .flatMap(([city, tiedot]) => (tiedot.nostot ?? []).map((n) => [city, n])),
+    ...Object.entries(KULTTUURI_KATEGORIAT)
+      .flatMap(([city, sivut]) => sivut.flatMap((s) => (s.nostot ?? []).map((n) => [city, n]))),
+  ];
   let maara = 0;
-  for (const [city, tiedot] of Object.entries(EUROPE_KULTTUURI)) {
-    for (const nosto of tiedot.nostot ?? []) {
+  {
+    for (const [city, nosto] of kaikki) {
       // Vanha kenttä oli linkki yleisradion etusivulle. Sitä ei saa
       // palauttaa: sivulle päätyminen ei ole musiikin kuulemista.
       assert.equal(nosto.musiikkiVapaa, undefined,

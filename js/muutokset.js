@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 407, teksti: 'Kymmenen uutta kaupunkilehteä Ateenasta Budapestiin' },
   { v: 406, teksti: 'Maan nimikilpi kutistuu kaukaa katsottuna maan mukana' },
   { v: 405, teksti: 'Lehden vieritys ei enää pompahda takaisin pohjaan' },
   { v: 404, teksti: 'Minitehtävä joka kaupunkilehden aihesivulle' },
