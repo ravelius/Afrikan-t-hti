@@ -13,7 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
-  { v: 355, teksti: 'Työhuone uudeksi: 5 välilehteä, Testaa ja tilanne yhteen' },
+  { v: 356, teksti: 'Työhuone uudeksi: 5 välilehteä, Testaa ja tilanne yhteen' },
+  { v: 355, teksti: 'Ruotsille korkokartta: Kiirunasta Malmöhön' },
+  { v: 355, teksti: 'Tukholman kohdekartta, ja vesi näkyy vihdoin' },
   { v: 354, teksti: 'Espanjalle korkokartta: Meseta ja kuusi kaupunkia' },
   { v: 354, teksti: 'Madridin kohdekartta: linnalta Retiron portille' },
   { v: 353, teksti: 'Menovinkit viidelle maalle: kokoelmat verkossa' },

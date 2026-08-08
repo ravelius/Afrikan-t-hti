@@ -57,6 +57,13 @@ const KAUPUNGIT = {
     // ruutukaavalle.
     rajat: { pohjoinen: 40.43, etela: 40.406, lansi: -3.72, ita: -3.675 },
   },
+  tukholma: {
+    // Kaupungintalolta Skansenille: Gamla stanin saari keskellä,
+    // Riddarfjärden lännessä ja Djurgården idässä. Kaikki kuusi
+    // kohdetta osuvat alueelle, ja vesi jakaa kuvan niin kuin se
+    // jakaa kaupungin — Tukholmassa ranta on kartan pääpiirre.
+    rajat: { pohjoinen: 59.342, etela: 59.313, lansi: 18.03, ita: 18.11 },
+  },
   venetsia: {
     // Koko historiallinen keskusta rautatieasemalta Arsenaalille:
     // Canal Grande kaartaa kuvan halki S-kirjaimena, ja kaikki kuusi
@@ -114,10 +121,17 @@ async function haeOverpass(rajat) {
   const kysely = `[out:json][timeout:120];(
     way["highway"~"^(${luokat})$"]${alue};
     way["waterway"~"^(river|canal)$"]${alue};
-    way["natural"="water"]${alue};
+    way["natural"~"^(water|coastline)$"]${alue};
     way["leisure"~"^(park|garden)$"]${alue};
     way["landuse"~"^(forest|grass|recreation_ground|cemetery)$"]${alue};
     way["railway"="rail"]${alue};
+    /*
+     * Isot järvet ja lahdet ovat OSM:ssä monikulmiorelaatioita, ja
+     * niiden jäsenpoluilla ei ole omia merkintöjä — pelkkä
+     * way["natural"="water"] ei siis löydä niitä lainkaan. Tukholmassa
+     * se tarkoitti, että Riddarfjärden puuttui kartalta kokonaan.
+     */
+    relation["natural"="water"]${alue};
   );out geom;`;
   const vastaus = await fetch('https://overpass-api.de/api/interpreter', {
     method: 'POST',
@@ -145,12 +159,47 @@ function piirra(kaupunki, elementit) {
 
   const kerrokset = { puistot: [], vedet: [], joet: [], radat: [], kadut: KADUT.map(() => []) };
   for (const e of elementit) {
+    /*
+     * Vesirelaation jäsenpolut piirretään samana rantanauhana kuin
+     * rantaviiva: monikulmion kokoaminen ulko- ja sisärenkaineen olisi
+     * paljon työtä siitä, mikä tässä tyylissä näkyy vain reunana.
+     * Sisärenkaat (saaret järvessä) ovat sama nauha, ja se on oikein —
+     * saaren ranta on ranta.
+     */
+    if (e.type === 'relation') {
+      for (const jasen of e.members ?? []) {
+        if (jasen.type === 'way' && jasen.geometry?.length) {
+          kerrokset.joet.push(`<polyline points="${pisteet(jasen.geometry)}"/>`);
+        }
+      }
+      continue;
+    }
     if (e.type !== 'way' || !e.geometry?.length) continue;
     const t = e.tags ?? {};
     if (t.highway) {
       const i = KADUT.findIndex((k) => k.luokat.includes(t.highway));
       if (i >= 0) kerrokset.kadut[i].push(`<polyline points="${pisteet(e.geometry)}"/>`);
     } else if (t.waterway) {
+      kerrokset.joet.push(`<polyline points="${pisteet(e.geometry)}"/>`);
+    } else if (t.natural === 'coastline') {
+      /*
+       * Meri on OSM:ssä rantaviiva, ei vesialue: avomerta ei ole
+       * piirretty minkään monikulmion sisään, vaan maa on rantaviivan
+       * vasemmalla puolella. Sen täyttäminen vaatisi renkaiden
+       * kokoamisen rajauslaatikkoa vasten, ja saaristossa siitä tulee
+       * herkkä. Siksi rantaviiva piirretään SAMOIN KUIN JOKI: leveänä
+       * vesivetona rannan myötäisesti.
+       *
+       * Se ei ole hätäratkaisu vaan pelin oma kartankieli — pääkartalla
+       * meri on juuri tällainen rantaa myötäilevä viiva (.sea-echo,
+       * sama sävy #b99a68). Ilman tätä Tukholma piirtyi kaupungiksi,
+       * jonka keskellä on tyhjiä peltoja: Riddarfjärden ja Saltsjön
+       * ovat rantaviivaa, joten ne jäivät paperin värisiksi.
+       *
+       * Mitta: veto on 14 px, ja 1600 px:n kuvassa se on Tukholman
+       * rajauksella noin 40 metriä. Kapeimmatkin salmet (Strömmen,
+       * noin 200 m) pysyvät siis auki.
+       */
       kerrokset.joet.push(`<polyline points="${pisteet(e.geometry)}"/>`);
     } else if (t.natural === 'water') {
       kerrokset.vedet.push(`<polygon points="${pisteet(e.geometry)}"/>`);
