@@ -40,11 +40,11 @@ export const TILANNE = {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
       tila: 'tyossa',
-      tehtava: 'Venetsian laguuniajo (korjattu työkalu osaa nyt '
-        + 'meren) ja tv-tallennekandidaattien kartoitus (RAI, RTVE, '
-        + 'SVT — vain lista, ei pelimuutoksia). Valmiina: v351 '
-        + 'Italia, v354 Espanja/Madrid, v355 Ruotsi/Tukholma.',
-      seuraavaksi: 'Kandidaattilista omistajan valittavaksi.',
+      tehtava: 'Espanjan tv-nappi RTVE-tallenteilla Saksan kahden '
+        + 'valinnan mallilla (sää + Telediario-kooste). Ruotsi ja '
+        + 'Italia jäävät ilman nappia (HLS-only / RAI:n tokenit). '
+        + 'Valmiina: v359 Venetsian laguuni, v351/v354/v355 kartat.',
+      seuraavaksi: 'RTVE-napin julkaisu; sitten kaista tyhjä.',
     },
     {
       tekija: 'Sonnet 1',
