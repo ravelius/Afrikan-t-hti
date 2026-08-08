@@ -6869,6 +6869,14 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
    * tarkalleen paperin reunaan kaikissa selaimissa. */
   top: 0;
   z-index: 2;
+  /*
+   * Oma piirtokerros: tarttuvalla rivillä on blend-mode ja varjo,
+   * jotka iOS piirtäisi muuten uudelleen joka vieritysruudulla —
+   * vieritys tökki juuri tämän rivin kohdalla (omistajan havainto
+   * 8.8.2026). translateZ(0) rasteroi rivin kerran ja loppu on
+   * pelkkää liu'utusta.
+   */
+  transform: translateZ(0);
   margin-inline: calc(var(--arkki-reunus) * -1);
   padding-inline: var(--arkki-reunus);
   padding-top: 0.95rem;
@@ -6940,6 +6948,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   position: sticky;
   top: var(--arkki-tarttuma, 0px);
   z-index: 3;
+  /* Sama syy kuin #arrival-liuskat-rivillä: blend-mode tarttuvassa
+   * elementissä nyki iOS:n vierityksen — oma kerros korjaa. */
+  transform: translateZ(0);
   /* Yläreunuksen on oltava pehmustetta eikä marginaalia: marginaali
    * siirtäisi tarttumakohtaa alaspäin ja jättäisi raon. */
   margin: 0 0 1rem;
