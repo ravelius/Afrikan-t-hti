@@ -259,6 +259,55 @@ export const MAAKARTAT = {
       wiki: 'Ávila',
     },
   },
+  SWE: {
+    tiedosto: 'Sweden relief location map.jpg',
+    lahde: 'Eric Gaba ja NordNordWest, Wikimedia Commons (CC BY-SA 3.0)',
+    // Rajat sijaintikarttaperheen omasta määrittelystä (Module:Location
+    // map/data/Sweden). Kuva on muita kapeampi ja korkeampi (842 × 1837)
+    // yksinkertaisesti siksi, että maa on sen muotoinen: 1 572 km
+    // etelästä pohjoiseen.
+    rajat: { pohjoinen: 69.5, etela: 55.1, lansi: 10.4, ita: 24.6 },
+    /*
+     * Kuusi kaupunkia etelästä pohjoiseen: neljä suurinta, pohjoisen
+     * suurin (Uumaja) ja Kiiruna napapiirin yläpuolelta. Kartalta
+     * näkee, miksi valtaosa väestä asuu eteläisessä kolmanneksessa —
+     * pohjoisessa on tunturia ja metsää.
+     */
+    kaupungit: [
+      { nimi: 'Tukholma', lat: 59.329, lon: 18.069, paa: true },
+      { nimi: 'Göteborg', lat: 57.707, lon: 11.967 },
+      { nimi: 'Malmö', lat: 55.605, lon: 13.003 },
+      { nimi: 'Uppsala', lat: 59.858, lon: 17.645 },
+      { nimi: 'Uumaja', lat: 63.826, lon: 20.263 },
+      { nimi: 'Kiiruna', lat: 67.855, lon: 20.226 },
+    ],
+    /*
+     * Nosto tarttuu introon kohdasta "vauraus rakennettiin raudasta".
+     * Rautaa ei näytä mikään Ruotsin sivu, ja tämä on siitä se tarina,
+     * jota lapsi ei usko ennen kuin näkee kuvan: kokonainen kaupunki
+     * siirretään pois oman kaivoksensa alta.
+     * Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+     */
+    nosto: {
+      otsikko: 'Kaupunki, joka siirretään pois oman kaivoksensa alta',
+      tiedosto: 'Kiruna20250819-12-kirkeflytting.jpg',
+      teksti: 'Kartan pohjoispäässä, napapiirin yläpuolella, on '
+        + 'Kiiruna. Sen alla on maailman suurin maanalainen '
+        + 'rautakaivos, ja sitä on kaivettu niin syvälle kaupungin '
+        + 'alle, että maa halkeilee — siksi koko Kiiruna siirretään '
+        + 'kolme kilometriä itään. Taloja on nostettu lavettien päälle '
+        + 'ja ajettu uudelle paikalle kävelyvauhtia. Elokuussa 2025 '
+        + 'vuorossa oli puinen kirkko, joka on äänestetty Ruotsin '
+        + 'kauneimmaksi rakennukseksi: se on niin leveä, että tietä '
+        + 'piti levittää sitä varten, ja matka kesti kaksi päivää. '
+        + 'Raudasta rakennettiin Ruotsin vauraus, ja täällä sitä yhä '
+        + 'kaivetaan.',
+      selite: 'Kiirunan kirkko matkalla uudelle paikalleen '
+        + 'lavettipyörien päällä elokuussa 2025.',
+      lahde: 'TorbjørnS, Wikimedia Commons (CC BY 4.0)',
+      wiki: 'Kiirunan kunta',
+    },
+  },
 };
 
 /*
@@ -880,6 +929,47 @@ export const KAUPUNKIKARTAT = {
       { nimi: 'Cibeleen aukio', lat: 40.4192, lon: -3.6931, wiki: 'Plaza de Cibeles' },
       { nimi: 'Prado-museo', lat: 40.4138, lon: -3.6921, wiki: 'Museo del Prado' },
       { nimi: 'Alcalán portti', lat: 40.42, lon: -3.6889, wiki: 'Puerta de Alcalá' },
+    ],
+  },
+  tukholma: {
+    /*
+     * Tukholma pakotti työkaluun rantaviivan tuen. Ensimmäinen ajo
+     * antoi kaupungin, jonka keskellä oli tyhjiä peltoja: Saltsjön ja
+     * Riddarfjärden ovat OSM:ssä rantaviivaa ja monikulmiorelaatioita,
+     * eivät tavallisia vesialueita, joten ne jäivät kokonaan pois.
+     * Nyt molemmat piirtyvät rantanauhana — ks. tools/
+     * piirra-kaupunkikartta.mjs. Vesi on Tukholmassa kartan pääpiirre,
+     * joten ilman sitä kuvaa ei olisi voinut julkaista.
+     */
+    polku: 'assets/kartat/tukholma-keskusta.png',
+    lahde: '© OpenStreetMap-tekijät (ODbL)',
+    rajat: { pohjoinen: 59.342, etela: 59.313, lansi: 18.03, ita: 18.11 },
+    esittely: 'Tukholma seisoo siinä, missä Mälaren-järvi purkautuu '
+      + 'Itämereen. Kapeikossa vesi virtaa kuin joessa — sen nimi on '
+      + 'Strömmen, ja siinä saa onkia lohta keskellä kaupunkia. Juuri '
+      + 'tämä paikka teki kaupungista tärkeän: 1200-luvulla salmi '
+      + 'suljettiin paaluilla, jotka pysäyttivät vieraat laivat ennen '
+      + 'järveä.\n\nKartan keskellä on Gamla stan, vanhakaupunki, '
+      + 'jonka kujat kiertelevät samoja mutkia kuin keskiajalla. '
+      + 'Kapein niistä on 90 senttiä leveä. Idässä levittäytyy '
+      + 'Djurgården, entinen kuninkaan metsästyspuisto, jossa ovat nyt '
+      + 'museot ja huvipuisto. Kartan kohteista pääsee lukemaan lisää '
+      + 'napauttamalla.',
+    kohteet: [
+      /*
+       * Lännestä itään: kaupungintalolta Skansenille. Jokaisen wiki on
+       * tarkistettu fi.wikipedian artikkeli. Stortorget ja
+       * Riddarholmenin kirkko ovat molemmat jo kannen kuvateksteissä,
+       * joten kartalle otettiin kirkko ja aukio jätettiin pois —
+       * kuninkaanlinna on sata metriä siitä eikä numeroita kannata
+       * kasata päällekkäin.
+       */
+      { nimi: 'Kaupungintalo', lat: 59.3275, lon: 18.0542, wiki: 'Tukholman kaupungintalo' },
+      { nimi: 'Riddarholmenin kirkko', lat: 59.3247, lon: 18.064, wiki: 'Riddarholmskyrkan' },
+      { nimi: 'Sergelin tori', lat: 59.3326, lon: 18.0649, wiki: 'Sergelin tori' },
+      { nimi: 'Kuninkaanlinna', lat: 59.3268, lon: 18.0717, wiki: 'Tukholman kuninkaanlinna' },
+      { nimi: 'Vasa-museo', lat: 59.328, lon: 18.0915, wiki: 'Vasa-museo' },
+      { nimi: 'Skansen', lat: 59.3255, lon: 18.1035, wiki: 'Skansen' },
     ],
   },
   venetsia: {
