@@ -6076,4 +6076,412 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  LVA: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Latvia on pannut verkkoon yllättävän paljon: kaksi miljoonaa '
+        + 'museoesinettä, sanomalehdet vuodesta 1822, ensimmäisten '
+        + 'laulujuhlien jäljet vuodelta 1873 ja kolmetoista kameraa lintujen '
+        + 'pesissä.',
+      lista: [
+        {
+          otsikko: 'Museot ja taide',
+          kohteet: [
+            {
+              nimi: 'Latvian kansallinen taidemuseo — kokoelma Google Arts & Culturessa',
+              tiedosto: 'Janis Rozentāls - The Princess and the Monkey - Google Art Project.jpg',
+              teksti: 'Museon teoksia voi zoomata niin läheltä, että '
+                + 'siveltimenjäljet erottuvat. Mukana on Janis Rozentālsin '
+                + 'satumaisia maalauksia 1900-luvun alusta.',
+              selite: 'Rozentālsin maalaus: punatukkainen prinsessa '
+                + 'hopeanharmaassa puvussa laskee kädestään helminauhaa, ja '
+                + 'lattialla istuu pieni apina punaisessa takissa.',
+              lahde: 'Janis Rozentāls, Wikimedia Commons (public domain)',
+              linkki: 'https://artsandculture.google.com/partner/national-museum-latvia',
+            },
+            {
+              nimi: 'Taidemuseon salit Street View\'ssa — kävele näyttelyn läpi',
+              teksti: 'Google on kuvannut museon kolmannen kerroksen samalla '
+                + 'tekniikalla kuin katunäkymät. Nuolia klikkaamalla siirtyy '
+                + 'salista toiseen ja voi pysähtyä minkä tahansa taulun '
+                + 'eteen.',
+              linkki: 'https://artsandculture.google.com/streetview/latvian-national-museum-of-art-third-floor/wAEoMtX6HoJPlg',
+            },
+            {
+              nimi: 'Rundāles palatsi — virtuaalimuseo ja esineiden tarinat',
+              tiedosto: 'Bauska Schloss Rundale Innen Goldener Saal 1.JPG',
+              teksti: 'Rundālen barokkipalatsi rakennettiin 1730-luvulla saman '
+                + 'arkkitehdin piirustuksista kuin Pietarin talvipalatsi. '
+                + 'Virtuaalimuseossa sen kelloja ja posliinia voi pyöritellä '
+                + 'joka puolelta.',
+              selite: 'Rundālen kultasali: siniset ja vaaleanpunaiset seinät '
+                + 'kullattuine koristeineen, kattoon maalattu taivas '
+                + 'hahmoineen ja keskellä lattiaa ryhmä vieraita.',
+              lahde: 'Zairon, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://rundale.net/en/virtual-museum/',
+            },
+            {
+              nimi: 'Rotko muzejs, Daugavpils — Mark Rothkon synnyinkaupunki',
+              teksti: 'Maalari Mark Rothko syntyi Daugavpilsissä vuonna 1903. '
+                + 'Museo toimii vanhan linnoituksen tykkiarsenaalissa, ja '
+                + 'siellä on esillä myös alkuperäisiä Rothkon töitä.',
+              linkki: 'https://www.rothkomuseum.com/',
+            },
+            {
+              nimi: 'NMKK — Latvian museoiden yhteinen luettelo',
+              tiedosto: 'Latgaļu sievietes tērpa un rotu rekonstrukcija LNVM ekspozīcijā.jpg',
+              teksti: 'Latvian museoissa on 7,4 miljoonaa esinettä. Niistä yli '
+                + 'kaksi miljoonaa on jo valokuvattu, ja ne kaikki löytyvät '
+                + 'samasta hakukoneesta.',
+              selite: 'Vitriinissä 1100-luvun latgallilaisnaisen puku: '
+                + 'tummansininen villahuivi, johon on kiinnitetty rivi '
+                + 'pronssisia ristikuvioita, ja takaseinällä rannerenkaita.',
+              lahde: 'Evita wiki, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.nmkk.lv/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot, lehdet ja äänilevyt',
+          kohteet: [
+            {
+              nimi: 'Periodika — latvialaiset lehdet vuodesta 1822',
+              teksti: 'Latvian kansalliskirjasto on skannannut noin 3 000 lehteä '
+                + 'ja yli kolme miljoonaa sivua. Vanhin niistä, Latweeschu '
+                + 'Awises, alkoi ilmestyä Jelgavassa vuonna 1822.',
+              linkki: 'https://periodika.lv/',
+            },
+            {
+              nimi: 'Grāmatas — kansalliskirjaston kirjahylly verkossa',
+              tiedosto: 'Gaismas-pils-1.jpg',
+              teksti: 'Sama kirjasto on kuvannut noin 8 000 kirjaa sivu sivulta, '
+                + 'yhteensä puolitoista miljoonaa sivua. Kirjastorakennus '
+                + 'itse on nimeltään Gaismas pils eli Valon linna.',
+              selite: 'Kansalliskirjaston sisus alhaalta kuvattuna: parvia nousee '
+                + 'päällekkäin monta kerrosta, portaat kulkevat ristiin ja '
+                + 'valot hehkuvat sinisinä.',
+              lahde: 'Rīgas investīciju un tūrisma aģentūra, Wikimedia Commons (CC BY 4.0)',
+              linkki: 'https://gramatas.lndb.lv/',
+            },
+            {
+              nimi: 'Latvijas vēsturiskie skaņu ieraksti — vanhat äänilevyt',
+              teksti: 'Kansalliskirjaston äänikokoelmaan on digitoitu Latvian '
+                + 'vanhoja gramofonilevyjä. Ne voi kuunnella suoraan '
+                + 'selaimessa, rahinoineen päivineen.',
+              linkki: 'https://audio.lndb.lv/',
+            },
+            {
+              nimi: 'Zudusī Latvija — kadonneen Latvian kuva-arkisto',
+              tiedosto: 'Cobblestone street in Riga, Latvia LCCN2012648280.jpg',
+              teksti: 'Arkistoon on koottu valokuvia, postikortteja ja piirroksia '
+                + 'rakennuksista ja paikoista, joita ei enää ole olemassa. '
+                + 'Vanhimmat ovat 1800-luvun lopulta.',
+              selite: 'Vanha mustavalkoinen postikortti Riiasta: mukulakivinen '
+                + 'sisäpiha, rapatut seinät, korkea kivikaari ja nurkassa '
+                + 'puinen vaja.',
+              lahde: 'Library of Congress, Wikimedia Commons (public domain)',
+              linkki: 'https://zudusilatvija.lv/',
+            },
+            {
+              nimi: 'Filmas.lv — Latvian elokuvien luettelo',
+              teksti: 'Katalogissa on yli 2 500 elokuvaa vuodesta 1920 alkaen, '
+                + 'myös piirrettyjä. Osa niistä on katsottavissa suoraan '
+                + 'sivustolla Skatīties filmas -painikkeen takaa.',
+              linkki: 'https://www.filmas.lv/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Laulujuhlat, linnat ja vanha elämä',
+          kohteet: [
+            {
+              nimi: 'Dziesmu svētku krātuve — laulujuhlien arkisto vuodesta 1873',
+              teksti: 'Ensimmäisillä yleisillä laulujuhlilla vuonna 1873 lauloi 1 '
+                + '003 laulajaa ja soitti 16 muusikkoa. Arkiston aikajanalta '
+                + 'pääsee jokaisiin juhliin vuoteen 2023 asti.',
+              linkki: 'https://dziesmusvetki.lndb.lv/',
+            },
+            {
+              nimi: 'Laulu- ja tanssijuhlat 2023 — 360 asteen kierros',
+              tiedosto: 'Song and Dance Celebration 2023, Latvia 03.jpg',
+              teksti: 'Panoraamakuvissa pääsee keskelle juhlia: kuorolavalle, '
+                + 'kulkueeseen ja täyteen katsomoon. Kuvaa voi pyörittää '
+                + 'ympäri ja katsoa mihin suuntaan haluaa.',
+              selite: 'Laulajia tiiviissä rivissä: keskellä kolme naista '
+                + 'punavalkoisessa kansanpuvussa ja koristepäähineessä, '
+                + 'ympärillä miehiä harmaissa takeissa suu auki laulamassa.',
+              lahde: 'Diaaaana, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://latviainside.com/explore/tours/culture/dzsv2023/',
+            },
+            {
+              nimi: 'Turaidan linna ilmasta — 360 asteen ilmakuvakierros',
+              tiedosto: 'Turaida Castle (4).JPG',
+              teksti: 'Turaidan punatiilistä linnaa alettiin rakentaa vuonna '
+                + '1214. Tällä kierroksella kamera on nostettu linnan '
+                + 'yläpuolelle, ja Gaujan laakso avautuu joka suuntaan.',
+              selite: 'Turaidan linna ylhäältä: punatiilisiä rakennuksia jyrkkine '
+                + 'tiilikattoineen, päädyssä sininen kellotaulu, ympärillä '
+                + 'tiheä metsä ja taustalla joki.',
+              lahde: 'PIERRE ANDRE LECLERCQ, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://latviainside.com/explore/tours/aero/turaida/virtualtour.html',
+            },
+            {
+              nimi: 'Latvijas Kultūras kanons — mitä latvialaiset itse pitävät tärkeimpänä',
+              teksti: 'Kansalliskirjaston kokoama luettelo Latvian tärkeimmistä '
+                + 'teoksista, jaettuna aloihin arkkitehtuurista elokuvaan. '
+                + 'Mukana on myös maisemia — pelkkiä paikkoja.',
+              linkki: 'https://kulturaskanons.lv/en/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja suorat kamerat',
+          kohteet: [
+            {
+              nimi: 'Latvijas Dabas fonds — kamerat lintujen pesissä',
+              teksti: 'Ensimmäinen pesäkamera asennettiin vuonna 2012 merikotkan '
+                + 'tutkimusta varten. Nyt lähetyksiä on kaudessa noin '
+                + 'kolmetoista, ja vuonna 2025 niitä katsottiin yli viisi '
+                + 'miljoonaa kertaa.',
+              linkki: 'https://ldf.lv/dabas-tiesraides/',
+            },
+            {
+              nimi: 'Baltic Live Cam — Latvian kaupungit juuri nyt',
+              teksti: 'Kameroita on Riian vanhassakaupungissa, Vapaudenpatsaalla '
+                + 'ja kauppahallilla sekä Jūrmalan rannalla, Liepājassa, '
+                + 'Ventspilsissä, Daugavpilsissä ja Cēsisissä.',
+              linkki: 'https://balticlivecam.com/cameras/latvia/',
+            },
+            {
+              nimi: 'Latvijas Dabas muzejs — luonnontieteellinen museo',
+              teksti: 'Museossa on oma luurankosali, Latvian linnut ja '
+                + 'hyönteisten maailma. Sivustolta löytyy myös 360 asteen '
+                + 'kierros, jolla salit voi käydä läpi kotoa käsin.',
+              linkki: 'https://www.dabasmuzejs.gov.lv/en',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  HUN: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Unkari on avannut oman muistinsa: kaksisataatuhatta valokuvaa '
+        + 'ilmaiseksi, Budapestin kartat neljältä eri vuodelta, Bartókin '
+        + 'äänittämät kansanlaulut ja kameroita, joista näkee haikaran pesään '
+        + 'juuri nyt.',
+      lista: [
+        {
+          otsikko: 'Museot ja kokoelmat',
+          kohteet: [
+            {
+              nimi: 'Magyar Nemzeti Múzeum — kansallismuseon kokoelmat',
+              tiedosto: 'Budapest, Hungarian National Museum, Seuso treasure, the Amphora.jpg',
+              teksti: 'Unkarin kansallismuseo perustettiin vuonna 1802. Sen '
+                + 'kokoelmaluettelo on jaettu kymmeniin osastoihin: '
+                + 'kivikauden esineisiin, roomalaisiin löytöihin, '
+                + 'kirkonkelloihin, julisteisiin ja postikortteihin.',
+              selite: 'Roomalainen hopea-amfora kansallismuseon vitriinissä: '
+                + 'pyöreä astia, jonka kylkeen on takoen muotoiltu ihmis- ja '
+                + 'eläinhahmoja, ja kahvat kaartuvat kuin kaksi kurottavaa '
+                + 'eläintä.',
+              lahde: 'Dguendel, Wikimedia Commons (CC BY 4.0)',
+              linkki: 'https://mnm.hu/en/collections',
+            },
+            {
+              nimi: 'Magyar Nemzeti Galéria — unkarilainen maalaustaide zoomattavana',
+              tiedosto: 'Cskt-maganyos cedrus (1907).jpg',
+              teksti: 'Unkarin kansallisgallerian teoksia voi katsoa Google Arts '
+                + '& Culturessa suurennettuina. Mukana ovat Csontváry, '
+                + 'Munkácsy ja Szinyei Merse, kolme unkarilaisen '
+                + 'maalaustaiteen tunnetuinta nimeä.',
+              selite: 'Csontváryn maalaus Yksinäinen setri: kiemurainen puu '
+                + 'keskellä kuvaa, oksat kaartuvat sivuille, taustalla '
+                + 'turkoosi meri ja vaaleat kalliot.',
+              lahde: 'Tivadar Csontváry Kosztka, Wikimedia Commons (public domain)',
+              linkki: 'https://artsandculture.google.com/partner/hungarian-national-gallery',
+            },
+            {
+              nimi: 'Néprajzi Múzeum — kansatieteellisen museon verkkokokoelma',
+              teksti: 'Budapestin kansatieteellinen museo aloitti vuonna 1872 '
+                + 'kansallismuseon osastona. Verkkokokoelmassa selataan esine '
+                + 'kerrallaan: pukuja, työkaluja, soittimia ja vanhoja '
+                + 'valokuvia.',
+              linkki: 'https://gyujtemeny.neprajz.hu/',
+            },
+            {
+              nimi: 'Skanzen — Unkarin ulkoilmamuseo Szentendressä',
+              tiedosto: 'Szentendrei szélmalom.JPG',
+              teksti: 'Szentendreen on siirretty kokonaisia taloja eri puolilta '
+                + 'Unkaria ja pystytetty ne uudelleen kylänraiteiksi. '
+                + 'Sivuilta näkee, miltä maalaiselämä näytti sata tai '
+                + 'kaksisataa vuotta sitten.',
+              selite: 'Kivinen tuulimylly ulkoilmamuseon nurmella: pyöreä torni, '
+                + 'kartiomainen katto ja neljä ristikkosiipeä; oikealla '
+                + 'seisoo vaalea kivipatsas jalustallaan.',
+              lahde: 'Crimea, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://skanzen.hu/en',
+            },
+          ],
+        },
+        {
+          otsikko: 'Arkistot, kartat ja vanhat kuvat',
+          kohteet: [
+            {
+              nimi: 'Hungaricana — Unkarin kulttuuriperintöportaali',
+              teksti: 'Hungaricana kokoaa unkarilaisten kirjastojen, arkistojen '
+                + 'ja museoiden digitoinnit yhteen osoitteeseen: '
+                + 'kuvagallerian, kirjaston, karttakokoelman, '
+                + 'arkistoaineistot ja kansanmusiikin.',
+              linkki: 'https://www.hungaricana.hu/en/',
+            },
+            {
+              nimi: 'Budapest Time Machine — kaupunki neljänä eri vuonna',
+              teksti: 'Aikakone näyttää Budapestin kartan vuosilta 1837, 1873, '
+                + '1908 ja 1937. Juuri vuonna 1873 Buda, Óbuda ja Pest '
+                + 'yhdistyivät yhdeksi kaupungiksi. Vanhan kartan voi '
+                + 'liu\'uttaa läpinäkyväksi nykyisen päälle.',
+              linkki: 'https://hungaricana.hu/en/budapest-idogep/',
+            },
+            {
+              nimi: 'Hungaricana Térképek — 77 823 vanhaa karttaa',
+              teksti: 'Hungaricanan karttaosastossa on 77 823 karttaa ja 42 652 '
+                + 'pohjapiirrosta. Karttoja voi suurentaa niin lähelle, että '
+                + 'yksittäisten korttelien ja talojen numerot erottuvat.',
+              linkki: 'https://maps.hungaricana.hu/en/',
+            },
+            {
+              nimi: 'Fortepan — 200 000 vanhaa valokuvaa ilmaiseksi',
+              tiedosto: 'Budapest, Halászbástya. - fortepan 82646.jpg',
+              teksti: 'Fortepan alkoi vuonna 2010 Budapestin kaduilta löydetyistä '
+                + 'valokuvista. Nyt kuvia on yli 200 000, ja kuka tahansa saa '
+                + 'katsoa ja ladata ne isokokoisina ilman maksua tai '
+                + 'tunnuksia.',
+              selite: 'Kalastajabastioni noin vuonna 1900 ruskeasävyisessä '
+                + 'valokuvassa: vaaleita torneja ja kaariholveja rinteessä, '
+                + 'takana Mátyás-kirkon korkea kirjava torni.',
+              lahde: 'Fortepan / Budapest Főváros Levéltára, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://fortepan.hu/en/',
+            },
+            {
+              nimi: 'Filmhíradók Online — unkarilaiset uutisfilmit',
+              teksti: 'Ennen televisiota uutiset katsottiin elokuvateatterissa. '
+                + 'Tänne on digitoitu unkarilaisia uutisfilmejä 1910-luvulta '
+                + '1940-luvulle, ja niitä voi selata aiheen, henkilön tai '
+                + 'paikkakunnan mukaan.',
+              linkki: 'https://filmhiradokonline.hu/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjat, musiikki ja kansanperinne',
+          kohteet: [
+            {
+              nimi: 'Bibliotheca Corvina Virtualis — kuningas Matiaksen kirjasto',
+              tiedosto: 'Matthias Corvinus from a Corvina Codex.jpg',
+              teksti: 'Kuningas Matias Corvinuksen kirjastossa oli noin 2 000 '
+                + 'nidettä, aikansa toiseksi suurin heti Vatikaanin jälkeen. '
+                + 'Niistä on jäljellä noin 220, ja sivusto kokoaa digitoidut '
+                + 'yhteen paikkaan.',
+              selite: 'Kuningas Matiaksen muotokuva corvina-koodeksin sivulta: '
+                + 'kiharatukkainen mies sivuprofiilissa, päässä sininen '
+                + 'nauha, ympärillä kultaiset latinankieliset kirjaimet '
+                + 'mustalla pohjalla.',
+              lahde: 'Ambrogio de Predis, Wikimedia Commons (public domain)',
+              linkki: 'https://corvina.hu/en/front/',
+            },
+            {
+              nimi: 'Bartók-rend — Bartókin kansanlaulut äänitteineen',
+              tiedosto: 'Bartók Béla 1927.jpg',
+              teksti: 'Béla Bartók keräsi kansanlauluja vahasylintereille '
+                + '1900-luvun alussa. Verkossa on hänen järjestelmänsä yli 13 '
+                + '000 sävelmää: luettelokortit, nuotinnokset ja alkuperäiset '
+                + 'äänitteet kuunneltavina.',
+              selite: 'Béla Bartók vuonna 1927: valkohiuksinen mies istuu '
+                + 'nojatuolissa tummassa puvussa, kädet ristissä sylissä ja '
+                + 'katse sivulle.',
+              lahde: 'Wikimedia Commons (public domain)',
+              linkki: 'https://systems.zti.hu/br/en',
+            },
+            {
+              nimi: 'Folkrádió — unkarilaista kansanmusiikkia soimassa',
+              teksti: 'Hagyományok Házan ylläpitämä Folkrádió soittaa '
+                + 'unkarilaista kansanmusiikkia ympäri vuorokauden. Soitin '
+                + 'aukeaa suoraan selaimessa, eikä mitään tarvitse asentaa '
+                + 'tai kirjautua.',
+              linkki: 'https://folkradio.hu/',
+            },
+            {
+              nimi: 'Virtual Hungarian Heritage House — kansantaide 360 asteessa',
+              teksti: 'Hagyományok Háza on kuvannut näyttelysalinsa niin, että '
+                + 'niissä voi kävellä selaimessa. Kansantaidetta katsotaan '
+                + 'läheltä, ja hetken saa seisoa tanssijoiden keskellä '
+                + 'lavalla.',
+              linkki: 'https://hagyomanyokhaza.hu/en/virtual-hungarian-heritage-house',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto, tiede ja suora kuva',
+          kohteet: [
+            {
+              nimi: 'Madárles — unkarilaiset lintukamerat suorana',
+              tiedosto: 'European roller (Coracias garrulus) 2.jpg',
+              teksti: 'Madárles kokoaa Unkarin lintukamerat yhdelle sivulle: '
+                + 'kattohaikaran pesä, pöllönpönttöjä, punajalkahaukkoja, '
+                + 'talitiaisen kolo ja jopa kanala. Kaikki on suoraa '
+                + 'lähetystä.',
+              selite: 'Sininärhi oksan nokassa kirkasta taivasta vasten: turkoosi '
+                + 'rinta, ruskea selkä, siivissä siniset sulat ja tumma suora '
+                + 'nokka.',
+              lahde: 'Charles J. Sharp, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://madarles.hu/en/webcams',
+            },
+            {
+              nimi: 'Budapestin eläintarha — kuusi kameraa suorana',
+              tiedosto: 'Elephant House, Budapest Zoo.jpg',
+              teksti: 'Vuonna 1866 avattu Budapestin eläintarha on Euroopan '
+                + 'vanhimpia. Kamerat näyttävät savannin, merileijona-altaan, '
+                + 'orankitarhan, norsutarhan, Etelä-Amerikan tarhan ja haiden '
+                + 'altaan.',
+              selite: 'Eläintarhan norsutalo: kaksi turkoosinvihreää '
+                + 'kaakelikupolia rinnakkain ja niiden vieressä valkoinen '
+                + 'torni, joka muistuttaa minareettia.',
+              lahde: 'József Rozsnyai, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://zoobudapest.com/en/for-visitors/webcams/',
+            },
+            {
+              nimi: 'Hortobágyin kansallispuisto — Euroopan laajin aro',
+              tiedosto: 'Racka Sheep.jpg',
+              teksti: 'Hortobágyin puszta on Euroopan laajin yhtenäinen '
+                + 'luonnonniitty. Siitä tuli Unkarin ensimmäinen '
+                + 'kansallispuisto vuonna 1973, ja Unesco lisäsi sen '
+                + 'maailmanperintöluetteloon vuonna 1999.',
+              selite: 'Kolme rackalammasta nurmella: mustalla lampaalla on kaksi '
+                + 'suoraa sarvea, jotka kiertyvät kuin korkkiruuvit; vieressä '
+                + 'vaalea lammas ja pieni karitsa.',
+              lahde: 'Lsmaster, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://www.hnp.hu/en/szervezeti-egyseg/tourism/world-heritage',
+            },
+            {
+              nimi: 'Albert Szent-Györgyi — C-vitamiini löytyi paprikasta',
+              tiedosto: 'Albert Szent-Györgyi.jpg',
+              teksti: 'Szegedissä työskennellyt Albert Szent-Györgyi sai '
+                + 'lääketieteen Nobelin vuonna 1937. Hän onnistui eristämään '
+                + 'C-vitamiinia suuria määriä juuri unkarilaisesta '
+                + 'paprikasta.',
+              selite: 'Albert Szent-Györgyi noin vuonna 1948: harmaahiuksinen '
+                + 'mies istuu sohvalla puvussa ja solmiossa, kädet ristissä '
+                + 'polven päällä ja katse sivulle.',
+              lahde: 'J.W. McGuire, Wikimedia Commons (public domain)',
+              linkki: 'https://www.nobelprize.org/prizes/medicine/1937/szent-gyorgyi/facts/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
