@@ -1132,4 +1132,168 @@ export const KULTTUURI_KATEGORIAT = {
       ],
     },
   ],
+  praha: [
+    {
+      id: 'kaupunki',
+      nimi: 'Praha',
+      johdanto: 'Sata tornia, kello joka näyttää auringon paikan taivaalla — ja '
+        + 'savesta tehty jättiläinen ullakolla.',
+      kansikuvat: [
+        {
+          tiedosto: 'The Vltava, Charles Bridge, Old Town Bridge Tower and Church of St. Francis of Assisi. Prague, Czech Republic.jpg',
+          selite: 'Kaarlensilta ja Vltava iltapäivän valossa. Sillan päässä '
+            + 'seisoo vanhankaupungin sillantorni, jonka läpi kuninkaat '
+            + 'ratsastivat kruunajaisiinsa.',
+          lahde: 'Ввласенко, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Old Town Square (Prague) 20150902.jpg',
+          selite: 'Vanhankaupungin tori illalla. Kaksi mustaa tornia kuuluu Tynin '
+            + 'kirkolle — niitä kutsutaan Aatamiksi ja Eevaksi, koska toinen '
+            + 'on hitusen paksumpi.',
+          lahde: 'Suicasmo, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Lascar Pražský hrad (Prague Castle) and St. Vitus Cathedral (4502233528).jpg',
+          selite: 'Prahan linna mäen päällä. Pyhän Vituksen katedraali kohoaa '
+            + 'keskeltä; linnaa pidetään maailman suurimpana yhtenäisenä '
+            + 'linnana.',
+          lahde: 'Jorge Láscar, Wikimedia Commons (CC BY 2.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Kello, joka näyttää missä aurinko on',
+          tiedosto: 'Praha Astronomical Clock 01.jpg',
+          teksti: 'Vanhankaupungin raatihuoneen seinässä käy kello vuodelta 1410. '
+            + 'Se on maailman vanhin astronominen kello, joka yhä toimii. '
+            + 'Viisarit eivät kerro vain kellonaikaa: kultainen käsi näyttää '
+            + 'auringon paikan taivaalla, toinen kuun, ja sininen kaari '
+            + 'erottaa päivän yöstä. Joka tasatunti kaksitoista apostolia '
+            + 'kulkee kellon yläpuolella olevien luukkujen ohi, ja niiden '
+            + 'vieressä seisova luuranko kääntää tiimalasinsa ympäri.',
+          selite: 'Orloj kokonaisuudessaan. Ylhäällä ovat pienet luukut, joista '
+            + 'apostolit kulkevat, keskellä sinivalkoinen tähtikellotaulu ja '
+            + 'alhaalla kultainen kalenterikiekko.',
+          lahde: 'Uoaei1, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Prahan astronominen kello',
+        },
+        {
+          otsikko: 'Kaarle IV rakensi sillan ja yliopiston',
+          tiedosto: 'Charles IV.jpg',
+          teksti: 'Kaarle IV oli Böömin kuningas ja Saksalais-roomalaisen '
+            + 'keisarikunnan keisari, ja hän teki Prahasta valtakuntansa '
+            + 'pääkaupungin. Hänen aikanaan kaupunki sai yliopiston, kokonaan '
+            + 'uuden kaupunginosan ja kivisillan Vltavan yli. Silta '
+            + 'aloitettiin vuonna 1357 hetkellä, jonka numerot luetaan yhtä '
+            + 'lailla eteen- ja taaksepäin: 1-3-5-7-9-7-5-3-1. Se kantaa yhä, '
+            + 'ja sitä sanotaan Kaarlensillaksi.',
+          selite: 'Kaarle IV kruunu päässään 1300-luvun maalauksessa. Viitassa on '
+            + 'kuvioina pieniä kotkia, keisarikunnan tunnuseläimiä.',
+          lahde: 'Wikimedia Commons (PD)',
+          wiki: 'Kaarle IV',
+        },
+        {
+          otsikko: 'Golem nukkuu ullakolla',
+          tiedosto: 'Old New Synagogue 01(js).jpg',
+          teksti: 'Prahan juutalaiskorttelin vanhinta synagogaa sanotaan '
+            + 'Vanhaksiuudeksi. Se valmistui 1200-luvulla ja on yhä käytössä. '
+            + 'Tarinan mukaan rabbi Löw muovasi 1500-luvulla Vltavan savesta '
+            + 'Golemin, ihmisen kokoisen apurin, joka heräsi henkiin suuhun '
+            + 'asetetusta lapusta. Kun Golem kävi liian voimakkaaksi, rabbi '
+            + 'otti lapun pois ja kantoi hahmon synagogan ullakolle. Sinne ei '
+            + 'tarinan mukaan saa nousta.',
+          selite: 'Vanhauusi synagoga jyrkkine tiilikattoineen. Takana näkyy '
+            + 'juutalaisen raatihuoneen kellotorni.',
+          lahde: 'Jerzy Strzelecki, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Golem',
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Kaksi säveltäjää teki Prahan joesta ja kylien tansseista '
+        + 'musiikkia, jota soitetaan kaikkialla maailmassa.',
+      nostot: [
+        {
+          otsikko: 'Kuuro mies sävelsi joen',
+          tiedosto: 'Jan Vilímek - Bedřich Smetana.jpg',
+          teksti: 'Bedřich Smetana menetti kuulonsa kokonaan lokakuussa 1874. '
+            + 'Alle kaksi kuukautta myöhemmin, 20. marraskuuta ja 8. '
+            + 'joulukuuta välisenä aikana, hän sävelsi Vltavan — teoksen, '
+            + 'joka seuraa jokea kahdesta pienestä lähteestä Prahaan asti. '
+            + 'Matkalla kuuluu metsästystorvia, häätanssi ja kuutamo, kunnes '
+            + 'joki jyrisee koskessa. Hän ei kuullut teostaan koskaan. '
+            + 'Vuodesta 1952 Prahan kevät -festivaali on alkanut joka 12. '
+            + 'toukokuuta juuri tällä musiikilla.',
+          selite: 'Bedřich Smetana (1824–1884) Jan Vilímekin litografiassa. '
+            + 'Vltava on osa kuuden sinfonisen runon sarjaa Má vlast eli '
+            + 'Isänmaani.',
+          lahde: 'Jan Vilímek, Wikimedia Commons (PD)',
+          wiki: 'Bedřich Smetana',
+          musiikki: 'https://music.apple.com/fi/search?term=smetana%20vltava',
+          musiikkiNimi: 'Smetanan Vltava Apple Musicissa',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/39/Smetana%2C_M%C3%A1_vlast_-_Vltava_-_The_Moldau.ogg/Smetana%2C_M%C3%A1_vlast_-_Vltava_-_The_Moldau.ogg.mp3',
+          musiikkiNayteNimi: 'Smetana: Vltava — Musopen Symphony Orchestra (CC0)',
+        },
+        {
+          otsikko: 'Dvořák vei kylätanssit maailmalle',
+          tiedosto: 'Jan Langhans Antonin Dvorak 1904 (cropped).jpg',
+          teksti: 'Antonín Dvořák oli teurastajan poika, joka soitti alttoviulua '
+            + 'prahalaisessa orkesterissa ennen kuin hänen sävellyksensä '
+            + 'löydettiin. Slaavilaiset tanssit tekivät hänestä kuuluisan: '
+            + 'niissä soi böömiläisten ja määriläisten kylien tanssimusiikki '
+            + 'sinfoniaorkesterille kirjoitettuna. Myöhemmin hän johti '
+            + 'musiikkikoulua New Yorkissa ja sävelsi siellä sinfonian '
+            + 'nimeltä Uudesta maailmasta.',
+          selite: 'Antonín Dvořák valokuvaaja Jan Langhansin edessä vuonna 1904, '
+            + 'hänen viimeisenä elinvuotenaan.',
+          lahde: 'Jan Nepomuk Langhans, Wikimedia Commons (PD)',
+          wiki: 'Antonín Dvořák',
+          musiikki: 'https://music.apple.com/fi/search?term=dvorak%20slavonic%20dances',
+          musiikkiNimi: 'Dvořákin Slaavilaiset tanssit Apple Musicissa',
+        },
+      ],
+    },
+    {
+      id: 'arki',
+      nimi: 'Arki ja tavat',
+      johdanto: 'Kaupungin oma voileipä ja teatteri, jossa näyttelijät roikkuvat '
+        + 'langoissa.',
+      nostot: [
+        {
+          otsikko: 'Nukketeatteri puolusti kieltä',
+          tiedosto: 'Marionette Opera Prague.jpg',
+          teksti: 'Habsburgien valtakunnassa virastojen ja koulujen kieli oli '
+            + 'saksa, mutta kiertävät nukkenäyttelijät esittivät markkinoilla '
+            + 'näytelmänsä tšekiksi — siksi marionetit muistetaan Tšekissä '
+            + 'kielen puolustajina. Unesco otti tšekkiläisen ja '
+            + 'slovakialaisen nukketeatterin ihmiskunnan kulttuuriperinnön '
+            + 'luetteloon vuonna 2016. Prahassa on yhä teattereita, joissa '
+            + 'lankojen varassa esitetään kokonainen ooppera.',
+          selite: 'Prahan Vanhankaupungin nukketeatterin sisäänkäynti. Kyltti '
+            + 'mainostaa Don Giovannia — Mozartin ooppera sai maailman '
+            + 'ensi-iltansa Prahassa 29. lokakuuta 1787 säveltäjän itsensä '
+            + 'johtamana.',
+          lahde: 'Jim Milles, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Marionetti',
+        },
+        {
+          otsikko: 'Voileipä, joka syödään haarukalla',
+          tiedosto: 'Obložené chlebíčky.jpg',
+          teksti: 'Chlebíček on paksu viipale vaaleaa leipää, jonka päälle '
+            + 'ladotaan perunasalaattia, kinkkua, kananmunaa ja suolakurkkua. '
+            + 'Prahalainen herkkukauppias Jan Paukert alkoi myydä niitä '
+            + 'liikkeessään 1910-luvulla, ja tapa levisi koko maahan. '
+            + 'Syntymäpäiviin ja hautajaisiin niitä tehdään yhä vadillinen, '
+            + 'ja kaupassa hinta lasketaan kappaleittain.',
+          selite: 'Vadillinen chlebíčkejä katetulla pöydällä. Pohjana on '
+            + 'tavallisesti perunasalaatti, ja päälle tulee kinkkua, salamia, '
+            + 'munaa ja suolakurkkua — jokainen leipä koristellaan erikseen.',
+          lahde: 'Wikimedia Commons (CC0)',
+        },
+      ],
+    },
+  ],
 };

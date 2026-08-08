@@ -1391,64 +1391,13 @@ export const EUROPE_KULTTUURI = {
   },
 
   praha: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Kuuro mies sävelsi joen',
-        tiedosto: 'Jan Vilímek - Bedřich Smetana.jpg',
-        teksti: 'Bedřich Smetana menetti kuulonsa kokonaan lokakuussa 1874. '
-                  + 'Alle kaksi kuukautta myöhemmin, 20. marraskuuta ja 8. '
-                  + 'joulukuuta välisenä aikana, hän sävelsi Vltavan — teoksen, '
-                  + 'joka seuraa jokea kahdesta pienestä lähteestä Prahaan '
-                  + 'asti. Hän ei kuullut siitä koskaan säveltäkään. Vuodesta '
-                  + '1952 Prahan kevät -festivaali on alkanut joka 12. '
-                  + 'toukokuuta juuri tällä musiikilla.',
-        selite: 'Bedřich Smetana (1824–1884) Jan Vilímekin litografiassa. '
-                  + 'Vltava on osa kuuden sinfonisen runon sarjaa Má vlast eli '
-                  + 'Isänmaani, jonka Smetana sävelsi vuosina 1874–1879.',
-        lahde: 'Wikimedia Commons (PD)',
-        wiki: 'Bedřich Smetana',
-        musiikki: 'https://music.apple.com/fi/search?term=smetana%20vltava',
-        musiikkiNimi: 'Smetanan Vltava Apple Musicissa',
-        musiikkiNayte: 'https://archive.org/download/Friedrich_Smetana_-_Die_Moldau/Smetana-Moldau.mp3',
-        musiikkiNayteNimi: 'Smetana: Vltava — CC0',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Voileipä, joka syödään haarukalla',
-        tiedosto: 'Obložené chlebíčky.jpg',
-        teksti: 'Chlebíček on paksu viipale vaaleaa leipää, jonka päälle '
-                  + 'ladotaan perunasalaattia, kinkkua, kananmunaa ja '
-                  + 'suolakurkkua. Prahalainen herkkukauppias Jan Paukert alkoi '
-                  + 'myydä niitä liikkeessään 1910-luvulla, ja tapa levisi koko '
-                  + 'maahan. Syntymäpäiviin ja hautajaisiin niitä tehdään yhä '
-                  + 'vadillinen, ja kaupassa hinta lasketaan kappaleittain.',
-        selite: 'Vadillinen chlebíčkejä katetulla pöydällä. Pohjana on '
-                  + 'tavallisesti perunasalaatti, ja päälle tulee kinkkua, '
-                  + 'salamia, munaa ja suolakurkkua — jokainen leipä '
-                  + 'koristellaan erikseen.',
-        lahde: 'Wikimedia Commons (CC0)',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Nukketeatteri puolusti kieltä',
-        tiedosto: 'Marionette Opera Prague.jpg',
-        teksti: 'Habsburgien valtakunnassa virastojen ja koulujen kieli oli '
-                  + 'saksa, mutta kiertävät nukkenäyttelijät esittivät '
-                  + 'markkinoilla näytelmänsä tšekiksi — siksi marionetit '
-                  + 'muistetaan Tšekissä kielen puolustajina. Unesco otti '
-                  + 'tšekkiläisen ja slovakialaisen nukketeatterin ihmiskunnan '
-                  + 'kulttuuriperinnön luetteloon vuonna 2016. Prahassa on yhä '
-                  + 'teattereita, joissa lankojen varassa esitetään kokonainen '
-                  + 'ooppera.',
-        selite: 'Prahan Vanhankaupungin nukketeatterin sisäänkäynti. Kyltti '
-                  + 'mainostaa Don Giovannia — Mozartin ooppera sai maailman '
-                  + 'ensi-iltansa Prahassa 29. lokakuuta 1787 säveltäjän '
-                  + 'itsensä johtamana.',
-        lahde: 'Jim Milles, Wikimedia Commons (CC BY 2.0)',
-        wiki: 'Marionetti',
-      },
-    ],
+    /*
+     * Praha sai kategoriat (kulttuuri-kategoriat.js, 8.8.2026), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin sinne: Smetana lehden Musiikki-sivulle, chlebíček ja
+     * nukketeatteri Arki ja tavat -sivulle. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Mikä oli erikoista siinä, miten Bedřich Smetana sävelsi Vltavan '
            + 'vuonna 1874?',
