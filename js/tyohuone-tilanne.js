@@ -36,9 +36,10 @@ export const TILANNE = {
       tehtava: 'Loppukiri: menovinkkimalli HYVÄKSYTTY (v373 Saksa; '
         + 'raja nyt 6–20/maa, katsottavuus edellä). Seuraavaksi '
         + 'neljä varastomaata mainiin (kuvat silmin ensin), loput '
-        + 'maat, maalehdet ja kaupunkilehdet. Lisäksi maan osio '
-        + 'riviksi sisällysluetteloon ja hampurilaisvalikkoon '
-        + '(omistaja ei löytänyt maalehteä kulmalinkistä).',
+        + 'maat, maalehdet ja kaupunkilehdet. Lisäksi maalehden '
+        + 'löydettävyyskolmikko: kartalta ilman varustetta, '
+        + 'sisällysluetteloon ja hampurilaisvalikkoon rivi '
+        + '(omistaja ei löytänyt lehteä kulmalinkistä).',
       seuraavaksi: 'Välitilanneraportti puolivälissä; loppuraportti '
         + 'kun Eurooppa on valmis.',
     },
