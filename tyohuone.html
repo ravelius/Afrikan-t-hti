@@ -25,38 +25,31 @@
       <button class="ikoni-nappi" id="paivita" type="button" title="Hakee uusimman version">Päivitä</button>
     </div>
     <nav id="valilehdet">
-      <button data-tab="todo">Todo Samille</button>
-      <button data-tab="kehitys">Kehitys</button>
       <button data-tab="tilanne">Tilanne</button>
+      <button data-tab="testaa">Testaa</button>
+      <button data-tab="kehitys">Kehitys</button>
       <button data-tab="kaupungit">Kaupungit</button>
-      <button data-tab="kartat">Kartat</button>
       <button data-tab="studio">Studio</button>
-      <button data-tab="suunnitelma">Suunnitelma</button>
-      <button data-tab="kasikirja">Käsikirja</button>
     </nav>
   </header>
 
   <main>
-    <!-- TODO SAMILLE: mitä koneella ei voi ratkaista (js/tyohuone-data.js) -->
-    <section id="tab-todo" hidden>
+    <!-- TILANNE (oletusvälilehti): kokonaistilanne kärjessä, sitten kaikki
+         mitä ennen oli omissa välilehdissä (Todo Samille, Suunnitelma,
+         Käsikirja) yhtenä pitkänä sivuna — omistajan toive 8.8.2026:
+         "näkisin kokonaistilanteen". -->
+    <section id="tab-tilanne">
+      <div id="tilannetaulu"></div>
+
+      <h2>Viimeisimmät muutokset</h2>
+      <div id="muutosloki-tiivis"></div>
+
       <h2>Todo Samille</h2>
       <p>Tänne kertyy se, mitä koneella ei voi ratkaista: äänet pitää
          kuunnella ja osa valinnoista on makuasioita. Kun kohta on
          hoidettu, se poistetaan listalta.</p>
       <div id="todo"></div>
-    </section>
 
-    <!-- KEHITYS: Fablen kaari, ääninäytteet ja mannerkokeilut kuunneltavaksi -->
-    <section id="tab-kehitys" hidden>
-      <p>Omistajan kuunneltavaksi ja luettavaksi: iso kaari sanoin, ääniehdokkaat
-         ja mannerkokeilut. Euroopan valmiit tekstit ja äänet luetaan suoraan
-         paketeista, joten tämä osio ei voi vanhentua.</p>
-      <div id="kehitys"></div>
-    </section>
-
-    <!-- TILANNE: missä projekti on juuri nyt -->
-    <section id="tab-tilanne">
-      <div id="tilannetaulu"></div>
       <div class="luvut" id="luvut"></div>
 
       <h2>Mitä puuttuu</h2>
@@ -72,6 +65,44 @@
          kopioidaan. Luvut luetaan peilin omasta manifestista, joten ne
          kertovat mitä siellä juuri nyt on.</p>
       <div class="kortti" id="tila"></div>
+
+      <h2>Dokumentit ja suunnitelma</h2>
+      <p>Entiset Suunnitelma- ja Käsikirja-välilehdet — sisältö ei ole
+         vanhentunut (pistokoe roolitus.md:tä ja isoisan-raamattu.md:tä
+         vasten: mm. AARTEET täsmää nykyiseen tarinakaanoniin), joten se
+         siirtyi tänne omaksi harmoonaan sen sijaan että se olisi
+         poistettu.</p>
+      <div id="dokumentit"></div>
+    </section>
+
+    <!-- TESTAA: omistajan ykkösominaisuus — mitä juuri nyt kannattaa kokeilla,
+         pikalinkit peliin ja karttojen esikatselu (entinen Kartat-välilehti). -->
+    <section id="tab-testaa" hidden>
+      <h2>Testattavaa juuri nyt</h2>
+      <p>Uusimmat ominaisuudet ja mistä ne löytää — Fable päivittää
+         julkaisujen tahdissa. Uusin ensin.</p>
+      <div id="testattavaa"></div>
+
+      <h2>Pikalinkit peliin</h2>
+      <p>Avaa laudan kartan katselutilassa, uuteen välilehteen. Mikään ei
+         tallennu eikä koske pelattavaan peliin.</p>
+      <div id="pikalinkit"></div>
+
+      <h2>Kartat</h2>
+      <div class="rivi" style="margin-bottom:0.6rem">
+        <select id="kartta-lauta"></select>
+        <a id="kartta-uuteen" href="index.html?lauta=maailmankartta" target="_blank" rel="noopener">
+          <button class="toiminto" type="button">Avaa omaan ikkunaan ↗</button></a>
+      </div>
+      <iframe id="kartta-kehys" class="kehys" title="Laudan kartta"></iframe>
+    </section>
+
+    <!-- KEHITYS: Fablen kaari, ääninäytteet ja mannerkokeilut kuunneltavaksi -->
+    <section id="tab-kehitys" hidden>
+      <p>Omistajan kuunneltavaksi ja luettavaksi: iso kaari sanoin, ääniehdokkaat
+         ja mannerkokeilut. Euroopan valmiit tekstit ja äänet luetaan suoraan
+         paketeista, joten tämä osio ei voi vanhentua.</p>
+      <div id="kehitys"></div>
     </section>
 
     <!-- KAUPUNGIT: yksi kaupunki kerrallaan, kaikki siitä -->
@@ -87,18 +118,6 @@
       </div>
       <div class="kaupunkilista" id="kaupunkilista"></div>
       <div id="kaupunki-kortti"></div>
-    </section>
-
-    <!-- KARTAT -->
-    <section id="tab-kartat" hidden>
-      <div class="rivi" style="margin-bottom:0.6rem">
-        <select id="kartta-lauta"></select>
-        <a id="kartta-uuteen" href="index.html?lauta=maailmankartta" target="_blank" rel="noopener">
-          <button class="toiminto" type="button">Avaa omaan ikkunaan ↗</button></a>
-      </div>
-      <iframe id="kartta-kehys" class="kehys" title="Laudan kartta"></iframe>
-      <p style="margin-top:0.6rem">Ikkunassa on oikea peli katselutilassa.
-         Mikään ei tallennu eikä koske pelattavaan peliin.</p>
     </section>
 
     <!-- STUDIO: äänistudio samassa sivussa, ei omana sivunaan -->
@@ -165,15 +184,6 @@
 
     </section>
 
-    <!-- SUUNNITELMA: mitä aiotaan rakentaa -->
-    <section id="tab-suunnitelma" hidden>
-      <div id="suunnitelma"></div>
-    </section>
-
-    <!-- KÄSIKIRJA: mihin nojataan -->
-    <section id="tab-kasikirja" hidden>
-      <div id="kasikirja"></div>
-    </section>
   </main>
 
   <dialog class="loki" id="loki-ikkuna">
@@ -192,7 +202,7 @@
       LAAJENNUKSET, TODO_SAMILLE,
     } from './js/tyohuone-data.js';
     import { KEHITYS_KAARI, AANINAYTTEET, MANTERE_KOKEILUT } from './js/tyohuone-kehitys-data.js';
-    import { TILANNE } from './js/tyohuone-tilanne.js';
+    import { TILANNE, TESTATTAVAA } from './js/tyohuone-tilanne.js';
     import { KOHTAAMISET } from './js/packs/kohtaamiset.js';
     import { VIHJETEKSTIT } from './js/packs/europe.js';
 
@@ -401,10 +411,13 @@
     const napit = [...document.querySelectorAll('#valilehdet button')];
     /* Vanhat kirjanmerkit eivät saa hajota nimien muuttuessa. */
     const VANHAT = {
-      etusivu: 'tilanne', maanosat: 'kartat', aanet: 'studio', tekstit: 'kaupungit',
-      kuvat: 'kaupungit', juoni: 'suunnitelma', lasit: 'suunnitelma',
-      pelit: 'suunnitelma', brandi: 'kasikirja', tarina: 'kasikirja',
-      lahteet: 'kasikirja', moottorit: 'kasikirja',
+      etusivu: 'tilanne', maanosat: 'testaa', aanet: 'studio', tekstit: 'kaupungit',
+      kuvat: 'kaupungit', juoni: 'tilanne', lasit: 'tilanne',
+      pelit: 'tilanne', brandi: 'tilanne', tarina: 'tilanne',
+      lahteet: 'tilanne', moottorit: 'tilanne',
+      // Välilehdet poistuivat 8.8.2026 työhuoneen uudistuksessa (5
+      // välilehteä 7:n sijaan): sisältö siirtyi Tilanteeseen tai Testaan.
+      todo: 'tilanne', kartat: 'testaa', suunnitelma: 'tilanne', kasikirja: 'tilanne',
     };
     function nayta(tab) {
       const kohde = VANHAT[tab] ?? tab;
@@ -415,7 +428,7 @@
       }
       // Raskaat kehykset ladataan vasta avattaessa.
       if (loytyi === 'studio') kaynnistaStudio();
-      if (loytyi === 'kartat') paivitaKartta(); else sammutaKartta();
+      if (loytyi === 'testaa') paivitaKartta(); else sammutaKartta();
       history.replaceState(null, '', `#${loytyi}`);
       window.scrollTo(0, 0);
     }
@@ -617,6 +630,76 @@
         k.append(lista);
       }
       kohde.replaceChildren(k);
+    }
+
+    /* Kymmenen uusinta muutoslokiriviä lyhyenä listana — koko loki on
+       yhä versionumeroa napauttamalla avautuvassa dialogissa. */
+    function piirraMuutoslokiTiivis() {
+      const kohde = $('muutosloki-tiivis');
+      if (!kohde) return;
+      const k = el('div', 'kortti');
+      for (const m of MUUTOKSET.slice(0, 10)) {
+        const rivi = el('div', 'rivi');
+        rivi.append(el('b', null, `v${m.v}`));
+        rivi.append(el('span', '', m.teksti));
+        k.append(rivi);
+      }
+      kohde.replaceChildren(k);
+    }
+
+    /* Testattavaa juuri nyt (js/tyohuone-tilanne.js: TESTATTAVAA) —
+       Fable päivittää julkaisujen tahdissa. */
+    function piirraTestattavaa() {
+      const kohde = $('testattavaa');
+      if (!kohde) return;
+      if (!TESTATTAVAA?.length) {
+        kohde.replaceChildren(el('p', 'kortti', 'Ei testattavaa juuri nyt.'));
+        return;
+      }
+      kohde.replaceChildren(...TESTATTAVAA.map((t) => {
+        const k = el('div', 'kortti');
+        k.append(el('h3', '', t.otsikko));
+        k.append(el('p', '', t.ohje));
+        return k;
+      }));
+    }
+
+    /*
+     * Pikalinkit peliin: nappi per lauta ja lehtikuusikon kaupungit.
+     * Pelissä ei ole kaupunkitason URL-parametria (?lauta=<id> avaa
+     * vain mantereen), joten kaupunkinapit vievät mantereen kartalle
+     * nimellä merkittynä — kaupunki napautetaan sieltä.
+     */
+    const LEHTIKUUSIKKO = [
+      ['Lontoo', 'europe'], ['Madrid', 'europe'], ['Tukholma', 'europe'],
+      ['Berliini', 'europe'], ['Venetsia', 'europe'], ['Kairo', 'africa'],
+    ];
+    function pikalinkkiNappi(teksti, lauta) {
+      const a = el('a', null);
+      a.href = `index.html?lauta=${lauta}`;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      const nappi = el('button', 'toiminto', teksti);
+      nappi.type = 'button';
+      a.append(nappi);
+      return a;
+    }
+    function piirraPikalinkit() {
+      const kohde = $('pikalinkit');
+      if (!kohde) return;
+      const laudat = el('div', 'kortti');
+      laudat.append(el('h3', '', 'Laudat'));
+      const rivi = el('div', 'rivi');
+      for (const p of PACKS) rivi.append(pikalinkkiNappi(p.boardLabel ?? p.name, p.id));
+      laudat.append(rivi);
+
+      const kaupungit = el('div', 'kortti');
+      kaupungit.append(el('h3', '', 'Lehtikuusikko'));
+      const rivi2 = el('div', 'rivi');
+      for (const [nimi, lauta] of LEHTIKUUSIKKO) rivi2.append(pikalinkkiNappi(nimi, lauta));
+      kaupungit.append(rivi2);
+
+      kohde.replaceChildren(laudat, kaupungit);
     }
 
     function piirraLuvut() {
@@ -984,7 +1067,7 @@
 
     $('kartta-lauta').addEventListener('change', paivitaKartta);
 
-    // --- SUUNNITELMA -----------------------------------------------------
+    // --- DOKUMENTIT JA SUUNNITELMA (entiset Suunnitelma+Käsikirja) -------
 
     /*
      * Haitari, jossa yksi osio on auki kerrallaan. Omistajan toive:
@@ -1020,7 +1103,32 @@
       return k;
     });
 
-    haitari($('suunnitelma'), [
+    haitari($('dokumentit'), [
+      {
+        otsikko: 'Dokumentit',
+        maara: '6 kpl',
+        rakenna: () => {
+          const d = el('div');
+          const DOKUMENTIT = [
+            ['docs/roolitus.md', 'Roolitus: kolme sessiota, yksi peli'],
+            ['docs/tarina.md', 'Tarinan kaanon'],
+            ['docs/isoisan-raamattu.md', 'Isoisän raamattu (tunnelmapaletti, motiivibudjetit)'],
+            ['docs/periaatteet.md', 'Pelin periaatteet'],
+            ['docs/tutki-aiheet.md', 'Lehtimalli ja aihesivujen resepti'],
+            ['docs/tyolista-opukselle.md', 'Lehtityön ohjeet'],
+          ];
+          for (const [polku, nimi] of DOKUMENTIT) {
+            const p = el('p');
+            const a = el('a', '', nimi);
+            a.href = polku;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            p.append(a);
+            d.append(p);
+          }
+          return [d];
+        },
+      },
       {
         otsikko: 'Aarteet',
         maara: `${AARTEET.length} kpl`,
@@ -1105,11 +1213,6 @@
           }),
         ],
       },
-    ]);
-
-    // --- KÄSIKIRJA -------------------------------------------------------
-
-    haitari($('kasikirja'), [
       {
         otsikko: 'Brändikirja',
         maara: 'tarina, ääni, tyyli',
@@ -1163,6 +1266,9 @@
     // --- käynnistys ------------------------------------------------------
 
     piirraTilannetaulu();
+    piirraMuutoslokiTiivis();
+    piirraTestattavaa();
+    piirraPikalinkit();
     piirraLuvut();
     piirraPuutteet();
     piirraLaudat();
