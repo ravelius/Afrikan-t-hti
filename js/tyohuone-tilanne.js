@@ -32,14 +32,13 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Loput 19 maata listamallilla uudelle pohjalle. '
-        + 'Valmiina: v366 maalehden rakenneuudistus '
-        + '(sisällysluettelo, hampurilaisvalikko, sivuaiheet '
-        + 'nappien alla, Saksan siivous, Ruokaa ja tapakulttuuria, '
-        + 'lehden nimeksi Unohdettu aarre), v363 listamalli, v361 '
-        + 'menovinkit 8 maalle.',
-      seuraavaksi: 'Lopuksi v361-maat ja lehtimaat samaan malliin '
-        + '(kaksi mallia näkyy hetken rinnakkain, tarkoituksella).',
+      tehtava: 'JÄRJESTYS MUUTTUI (omistajan palaute 8.8. ilta): '
+        + 'kuusi lehtimaata listamalliin HETI, DEU ensin — '
+        + 'Berliinin menovinkit näyttivät vielä vanhaa nostomallia. '
+        + 'Sitten v361-maat, vasta lopuksi 19 uutta maata. '
+        + 'Valmiina: v366 rakenneuudistus, v363 listamalli, v361.',
+      seuraavaksi: 'Raportti DEU:sta heti kun valmis, jotta '
+        + 'omistaja voi katsoa Berliinin uudestaan.',
     },
     {
       tekija: 'Opus 2',
