@@ -32,20 +32,22 @@ export const TILANNE = {
         + '8.8.): selvät yläotsikot, pikkukuva + lyhyt selitys + '
         + 'linkki, jopa ~20 linkkiä per maa. Ensin 23 uutta maata, '
         + 'lopuksi kuusi lehtimaata samaan malliin.',
-      seuraavaksi: 'Maalehtien syvyys päätetään vasta omistajan '
-        + 'testikierroksen jälkeen (Ranskan pilotti odottaa '
-        + 'haaralla).',
+      seuraavaksi: 'Lehden alavalikon järjestys (Poistu vasen, '
+        + 'Seuraava/Tapaa oikea) ja tietovisan iloisempi ulkoasu '
+        + '(omistajan ohjeet 8.8.). Maalehtien syvyys päätetään '
+        + 'vasta omistajan testikierroksen jälkeen.',
     },
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'odottaa',
-      tehtava: 'Kaista tyhjä. Valmiina: v360 Espanjan tv-nappi '
-        + '(Sää tänään + Uutiset neljässä minuutissa, '
-        + 'worker-reitti #492), v359 Venetsian laguuni, '
-        + 'v351/v354/v355 kartat, tv-kartoitus.',
-      seuraavaksi: 'Uusi tehtävä pilottikatselmuksen ja '
-        + 'testikierroksen tarpeiden mukaan.',
+      tila: 'tyossa',
+      tehtava: 'Kaupunkikarttojen ulkoasu omistajan ohjeella 8.8.: '
+        + 'kontrasti alas (tummimmat viivat vaaleammiksi, kuusi '
+        + 'karttaa uusiksi), numeroympyröiden tausta vaaleammaksi, '
+        + 'OSM-merkintä pienemmäksi, hover-seloste pöytäkoneelle. '
+        + 'Valmiina: v360 Espanjan tv-nappi, v359 laguuni.',
+      seuraavaksi: 'Raportti Fablelle, kun kartat on ajettu ja '
+        + 'katsottu.',
     },
     {
       tekija: 'Sonnet 1',
