@@ -39,13 +39,14 @@ export const TILANNE = {
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'odottaa',
-      tehtava: 'Kaista tyhjä. Valmiina: v360 Espanjan tv-nappi '
-        + '(Sää tänään + Uutiset neljässä minuutissa, '
-        + 'worker-reitti #492), v359 Venetsian laguuni, '
-        + 'v351/v354/v355 kartat, tv-kartoitus.',
-      seuraavaksi: 'Uusi tehtävä pilottikatselmuksen ja '
-        + 'testikierroksen tarpeiden mukaan.',
+      tila: 'tyossa',
+      tehtava: 'Kaupunkikarttojen ulkoasu omistajan ohjeella 8.8.: '
+        + 'kontrasti alas (tummimmat viivat vaaleammiksi, kuusi '
+        + 'karttaa uusiksi), numeroympyröiden tausta vaaleammaksi, '
+        + 'OSM-merkintä pienemmäksi, hover-seloste pöytäkoneelle. '
+        + 'Valmiina: v360 Espanjan tv-nappi, v359 laguuni.',
+      seuraavaksi: 'Raportti Fablelle, kun kartat on ajettu ja '
+        + 'katsottu.',
     },
     {
       tekija: 'Sonnet 1',
