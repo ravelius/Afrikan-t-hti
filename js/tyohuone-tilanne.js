@@ -45,13 +45,13 @@ export const TILANNE = {
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'tyossa',
-      tehtava: 'Pieni hiontaerä: selitelistan pallot samaan '
-        + 'hiekansävyyn kuin kartan ympyrät ja linkkitekstien '
-        + 'alleviivaus kevyemmäksi. Valmiina: v362 karttojen '
-        + 'ulkoasu, v360 Espanjan tv-nappi (iPad-testi OK), v359 '
-        + 'laguuni.',
-      seuraavaksi: 'Raportti Fablelle.',
+      tila: 'odottaa',
+      tehtava: 'Kaista tyhjä. Valmiina: v364 selitepallot kartan '
+        + 'sävyyn ja linkkien kevyempi alleviivaus (lehti ja '
+        + 'karttanäkymä; aloitusnäkymän linkki jätetty vahvaksi '
+        + 'luettavuuden takia), v362 karttojen ilme, v360 Espanjan '
+        + 'tv-nappi.',
+      seuraavaksi: 'Uusi tehtävä testikierroksen tarpeiden mukaan.',
     },
     {
       tekija: 'Sonnet 1',
