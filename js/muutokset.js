@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 351, teksti: 'Italialle oma korkokartta ja kuusi kaupunkia' },
+  { v: 351, teksti: 'Venetsian kohdekartta: Canal Grande ja kuusi kohdetta' },
   { v: 350, teksti: 'Kaupunki- ja maalehti erikseen, kohtaaminen viimeisenä' },
   { v: 350, teksti: 'Maiden tiedot -varuste: maan lehti suoraan kartalta' },
   { v: 350, teksti: 'Menovinkit: parhaat kokoelmat nettimatkaajalle' },
