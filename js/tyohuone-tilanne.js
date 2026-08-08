@@ -44,8 +44,9 @@ export const TILANNE = {
       seuraavaksi: 'Loput ~30 kaupunkia vapaassa järjestyksessä '
         + '3–4 agentin erissä (Ateena, Amsterdam ja Egypti '
         + 'käynnissä). Samalla minitehtävä jokaiselle '
-        + 'kaupunkilehden aihesivulle (tietopisteet, v399:n '
-        + 'mekanismi) — myös jo valmiisiin takautuvasti.',
+        + 'kaupunkilehden aihesivulle (+10 puntaa, omistajan '
+        + 'lopullinen päätös v400) — myös jo valmiisiin '
+        + 'takautuvasti.',
     },
     {
       tekija: 'Opus 2',
@@ -102,12 +103,10 @@ export const TILANNE = {
  */
 export const TESTATTAVAA = [
   {
-    otsikko: 'Visoista tietopisteitä rahan sijaan (v399)',
-    ohje: 'Vastaa minkä tahansa lehden kulttuurivisaan tai '
-      + 'minitehtävään: oikeasta tulee nyt tietopisteitä (2 tai 1), '
-      + 'ei puntia, ja kertymä näkyy passissa Kokemuksen alla. '
-      + 'Palkintologiikka odottaa päätöstäsi — ehdotukset ovat '
-      + 'Fablen viestissä.',
+    otsikko: 'Visat palkitsevat taas puntina (v400)',
+    ohje: 'Omistajan päätös: raha on yksinkertaisin. Kulttuurivisa '
+      + 'antaa +25 ja lehden minitehtävä +10 puntaa kuten ennenkin '
+      + '— v399:n tietopistekokeilu peruttiin saman tien.',
   },
   {
     otsikko: 'Kaupunkilehtiä nyt kahdeksalla (v394–v398)',
