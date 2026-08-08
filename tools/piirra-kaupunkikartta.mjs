@@ -93,13 +93,23 @@ const KAUPUNGIT = {
  * pergamentin puoleen niin, että ero pienimmän ja suurimman kadun
  * välillä säilyy — kartta on yhä luettava, mutta se on nyt tausta eikä
  * julistetta. Viivanleveyksiä hiukan ohennettiin samasta syystä.
+ *
+ * TOINEN KEVENNYS (omistajan palaute 8.8.2026: "viivat vaaleammiksi,
+ * erityisesti tummimmat"). Kevennys ei ole tasainen, ja se on
+ * tarkoituksellista: tummin pää nousi paljon (#7a6a4d → #a08e64,
+ * kontrasti paperiin 4,0:1 → 2,7:1) ja ohuin pää vain vähän
+ * (#bcae91 → #c8bb9e). Jos molempia olisi kevennetty yhtä paljon,
+ * tiheimpien kaupunkien pikkukadut olisivat kadonneet kokonaan —
+ * Madridin ydinkeskusta on pelkkää pikkukatua ilman jokea tai rantaa,
+ * ja se on näistä kuudesta herkin. Nyt luokkien väliset erot ovat
+ * kapeammat mutta kaikki viisi luokkaa erottuvat yhä toisistaan.
  */
 const KADUT = [
-  { luokat: ['residential', 'unclassified', 'living_street', 'pedestrian'], vari: '#bcae91', leveys: 1.4 },
-  { luokat: ['tertiary', 'tertiary_link'], vari: '#b0a084', leveys: 2.2 },
-  { luokat: ['secondary', 'secondary_link'], vari: '#9a8a6a', leveys: 2.9 },
-  { luokat: ['primary', 'primary_link'], vari: '#8a7a5b', leveys: 3.7 },
-  { luokat: ['trunk', 'trunk_link', 'motorway', 'motorway_link'], vari: '#7a6a4d', leveys: 4.6 },
+  { luokat: ['residential', 'unclassified', 'living_street', 'pedestrian'], vari: '#c8bb9e', leveys: 1.4 },
+  { luokat: ['tertiary', 'tertiary_link'], vari: '#c1b394', leveys: 2.2 },
+  { luokat: ['secondary', 'secondary_link'], vari: '#b5a583', leveys: 2.9 },
+  { luokat: ['primary', 'primary_link'], vari: '#ab9a73', leveys: 3.7 },
+  { luokat: ['trunk', 'trunk_link', 'motorway', 'motorway_link'], vari: '#a08e64', leveys: 4.6 },
 ];
 
 /*
