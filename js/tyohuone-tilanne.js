@@ -27,21 +27,23 @@ export const TILANNE = {
     {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
-      tila: 'tyossa',
-      tehtava: 'Loput Euroopan maalehdet. Valmiina: v357 radio- ja '
-        + 'tv-napit molemmissa lehdissä (viimeiset livet pois), v353 '
-        + 'menovinkit kaikille viidelle maalle, v350 lehtijako.',
-      seuraavaksi: 'Uudet maalehdet valmiiksi kartta-aikataulun '
-        + 'tahdissa.',
+      tila: 'odottaa',
+      tehtava: 'Kartoitti loput maalehdet: Euroopan laudalla 29 '
+        + 'maata, lehti vain kuudella. Ranskan pilotti valmiina '
+        + 'haaralla. Valmiina: v357 radio- ja tv-napit, v353 '
+        + 'menovinkit, v350 lehtijako.',
+      seuraavaksi: 'Odottaa omistajan päätöstä maalehtien '
+        + 'laajuudesta (katso päätösjono).',
     },
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
       tila: 'tyossa',
-      tehtava: 'Tv-tallennekandidaattien haku. Valmiina: v351 '
-        + 'Italia, v354 Espanja/Madrid, v355 Ruotsi/Tukholma '
-        + '(korkokartat, kohdekartat, introt).',
-      seuraavaksi: 'Tallennekandidaatit omistajan valittavaksi.',
+      tehtava: 'Venetsian laguuniajo (korjattu työkalu osaa nyt '
+        + 'meren) ja tv-tallennekandidaattien kartoitus (RAI, RTVE, '
+        + 'SVT — vain lista, ei pelimuutoksia). Valmiina: v351 '
+        + 'Italia, v354 Espanja/Madrid, v355 Ruotsi/Tukholma.',
+      seuraavaksi: 'Kandidaattilista omistajan valittavaksi.',
     },
     {
       tekija: 'Sonnet 1',
@@ -65,6 +67,11 @@ export const TILANNE = {
     },
   ],
   odottaaPaatosta: [
+    'Euroopan maalehtien laajuus: 23 maalta puuttuu lehti (~700 '
+      + 'nostoa Berliinin tasolla). Vaihtoehdot: kapea lehti '
+      + 'kaikille / täysi harvoille / menovinkit ensin kaikille. '
+      + 'Suositus: menovinkit kaikille nyt, syvyys vasta omistajan '
+      + 'testikierroksen jälkeen.',
     'Berliinin nähtävyyspilotin katselmus (Sonnet 2 odottaa lupaa '
       + 'jatkaa muihin kaupunkeihin)',
     'Kertoja- ja hahmoäänten valinta (kuuntele Kehitys-välilehden '
