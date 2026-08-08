@@ -15,7 +15,10 @@ tämän ja ottaa roolinsa tästä. Omistaja ohjaa kaikkea Fablen kautta.)*
   ajot omistajan avaimella, joka kierrätetään ajojen jälkeen).
 - **Koordinointi:** jakaa tehtävät Opukselle ja Sonnetille, kokoaa
   raportit ja tuo omistajalle vain päätöstä vaativat asiat. Ratkoo
-  versionumero- ja mergetörmäykset.
+  versionumero- ja mergetörmäykset. Ylläpitää työhuoneen
+  tilannetaulua (js/tyohuone-tilanne.js) — päivitys aina, kun
+  raportti saapuu tai työjono muuttuu; muut sessiot eivät kirjoita
+  siihen.
 
 ## Opus — toimitus: lehdet ja koodi
 

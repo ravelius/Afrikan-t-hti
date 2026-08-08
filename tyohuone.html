@@ -56,6 +56,7 @@
 
     <!-- TILANNE: missä projekti on juuri nyt -->
     <section id="tab-tilanne">
+      <div id="tilannetaulu"></div>
       <div class="luvut" id="luvut"></div>
 
       <h2>Mitä puuttuu</h2>
@@ -191,6 +192,7 @@
       LAAJENNUKSET, TODO_SAMILLE,
     } from './js/tyohuone-data.js';
     import { KEHITYS_KAARI, AANINAYTTEET, MANTERE_KOKEILUT } from './js/tyohuone-kehitys-data.js';
+    import { TILANNE } from './js/tyohuone-tilanne.js';
     import { KOHTAAMISET } from './js/packs/kohtaamiset.js';
     import { VIHJETEKSTIT } from './js/packs/europe.js';
 
@@ -579,6 +581,43 @@
       }
       return [...paras.values()];
     })();
+
+    /*
+     * TILANNETAULU (omistajan toive 8.8.2026: "yhteenveto, joka
+     * päivittyy, siitä missä tämänhetkinen rakennustyö on menossa").
+     * Data tulee js/tyohuone-tilanne.js:stä — Fable ylläpitää sitä
+     * raporttien tahdissa, tämä sivu vain näyttää sen. Etusivun
+     * (Tilanne-välilehden) kärjessä, ennen lukuja.
+     * ------------------------------------------------------------------ */
+    const TILAN_NIMI = { tyossa: 'työssä', valmis: 'valmis', odottaa: 'odottaa' };
+    function piirraTilannetaulu() {
+      const kohde = $('tilannetaulu');
+      if (!kohde || !TILANNE) return;
+      const k = el('div', 'kortti');
+      const otsikkoRivi = el('div', 'rivi');
+      otsikkoRivi.style.justifyContent = 'space-between';
+      otsikkoRivi.append(el('h2', '', 'Rakennustyön tilanne'));
+      otsikkoRivi.append(el('span', 'pieni', `päivitetty ${TILANNE.paivitetty}`));
+      k.append(otsikkoRivi);
+      if (TILANNE.tavoite) k.append(el('p', 'korostus', TILANNE.tavoite));
+      for (const rivi of TILANNE.rivit ?? []) {
+        const r = el('div', 'kortti');
+        const nimiRivi = el('p', 'todo-aani-nimi');
+        nimiRivi.append(el('b', null, `${rivi.tekija} — ${rivi.rooli}`));
+        nimiRivi.append(el('span', 'merkki', ` ${TILAN_NIMI[rivi.tila] ?? rivi.tila}`));
+        r.append(nimiRivi);
+        if (rivi.tehtava) r.append(el('p', '', rivi.tehtava));
+        if (rivi.seuraavaksi) r.append(el('p', 'pieni', `Seuraavaksi: ${rivi.seuraavaksi}`));
+        k.append(r);
+      }
+      if (TILANNE.odottaaPaatosta?.length) {
+        k.append(el('h3', '', 'Odottaa omistajan päätöstä'));
+        const lista = el('ul');
+        for (const kohta of TILANNE.odottaaPaatosta) lista.append(el('li', '', kohta));
+        k.append(lista);
+      }
+      kohde.replaceChildren(k);
+    }
 
     function piirraLuvut() {
       const luvut = [
@@ -1123,6 +1162,7 @@
 
     // --- käynnistys ------------------------------------------------------
 
+    piirraTilannetaulu();
     piirraLuvut();
     piirraPuutteet();
     piirraLaudat();
