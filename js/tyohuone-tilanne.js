@@ -32,12 +32,13 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Loput Euroopan maat listamallilla uudelle pohjalle '
-        + '(tyhjiä maita vielä kymmenkunta). Valmiina: v368 KOKO '
-        + 'PELI YHTÄ MENOVINKKIMALLIA (19 maata, 116 riviä, '
-        + 'ryhmäotsikot maan mukaan), v366 rakenneuudistus.',
-      seuraavaksi: 'Määrän kasvatus (~20 linkkiä/maa) vasta kun '
-        + 'kaikilla mailla on lehti.',
+      tehtava: 'Omistajan suunnanmuutos 8.8.: menovinkit ensin '
+        + 'kuntoon — Saksasta täysi mallikappale (~20 linkkiä, '
+        + 'ryhmäotsikot), omistaja arvioi, ja vasta sitten muut '
+        + 'maat kerralla hyvänä. Uusien maiden erät tauolle. '
+        + 'Valmiina: v368 kaikki listamalliin, v366 uudistus.',
+      seuraavaksi: 'Raportti Saksan mallista; monistus '
+        + 'hyväksynnän jälkeen.',
     },
     {
       tekija: 'Opus 2',
