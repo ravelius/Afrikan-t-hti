@@ -5077,4 +5077,129 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  POL: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Puola on avannut kokoelmansa verkkoon isolla kädellä: '
+        + 'kansalliskirjaston käsikirjoituksia, Chopinin omaa käsialaa, '
+        + 'suolakaivos katunäkymänä, museoesineitä 3D:nä ja kirja, jossa on '
+        + 'jokainen maailman visentti.',
+      nostot: [
+        {
+          otsikko: 'Psalttari, jossa joka säe on kolmella kielellä',
+          tiedosto: 'Psałterz-floriański-7r.jpg',
+          teksti: 'Polona on Puolan kansalliskirjaston digitaalinen kokoelma ja '
+            + 'maan suurin: kirjoja, sanomalehtiä, karttoja, julisteita, '
+            + 'nuotteja ja käsikirjoituksia, kaikki ilman kirjautumista ja '
+            + 'maksua. Kuuluisin aarre on Florianin psalttari 1300-luvun '
+            + 'lopulta. Sen kirjoittaja teki jokaisen säkeen kolmesti — '
+            + 'latinaksi, puolaksi ja saksaksi — peräkkäin samalle sivulle. '
+            + 'Se on vanhin tunnettu puolannos Psalmien kirjasta. Sivut '
+            + 'aukeavat zoomattavina, ja koko niteen saa ladata itselleen.',
+          selite: 'Aukeama Florianin psalttarista: sinikultainen koristeltu '
+            + 'B-alkukirjain, tiheää käsialaa kahdessa palstassa ja '
+            + 'reunuksissa kiemurtelevia lehtiä, joiden seassa on pikkuruisia '
+            + 'ihmishahmoja.',
+          lahde: 'Tuntematon tekijä, Wikimedia Commons (public domain)',
+          linkki: 'https://polona.pl/',
+          linkkiNimi: 'Polona — Puolan kansalliskirjaston digitaalinen kokoelma',
+        },
+        {
+          otsikko: '287 kilometriä käytäviä, jotka on louhittu suolasta',
+          tiedosto: 'Saint Kinga Chapel in Wieliczka Salt Mine.jpg',
+          teksti: 'Wieliczkan suolakaivosta Krakovan kupeessa on kaivettu '
+            + '1200-luvulta lähtien, ja suolaa nostettiin sieltä vuoteen 1996 '
+            + 'asti. Käytäviä kertyi 287 kilometriä ja syvyyttä 327 metriä. '
+            + 'Kaivosmiehet veistivät seiniin patsaita ja kokonaisia '
+            + 'kappeleita — niitä on neljä — sekä kattokruunuja '
+            + 'suolakiteistä. Google Arts & Culturen katunäkymä vie '
+            + 'museoreitille kolmanteen kerrokseen, jossa seisovat vanhat '
+            + 'hevoskierrot ja suolakiteet. Kaivos pääsi Unescon '
+            + 'maailmanperintölistalle heti ensimmäisenä vuonna 1978.',
+          selite: 'Pyhän Kingan kappeli suolakaivoksessa: valtava maanalainen '
+            + 'sali, jonka katosta riippuu kolme suolakidekruunua ja jonka '
+            + 'seiniin on veistetty reliefejä.',
+          lahde: 'Андрей Романенко, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://artsandculture.google.com/streetview/salt-mine-in-wieliczka-museum-route/0wEn5KBrU5rH3g',
+          linkkiNimi: 'Google Arts & Culture — Wieliczkan museoreitti katunäkymänä',
+        },
+        {
+          otsikko: '39 500 kohdetta Chopinin perinnöstä, ilmaiseksi',
+          tiedosto: 'Op.27 Nocturne.jpg',
+          teksti: 'Fryderyk Chopinin instituutti digitoi koko kokoelmansa vuosina '
+            + '2017–2020 ja avasi sen verkkoon. Kohteita on 39 500: '
+            + 'käsikirjoituksia, 500 ensipainosta, 30 000 valokuvaa, Chopinin '
+            + 'kirjeitä ja lähes tuhat tuntia äänitteitä. Nuotit saa myös '
+            + 'tiedostoina, joita voi verrata keskenään. Käsikirjoituksissa '
+            + 'näkyy se, mikä painetusta nuotista on siivottu pois: kiireessä '
+            + 'vedetyt kaaret, yliviivatut tahdit ja kohdat, joissa säveltäjä '
+            + 'vaihtoi mieltään. Kaikki on ilmaista ja käytettävissä.',
+          selite: 'Chopinin oma käsikirjoitus nokturnoon op. 27 nro 2 vuodelta '
+            + '1836: kolme nuottirivistöä käsin vedettyä nuottia, ylhäällä '
+            + 'merkintä Lento sostenuto ja reunassa kirjaston pyöreitä '
+            + 'leimoja.',
+          lahde: 'Frédéric Chopin, Wikimedia Commons (public domain)',
+          linkki: 'https://chopin.musicsources.pl/en/',
+          linkkiNimi: 'Chopin Heritage in Open Access — koko Chopin-kokoelma',
+        },
+        {
+          otsikko: '30 puupäätä, jotka tuijottivat katosta alas',
+          tiedosto: 'Wawel heads Cracow.jpg',
+          teksti: 'Wirtualne Muzea Małopolski on skannannut yli tuhat esinettä 42 '
+            + 'museosta Krakovan seudulta, ja niitä voi kääntää ruudulla joka '
+            + 'suuntaan. Mukana ovat Wawelin linnan kuuluisat puupäät. '
+            + 'Lähettiläiden salin kasettikatosta katsoi alas aikanaan 194 '
+            + 'veistettyä ihmispäätä: kuninkaita, sotilaita, hovinaisia. '
+            + 'Katto revittiin 1800-luvun alussa, kun salista tehtiin '
+            + 'kasarmi, ja päistä on jäljellä 30. Ne nostettiin takaisin '
+            + 'kattoon vuonna 1927.',
+          selite: 'Mustavalkokuva neljästä Wawelin puupäästä kasettikaton '
+            + 'koristeellisten kehysten sisällä: lattapäähineinen mies, '
+            + 'seppelepäinen nainen, valkolakkinen hahmo ja partainen mies '
+            + 'baskerissa.',
+          lahde: 'S. Kolowca, Wikimedia Commons (public domain)',
+          linkki: 'https://muzea.malopolska.pl/en/objects-list',
+          linkkiNimi: 'Wirtualne Muzea Małopolski — esineet käännettävinä',
+        },
+        {
+          otsikko: '67 seinämaalausta, jotka ehdittiin irrottaa ennen tulvaa',
+          tiedosto: 'Faras Saint Anne.jpg',
+          teksti: 'Varsovan kansallismuseo on vienyt verkkoon lähes 60 000 '
+            + 'esinettä. Erikoisin osa on Farasin galleria. Puolalaiset '
+            + 'arkeologit kaivoivat vuosina 1961–1964 Nubiassa Sudanin '
+            + 'puolella esiin katedraalin, jonka seinät oli maalattu täyteen '
+            + 'ihmishahmoja. Assuanin padon tekojärvi oli nielaisemassa '
+            + 'paikan, joten maalaukset irrotettiin seinistä ja kannettiin '
+            + 'turvaan. Varsovaan päätyi 67 maalausta — Euroopan ainoa '
+            + 'nubialaisen kirkkotaiteen kokoelma. Ne löytyvät museon '
+            + 'digitaalisesta kokoelmasta.',
+          selite: 'Farasin katedraalista irrotettu seinämaalaus 700-luvulta: pyhä '
+            + 'Anna huivi päässään, etusormi huulillaan, ja ympärillä '
+            + 'kreikankielinen teksti rapautuneella kalkkipinnalla.',
+          lahde: 'Tuntematon taiteilija (Faras), Wikimedia Commons (public domain)',
+          linkki: 'https://cyfrowe.mnw.art.pl/en/catalog',
+          linkkiNimi: 'Cyfrowe MNW — Varsovan kansallismuseon kokoelmat',
+        },
+        {
+          otsikko: 'Kirja, jossa on jokaisen maailman visentin nimi',
+          tiedosto: 'Wisent - European bison - Bison bonasus - Wiking.jpg',
+          teksti: 'Visentti eli euroopanbiisoni katosi luonnosta 1900-luvun '
+            + 'alussa. Vuonna 1923 perustettu kansainvälinen suojeluyhdistys '
+            + 'laski jäljellä olevat puhdasrotuiset eläimet: niitä oli 54, '
+            + 'kaikki tarhoissa. Nykyiset visentit polveutuvat kahdestatoista '
+            + 'niistä. Siitä lähtien jokainen vasa on kirjattu sukukirjaan, '
+            + 'jota pidetään Białowieżan kansallispuistossa. Puiston sivuilta '
+            + 'saa ladata 64 vuosikertaa vuosilta 1947–2024. Vuoden 2022 '
+            + 'lopussa visenttejä oli 10 536.',
+          selite: 'Visenttisonni makaa kukkivalla niityllä Białowieżan metsässä '
+            + 'ja katsoo suoraan kameraan; paksut sarvet kaartuvat ylöspäin '
+            + 'ja takana on tumma metsänreuna.',
+          lahde: 'Bouke ten Cate, Wikimedia Commons (CC BY 4.0)',
+          linkki: 'https://bpn.gov.pl/ksiega-rodowodowa-zubrow',
+          linkkiNimi: 'Białowieżan kansallispuisto — visenttien sukukirja',
+        },
+      ],
+    },
+  ],
 };
