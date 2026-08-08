@@ -543,4 +543,395 @@ export const NAHTAVYYSJUTUT = {
       lahde: 'Wikipedia',
     },
   },
+  madrid: {
+    Kuninkaanlinna: {
+      aika: '1755',
+      teksti: 'Jouluaattona 1734 vanha Alcázar-linna paloi neljä '
+          + 'vuorokautta, ja suuri osa siitä tuhoutui kokonaan. Osa '
+          + 'taideaarteista oli onneksi jo siirretty toiseen palatsiin, '
+          + 'mutta yksi Velázquezin maalaus katosi liekeissä.'
+        + '\n\n'
+        + 'Kuningas Filip V käski rakentaa palon paikalle upouuden '
+          + 'linnan. Italialainen arkkitehti Filippo Juvarra suunnitteli '
+          + 'sen, ja rakennustyöt kestivät vuodesta 1738 vuoteen 1755.'
+        + '\n\n'
+        + 'Linnassa on 3 418 huonetta ja yli 135 000 neliömetriä '
+          + 'lattiapinta-alaa — se on Länsi-Euroopan suurin palatsi. '
+          + 'Nykyään siellä pidetään valtiovierailuja, ja kokoelmiin '
+          + 'kuuluu muun muassa maailman ainoa täydellinen '
+          + 'Stradivarius-viulukvintetti.',
+      kuvat: [
+        {
+          tiedosto: 'Royal Palace of Madrid east facade 1.jpg',
+          selite: 'Kuninkaanlinnan itäjulkisivu iltapäivän auringossa, '
+            + 'edustalla kävelijöitä.',
+          lahde: 'Kallerna, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Plaza Mayor': {
+      aika: '1619',
+      teksti: 'Espanjan kuningas halusi kaupungille kunnon aukion toreja '
+          + 'ja juhlia varten. Nykyinen Plaza Mayor valmistui 1619 '
+          + 'arkkitehti Juan Gómez de Moran suunnitelmien mukaan. Se on '
+          + '129 metriä pitkä ja 94 metriä leveä, ja sitä ympäröivissä '
+          + 'taloissa on peräti 237 parveketta, joilta väki katseli '
+          + 'aikoinaan tapahtumia alhaalla.'
+        + '\n\n'
+        + 'Aukiolla nähtiin myös synkempiä hetkiä: kesäkuussa 1680 '
+          + 'inkvisitio tuomitsi siellä 117 ihmistä, ja 21 heistä '
+          + 'poltettiin roviolla. Aukio itsekin paloi kolmesti, pahiten '
+          + 'vuonna 1790.'
+        + '\n\n'
+        + 'Keskellä ratsastaa pronssinen kuningas Filip III, valettu jo '
+          + '1616 mutta nostettu paikalleen vasta 1848. Nykyään aukiolla '
+          + 'pidetään joulutoria ja viikonloppuisin postimerkki- ja '
+          + 'kolikkomarkkinoita.',
+      kuvat: [
+        {
+          tiedosto: 'Plaza Mayor de Madrid - 01.jpg',
+          selite: 'Plaza Mayorin pohjoissivu torneineen ja kuningas '
+            + 'Filip III:n ratsastajapatsas edessä.',
+          lahde: 'Carlos Delgado, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Plaza Mayor, Madrid, España, 2023-01-03, DD 78.jpg',
+          selite: 'Maalattu talon julkisivu parvekkeineen aukion '
+            + 'laidalla.',
+          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Puerta del Sol': {
+      aika: '1857',
+      teksti: 'Puerta del Sol eli Auringon portti oli aikoinaan Madridin '
+          + 'muurin portti 1400-luvulla. Nimi tulee portin koristeesta, '
+          + 'nousevasta auringosta, koska portti oli käännetty itään.'
+        + '\n\n'
+        + 'Aukion kiveyksessä on messinkilaatta, joka merkitsee '
+          + 'Espanjan kilometriä nolla — vuodesta 1857 lähtien juuri '
+          + 'siitä pisteestä on mitattu kaikki maan päätiet. Kuusi '
+          + 'valtatietä lähtee sieltä eri suuntiin kuin kellotaulun '
+          + 'viisarit.'
+        + '\n\n'
+        + 'Aukion kellotalosta soi joka uudenvuodenyönä kaksitoista '
+          + 'lyöntiä, ja espanjalaiset syövät jokaisella lyönnillä '
+          + 'viinirypäleen — perinnettä on lähetetty televisiosta '
+          + 'vuodesta 1962. Aukiolla seisoo myös patsas karhusta, joka '
+          + 'kurkottaa mansikkapuuhun: se on koko Madridin tunnus.',
+      kuvat: [
+        {
+          tiedosto: 'Puerta del Sol, panorama, Madrid, España, 2015.JPG',
+          selite: 'Näkymä vilkkaalle aukiolle, taustalla vanha '
+            + 'kellotorni.',
+          lahde: 'Benjamín Núñez González, Wikimedia Commons '
+            + '(CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Escultura del Oso y el Madroño, Puerta del Sol, Madrid, España, Spain.jpg',
+          selite: 'Pronssinen karhu kurkottaa mansikkapuuhun — Madridin '
+            + 'tunnuskuva.',
+          lahde: 'Carlos Teixidor Cadenas, Wikimedia Commons '
+            + '(CC BY-SA 4.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Cibeleen aukio': {
+      aika: '1780',
+      teksti: 'Aukion keskellä kohoava Cibeles-suihkulähde on Madridin '
+          + 'tunnetuimpia näkymiä. Arkkitehti Ventura Rodríguez '
+          + 'suunnitteli sen vuonna 1780: valkoisesta marmorista '
+          + 'veistetty jumalatar Cibele ajaa vaunuilla, joita vetävät '
+          + 'kaksi leijonaa.'
+        + '\n\n'
+        + 'Suihkulähde siirrettiin nykyiselle paikalleen vuonna 1895. '
+          + 'Sitä ympäröi neljä komeaa rakennusta kolmesta eri '
+          + 'kaupunginosasta, joista suurin on entinen postipalatsi — '
+          + 'nykyään Madridin kaupungintalo.'
+        + '\n\n'
+        + 'Suihkulähteestä on tullut myös jalkapallon juhlapaikka: kun '
+          + 'Real Madrid voittaa mestaruuden, joukkueen kapteeni '
+          + 'ripustaa lipun patsaan kaulaan. Innostus on mennyt '
+          + 'liiallisuuksiin kahdesti — jumalattarelta katkesi käsi '
+          + 'sekä 1994 että 2002.',
+      kuvat: [
+        {
+          tiedosto: 'Fountain of Cybele at Plaza de Cibeles, Madrid, Spain (Ank Kumar, Infosys Limited ) 07.jpg',
+          selite: 'Cibeles-suihkulähde suihkuamassa, taustalla entinen '
+            + 'postipalatsi.',
+          lahde: 'Ank Kumar, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Prado-museo': {
+      aika: '1819',
+      teksti: 'Arkkitehti Juan de Villanueva suunnitteli rakennuksen jo '
+          + 'vuonna 1785 kuningas Kaarle III:n tilauksesta '
+          + 'luonnontieteiden museoksi. Suunnitelmat viivästyivät '
+          + 'sotien takia, ja lopulta kuningas Ferdinand VII päätti '
+          + 'tehdä siitä taidemuseon. Prado avasi ovensa marraskuussa '
+          + '1819.'
+        + '\n\n'
+        + 'Museossa on maailman hienoimpia maalauksia: Velázquezin Las '
+          + 'Meninas, Boschin Maallisten ilojen puutarha ja Goyan '
+          + 'synkät niin kutsutut mustat maalaukset. Goya on museon '
+          + 'eniten esillä oleva taiteilija.'
+        + '\n\n'
+        + 'Kokoelmiin kuuluu nykyään noin 7 600 maalausta ja tuhansia '
+          + 'piirustuksia ja veistoksia. Rakennusta laajennettiin maan '
+          + 'alle 2007, ja vuonna 2023 museossa kävi yli 3,3 miljoonaa '
+          + 'kävijää.',
+      kuvat: [
+        {
+          tiedosto: 'Buildings of the Museo del Prado 20180720.jpg',
+          selite: 'Museon punatiilinen julkisivu pylväikköineen '
+            + 'kirkkaana päivänä.',
+          lahde: 'Suicasmo, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Las Meninas 01.jpg',
+          selite: 'Velázquezin maalaus Las Meninas, museon tunnetuin '
+            + 'teos.',
+          lahde: 'Diego Velázquez, Wikimedia Commons (PD)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Alcalán portti': {
+      aika: '1778',
+      teksti: 'Kuningas Kaarle III halusi komean uuden portin vanhan, '
+          + 'rapistuneen kaupunginmuurin portin tilalle — sitä pitkin '
+          + 'kuljettiin tietä Alcalá de Henaresin kaupunkiin. '
+          + 'Arkkitehti Francesco Sabatini suunnitteli portin, ja työt '
+          + 'alkoivat noin vuonna 1774.'
+        + '\n\n'
+        + 'Portti on rakennettu Segovian graniitista, ja sen '
+          + 'koristeveistokset veistivät Francisco Gutiérrez ja Roberto '
+          + 'Michel valkoisesta Colmenarin kivestä. Se on 43 metriä '
+          + 'leveä ja 19,5 metriä korkea, ja se vihittiin käyttöön '
+          + '1778.'
+        + '\n\n'
+        + 'Keskellä olevassa laatassa lukee latinaksi REGE CAROLO III '
+          + 'ANNO MDCCLXXVIII eli Kuningas Kaarle III, vuonna 1778. '
+          + 'Portti seisoo nykyään keskellä vilkasta liikenneympyrää, '
+          + 'kaupunginmuurit ovat kadonneet jo kauan sitten.',
+      kuvat: [
+        {
+          tiedosto: 'Puerta de Alcalá, Madrid, España, 2017-05-18, DD 14.jpg',
+          selite: 'Portti edestä katsottuna, kaarien läpi näkyy '
+            + 'kaupunkia.',
+          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+  },
+  tukholma: {
+    Kaupungintalo: {
+      aika: '1923',
+      teksti: 'Arkkitehti Ragnar Östberg suunnitteli kaupungintalon, '
+          + 'joka rakennettiin kaupungin rantaan vuosina 1911–1923 — '
+          + 'melkein kahdeksan miljoonaa punaista tiiltä. Tornissa on '
+          + '106 metriä ja huipulla kolme kultaista kruunua, Ruotsin '
+          + 'vanha tunnus.'
+        + '\n\n'
+        + 'Talon sisällä on Sininen sali, jossa Nobelin palkintojen '
+          + 'juhlaillallinen syödään joka vuosi. Sen jälkeen vieraat '
+          + 'tanssivat Kultaisessa salissa, jonka seinät on peitetty '
+          + 'yli 18 miljoonalla pienellä mosaiikkipalalla.'
+        + '\n\n'
+        + 'Kaupungintalo avattiin juhlallisesti 23. kesäkuuta 1923. '
+          + 'Avaajat luulivat sen olevan tasan 400 vuotta siitä, kun '
+          + 'kuningas Kustaa Vaasa saapui Tukholmaan — todellisuudessa '
+          + 'päivämäärä oli hieman väärin, mutta juhla pidettiin '
+          + 'silti.',
+      kuvat: [
+        {
+          tiedosto: 'Stockholm City Hall February 2014 02.jpg',
+          selite: 'Kaupungintalon torni valaistuna iltahämärässä '
+            + 'Riddarholmenilta nähtynä, huipulla kolme kultaista '
+            + 'kruunua.',
+          lahde: 'Arild Vågen, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Gyllene salen (Golden Hall) and mosaic of Mälardrottningen - Stockholms stadshus (24831465706).jpg',
+          selite: 'Kultaisen salin kimaltavat mosaiikkiseinät, joissa '
+            + 'on yli 18 miljoonaa pientä lasipalaa.',
+          lahde: 'Jorge Láscar, Wikimedia Commons (CC BY 2.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Riddarholmenin kirkko': {
+      aika: '1835',
+      teksti: 'Riddarholmenin kirkko on yksi Tukholman vanhimmista '
+          + 'rakennuksista — se rakennettiin fransiskaanimunkkien '
+          + 'luostariksi jo 1200-luvun lopulla. Uskonpuhdistuksen '
+          + 'jälkeen munkit lähtivät, ja kirkosta tuli vähitellen '
+          + 'kuninkaallisten hautakirkko.'
+        + '\n\n'
+        + 'Melkein kaikki Ruotsin kuninkaat Kustaa II Aadolfista '
+          + 'Kustaa V:een lepäävät kirkon holveissa, samoin kaksi '
+          + 'keskiaikaista kuningasta. Vain kuningatar Kristiina on '
+          + 'haudattu muualle, Roomaan.'
+        + '\n\n'
+        + 'Alkuperäisen tornin huipun suunnitteli flaamilainen '
+          + 'arkkitehti Willem Boy 1500-luvulla, mutta salama tuhosi '
+          + 'sen 28. heinäkuuta 1835. Nykyinen valurautahuippu on '
+          + 'rakennettu sen tilalle. Seurakunta lakkautettiin jo 1807, '
+          + 'joten kirkkoa käytetään enää hautajaisiin ja '
+          + 'muistotilaisuuksiin.',
+      kuvat: [
+        {
+          tiedosto: 'Riddarholmskyrkan norra fasaden.jpg',
+          selite: 'Kirkon pohjoisjulkisivu: goottilainen tiilitorni ja '
+            + 'pyöreäkattoinen kuninkaallinen hautakappeli vierekkäin.',
+          lahde: 'Zeke530, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Riddarholmskyrkan February 2013 01.jpg',
+          selite: 'Ilmakuva kirkon mustasta valurautaisesta '
+            + 'tornihuipusta ja vihreistä kattokupoleista talvella.',
+          lahde: 'Arild Vågen, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Sergelin tori': {
+      aika: '1967',
+      teksti: 'Sergelin tori sai nykyisen muotonsa vuonna 1967. '
+          + 'Keskellä pyörii liikenneympyrä, jonka muoto ei ole '
+          + 'tavallinen soikio vaan supermuna — sen keksi matemaatikko '
+          + 'Piet Hein.'
+        + '\n\n'
+        + 'Torin tunnusmerkki on 37 metriä korkea lasi- ja '
+          + 'teräsobeliski, jonka arkkitehti Edvin Öhrström '
+          + 'suunnitteli. Se valmistui vasta 1974 ja on aiheuttanut '
+          + 'tekniikkaongelmia vuosien varrella.'
+        + '\n\n'
+        + 'Alempi kävelytaso, Plattan, on päällystetty '
+          + 'mustavalkoisilla kolmioilla — sama kuvio löytyy nykyään '
+          + 'Tukholman metrojunien penkeistä. Torilla juhlitaan '
+          + 'urheiluvoittoja, mielenosoitetaan ja vietetään vappua.',
+      kuvat: [
+        {
+          tiedosto: 'Sergels torg-Stockholm-DSC 0115w.jpg',
+          selite: 'Sergelin torin 37 metriä korkea lasiobeliski '
+            + 'valaistuna iltahämärässä liikenneympyrän keskellä.',
+          lahde: 'Peter Haas, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Sergels Torg.jpg',
+          selite: 'Alempi kävelytaso Plattan mustavalkoisine '
+            + 'kolmiokuvioineen, obeliski taustalla.',
+          lahde: 'Kallerna, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    Kuninkaanlinna: {
+      aika: '1697',
+      teksti: 'Vanha Kolmen kruunun linna paloi maan tasalle 7. '
+          + 'toukokuuta 1697 — vain pohjoismuuri jäi pystyyn. Samana '
+          + 'vuonna arkkitehti Nicodemus Tessin nuorempi aloitti '
+          + 'uuden, vieläkin suuremman linnan rakentamisen samalle '
+          + 'paikalle.'
+        + '\n\n'
+        + 'Rakentaminen kesti vuosikymmeniä, ja kuningasperhe pääsi '
+          + 'muuttamaan sisään vasta 1754. Linnassa on peräti 1 430 '
+          + 'huonetta, joista 660:ssä on ikkuna, ja ovia ja portteja on '
+          + 'noin 7 500.'
+        + '\n\n'
+        + 'Kuninkaallinen henkivartiokaarti on vartioinut linnaa jo '
+          + 'vuodesta 1523 asti — se on yksi Ruotsin vanhimmista '
+          + 'laitoksista. Nykyään linnassa käy vuosittain noin 800 000 '
+          + 'vierasta.',
+      kuvat: [
+        {
+          tiedosto: 'Stockholm Palace 01.jpg',
+          selite: 'Kuninkaanlinna kultaisessa iltavalossa vedestä '
+            + 'kuvattuna.',
+          lahde: 'Ad Meskens, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Façade of Stockholms slott (Stockholm Palace) Palace (24763668411).jpg',
+          selite: 'Linnan pääovi ja kuninkaallinen henkivartija '
+            + 'vartiokopissaan.',
+          lahde: 'Jorge Láscar, Wikimedia Commons (CC BY 2.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Vasa-museo': {
+      aika: '1628',
+      teksti: 'Vasa oli komea, 64-tykkinen sotalaiva, mutta se kaatui '
+          + 'ja upposi jo neitsytmatkallaan 10. elokuuta 1628 — vain '
+          + '1 300 metrin päässä satamasta. Tuulenpuuska kallisti '
+          + 'laivan kyljelleen, vesi tulvi sisään avoimista '
+          + 'tykkiluukuista, ja noin 30 ihmistä hukkui.'
+        + '\n\n'
+        + 'Laiva oli liian epävakaa: yläosat olivat liian raskaita, ja '
+          + 'kannen palkit oli tehty liian isoiksi. Laiva nostettiin '
+          + 'vedestä vasta 1961, yli 330 vuotta myöhemmin, lähes '
+          + 'ehjänä.'
+        + '\n\n'
+        + 'Vasan runkoa koristaa lähes 500 puuveistosta. Museo avattiin '
+          + '15. kesäkuuta 1990, ja siitä lähtien laivaa on käynyt '
+          + 'katsomassa jo yli 45 miljoonaa ihmistä.',
+      kuvat: [
+        {
+          tiedosto: 'Lateral view of the Vasa ship, Vasa Museum, Stockholm, Sweden julesvernex2.jpg',
+          selite: 'Vasa-laivan kylki lähikuvassa: tykkiluukut ja '
+            + 'köysistö museohallissa.',
+          lahde: 'Jules Verne Times Two, Wikimedia Commons '
+            + '(CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Stern of the Vasa ship, Vasa Museum, Stockholm, Sweden julesvernex2.jpg',
+          selite: 'Laivan koristeellinen perä täynnä puuveistoksia ja '
+            + 'Ruotsin vaakunaa.',
+          lahde: 'Jules Verne Times Two, Wikimedia Commons '
+            + '(CC BY-SA 4.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    Skansen: {
+      aika: '1891',
+      teksti: 'Artur Hazelius perusti Skansenin 11. lokakuuta 1891. Se '
+          + 'on Ruotsin vanhin ulkoilmamuseo, ja sinne koottiin taloja, '
+          + 'myllyjä ja pihoja eri puolilta Ruotsia — lähes 150 '
+          + 'rakennusta, joista vain kolme on jälkeenpäin rakennettuja '
+          + 'jäljennöksiä.'
+        + '\n\n'
+        + 'Skansenilla asuu myös eläimiä: karhuja, hirviä, ilveksiä, '
+          + 'poroja ja hylkeitä pääsee katsomaan aivan läheltä. Alue on '
+          + '30 hehtaarin kokoinen, ja sinne pääsee muun muassa '
+          + 'pienellä köysiradalla.'
+        + '\n\n'
+        + 'Nykyään Skansenissa käy yli 1,3 miljoonaa vierasta joka '
+          + 'vuosi. Suosituin perinne on Allsång på Skansen eli '
+          + 'yhteislaulutilaisuus, joka on jatkunut jo vuosikymmenten '
+          + 'ajan.',
+      kuvat: [
+        {
+          tiedosto: 'Skansen, Stockholm (by Pudelek) 3.JPG',
+          selite: 'Skogaholmin kartano, yksi Skansenin lähes 150 '
+            + 'vanhasta rakennuksesta.',
+          lahde: 'Marcin Szala (Pudelek), Wikimedia Commons '
+            + '(CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Brown bear at Skansen (15181590522).jpg',
+          selite: 'Ruskeakarhu lähikuvassa Skansenin eläintarhassa.',
+          lahde: 'Magnus Johansson, Wikimedia Commons (CC BY-SA 2.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+  },
 };
