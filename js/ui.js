@@ -6973,12 +6973,24 @@ export class UI {
      * näyttävät maaosaston etusivulla entiseen tapaan.
      */
     const maakartta = maanIso && otsikonMaa ? MAAKARTAT[maanIso] ?? null : null;
-    if (maakartta) {
-      kategoriat.push({ id: 'maa-etusivu', nimi: otsikonMaa, kartta: maakartta });
-    }
+    /*
+     * KAUPUNKILEHTI JA MAALEHTI OVAT ERI LEHTIÄ (v350, omistajan
+     * päätös 8.8.2026: "erotetaan kaupunki ja maa lehti toisistaan").
+     *
+     * Ennen nämä olivat yksi pino: kansi, kaupungin aiheet, maan
+     * etusivu, maan aiheet ja numerot. Lontoossa siitä tuli 14 sivua,
+     * ja kaupungin oma tarina hukkui maan alle. Nyt kaupunkilehti on
+     * 3-4 sivua, ja maa on oma lehtensä, joka avataan kartalta maan
+     * nimen "i"-painikkeesta tai Maiden tiedot -varusteella.
+     *
+     * Sama aihetunnus kaupungilla ja maalla ei enää piilota maan
+     * sivua, koska listat ovat erilliset — mutta samaa sisältöä ei
+     * silti kannata olla kahdessa paikassa (ks. Lontoon jako v349).
+     */
+    this.maanSivut = [];
+    if (maakartta) this.maanSivut.push({ id: 'maa-etusivu', nimi: otsikonMaa, kartta: maakartta });
     for (const osa of (maanIso ? MAA_KATEGORIAT[maanIso] ?? [] : [])) {
-      if (kategoriat.some((k) => k.id === osa.id)) continue;
-      kategoriat.push(maanLippu ? { ...osa, maaLippu: maanLippu, maa: otsikonMaa } : osa);
+      this.maanSivut.push(maanLippu ? { ...osa, maaLippu: maanLippu, maa: otsikonMaa } : osa);
     }
     /*
      * Lehtitaitto (omistajan toive 5.8.2026): aihe, jonka id on
@@ -7008,7 +7020,8 @@ export class UI {
       // numeroina muotoon") — tässä nominatiivissa, koska "numeroina"
       // on jo taivutettu: "EGYPTI NUMEROINA".
       const nimi = otsikonMaa ? `${otsikonMaa} numeroina` : 'Maa numeroina';
-      kategoriat.push({ id: 'maa-numeroina', nimi, numerot: maanIso });
+      // Numerot ovat maan tietoa, joten ne kuuluvat maalehteen.
+      this.maanSivut.push({ id: 'maa-numeroina', nimi, numerot: maanIso });
     }
     this.tutkiLehti = lehti;
     // Karttamaissa maaosasto ei asu etusivulla: kulmalinkki vie sen
@@ -7037,6 +7050,9 @@ export class UI {
     this.arrivalLiuskat.replaceChildren();
     this.arrivalLiuskat.hidden = true;
     this.tutkiSivut = kategoriat;
+    // Kaupunkilehti aukeaa aina kaupunkitilassa; maalehti on oma
+    // näkymänsä, joka avataan kartalta (avaaMaalehti).
+    this.tutkiTila = 'kaupunki';
     this.naytaTutkiSivu(0, { heti: true });
   }
 
@@ -7107,6 +7123,59 @@ export class UI {
     if (kortti) kortti.scrollTop = 0;
   }
 
+  /**
+   * Maalehti omana näkymänään (omistajan päätös 8.8.2026: "erotetaan
+   * kaupunki ja maa lehti toisistaan ... maan sivuille pääsisi nyt
+   * suoraan kartalta").
+   *
+   * Sama arkki ja sama sivunkääntö kuin kaupunkilehdellä — vain
+   * sivulista vaihtuu. Näin koko taitto, kuvien suurennus ja
+   * pyyhkäisyselaus tulevat ilmaiseksi eikä mitään tarvitse toistaa.
+   *
+   * Kaupunkilehteen palataan sulkemalla; maalehti ei ole kaupungin
+   * sivujen jatke vaan rinnakkainen lehti.
+   */
+  avaaMaalehti(iso, { nimi = null } = {}) {
+    const maa = this.game?.pack?.map?.countryShapes?.[iso];
+    if (!maa) return;
+    const otsikko = nimi ?? maa.nimi;
+    const sivut = [];
+    const kartta = MAAKARTAT[iso];
+    if (kartta) sivut.push({ id: 'maa-etusivu', nimi: otsikko, kartta });
+    for (const osa of MAA_KATEGORIAT[iso] ?? []) {
+      sivut.push(maa.lippu ? { ...osa, maaLippu: maa.lippu, maa: otsikko } : osa);
+    }
+    sivut.push({ id: 'maa-numeroina', nimi: `${otsikko} numeroina`, numerot: iso });
+    if (!sivut.length) return;
+
+    /*
+     * Maalehdellä ei ole kaupungin osia: ei kansikuvia, ei säärivi
+     * eikä kohtaamista. Ne piilotetaan tässä, ja kaupunkilehti
+     * palauttaa ne omalla rakennaSivut-ajollaan.
+     */
+    this.tutkiTila = 'maa';
+    this.tutkiMaaLehti = iso;
+    this.tutkiSivut = sivut;
+    this.tutkiLehti = true;
+    this.tutkiMaaEtusivu = false;
+    this.arrivalDialog.classList.add('lehti', 'arkki');
+    this.arrivalDialog.classList.toggle('maalehti', true);
+    this.piirraLehtiKuvat(null);
+    this.arrivalPalstat.hidden = true;
+    this.arrivalKulttuuri.hidden = true;
+    this.arrivalLehtiYla.hidden = false;
+    this.arrivalCity.textContent = otsikko;
+    this.arrivalLehtiAla.textContent = 'Maan oma lehti';
+    this.arrivalLehtiAla.hidden = false;
+    this.naytaLehtiSaa(null);
+    if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
+    const arkki = this.arrivalDialog.querySelector('.dialog-card');
+    if (arkki) this.kytkeTutkiSelaus(arkki);
+    // Maalehti alkaa maan etusivulta (indeksi 0 on kaupunkilehden
+    // kansi, jota maalehdellä ei ole — siksi sivu 1).
+    this.naytaTutkiSivu(1, { heti: true });
+  }
+
   /** Sivun vaihto suuntaan (+1 seuraava, -1 edellinen). */
   vaihdaTutkiSivu(suunta) {
     const sivuja = this.tutkiSivuja();
@@ -7152,6 +7221,50 @@ export class UI {
     edellinen.hidden = this.tutkiSivu <= 0;
     seuraava.hidden = this.tutkiSivu >= sivuja - 1;
     numero.textContent = `${(this.tutkiSivu ?? 0) + 1} / ${sivuja}`;
+    this.paivitaTutkiAlapalkki();
+  }
+
+  /**
+   * Lehden alapalkki (omistajan päätös 8.8.2026: "muuta kaupunkilehden
+   * navigointi alas niin että tapaa henkilö x on vasta viimeisellä
+   * sivulla. aiemmilla sivuilla on nappi seuraavalle (ja edelliselle
+   * jos on) sekä poistu").
+   *
+   * Kohtaaminen on lehden PÄÄTEPISTE: se ei kilpaile lukemisen kanssa
+   * vaan odottaa, kunnes lehti on luettu. Sitä ennen alapalkki on
+   * pelkkää navigointia.
+   *
+   * Maalehdellä ei ole kohtaamista lainkaan — siellä viimeiselläkin
+   * sivulla on vain Poistu.
+   */
+  paivitaTutkiAlapalkki() {
+    const kyllä = document.getElementById('arrival-yes');
+    const ei = document.getElementById('arrival-no');
+    if (!kyllä || !ei) return;
+    const sivuja = this.tutkiSivuja();
+    const viimeisella = (this.tutkiSivu ?? 0) >= sivuja - 1;
+    const maalehti = this.tutkiTila === 'maa';
+    // Kohtaaminen vain kaupunkilehden viimeisellä sivulla.
+    kyllä.hidden = maalehti || !viimeisella;
+    ei.textContent = maalehti || viimeisella ? 'Poistu' : 'Poistu lehdestä';
+
+    let palkki = this.arrivalDialog.querySelector(':scope .tutki-alanapit');
+    if (!palkki) {
+      palkki = html('div', 'tutki-alanapit');
+      const tee = (luokka, teksti, suunta) => {
+        const nappi = html('button', `tutki-alanappi ${luokka}`, teksti);
+        nappi.type = 'button';
+        nappi.addEventListener('click', () => this.vaihdaTutkiSivu(suunta));
+        palkki.appendChild(nappi);
+        return nappi;
+      };
+      tee('edellinen', 'Edellinen', -1);
+      tee('seuraava', 'Seuraava', 1);
+      ei.parentElement?.insertBefore(palkki, ei);
+    }
+    palkki.querySelector('.edellinen').hidden = (this.tutkiSivu ?? 0) <= 0;
+    palkki.querySelector('.seuraava').hidden = viimeisella;
+    palkki.hidden = sivuja < 2;
   }
 
   /**

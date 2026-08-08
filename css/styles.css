@@ -8683,3 +8683,21 @@ body.vertailu-tila .pawns { display: none; }
   .nahtavyys-kortti { padding: 1.5rem 2rem 1.2rem; }
   .nahtavyys-kappale { font-size: 1.02rem; }
 }
+
+/* ── LEHDEN ALANAPIT ───────────────────────────────────────────────────
+ *
+ * Omistajan päätös 8.8.2026: "muuta kaupunkilehden navigointi alas niin
+ * että tapaa henkilö x on vasta viimeisellä sivulla. aiemmilla sivuilla
+ * on nappi seuraavalle (ja edelliselle jos on) sekä poistu."
+ *
+ * Kohtaaminen on lehden päätepiste, ei kilpailija lukemiselle. Sitä
+ * ennen alapalkissa on pelkkä sivunvaihto — samannäköiset paperipainikkeet
+ * kuin muutkin lehden napit, jotta rivi pysyy yhtenäisenä.
+ */
+.tutki-alanapit {
+  display: contents;
+}
+
+.tutki-alanappi {
+  font-family: var(--font-type);
+}
