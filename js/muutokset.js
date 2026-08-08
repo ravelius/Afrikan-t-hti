@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 364, teksti: 'Selitepallot kartan sävyyn, linkit kevyemmin viivattu' },
   { v: 363, teksti: 'Menovinkit listaksi: enemmän linkkejä, pienemmät kuvat' },
   { v: 363, teksti: 'Poistu vasemmalle, Seuraava oikealle joka sivulla' },
   { v: 363, teksti: 'Tietovisa omaksi kortikseen: väljempi ja vaaleampi' },
