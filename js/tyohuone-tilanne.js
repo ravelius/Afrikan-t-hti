@@ -47,13 +47,12 @@ export const TILANNE = {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
       tila: 'tyossa',
-      tehtava: 'Loppukiri: maakartta (korkokartta + '
-        + 'kaupunkipisteet) ja intro jokaiselle Euroopan maalle, '
-        + 'jolta ne puuttuvat — ITA/ESP/SWE-mallilla, '
-        + 'agenttiparvet 3–4 rinnakkain, erä per PR. '
-        + 'Kaupunkikartat uusille kaupungeille vasta '
-        + 'nähtävyysvaiheessa.',
-      seuraavaksi: 'Eräraportit Fablelle; esteistä heti.',
+      tehtava: 'Loppukiri: maakartat + introt kaikille. Erä 1/4 '
+        + 'mainissa (v374: FRA, NLD, CZE, POL, AUT, CHE — 36 '
+        + 'pistettä todennettu, 2 faktavirhettä kiinni ennen '
+        + 'peliä). Erä 2 käynnissä (NOR, DNK, FIN, EST, LVA, '
+        + 'LTU); 18 maata jäljellä.',
+      seuraavaksi: 'Erät 2–4; eräraportit Fablelle.',
     },
     {
       tekija: 'Sonnet 1',
