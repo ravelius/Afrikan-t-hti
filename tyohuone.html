@@ -26,6 +26,7 @@
     </div>
     <nav id="valilehdet">
       <button data-tab="todo">Todo Samille</button>
+      <button data-tab="kehitys">Kehitys</button>
       <button data-tab="tilanne">Tilanne</button>
       <button data-tab="kaupungit">Kaupungit</button>
       <button data-tab="kartat">Kartat</button>
@@ -45,8 +46,17 @@
       <div id="todo"></div>
     </section>
 
+    <!-- KEHITYS: Fablen kaari, ääninäytteet ja mannerkokeilut kuunneltavaksi -->
+    <section id="tab-kehitys" hidden>
+      <p>Omistajan kuunneltavaksi ja luettavaksi: iso kaari sanoin, ääniehdokkaat
+         ja mannerkokeilut. Euroopan valmiit tekstit ja äänet luetaan suoraan
+         paketeista, joten tämä osio ei voi vanhentua.</p>
+      <div id="kehitys"></div>
+    </section>
+
     <!-- TILANNE: missä projekti on juuri nyt -->
     <section id="tab-tilanne">
+      <div id="tilannetaulu"></div>
       <div class="luvut" id="luvut"></div>
 
       <h2>Mitä puuttuu</h2>
@@ -181,6 +191,10 @@
       AARTEET, VARUSTEET, KAUPUNKIKARTAT, LASIT, PELIT, PELITILAT, LAHTEET, MOOTTORIT,
       LAAJENNUKSET, TODO_SAMILLE,
     } from './js/tyohuone-data.js';
+    import { KEHITYS_KAARI, AANINAYTTEET, MANTERE_KOKEILUT } from './js/tyohuone-kehitys-data.js';
+    import { TILANNE } from './js/tyohuone-tilanne.js';
+    import { KOHTAAMISET } from './js/packs/kohtaamiset.js';
+    import { VIHJETEKSTIT } from './js/packs/europe.js';
 
     const $ = (id) => document.getElementById(id);
     const el = (tagi, luokka, teksti) => {
@@ -280,6 +294,109 @@
       }
     }
     piirraTodo();
+
+    /* ------------------------------------------------------------------ *
+     * KEHITYS (omistajan tilaus 8.8.2026: "kokeillaan ja kuuntelen").
+     *
+     * Neljä osiota, sama haitari-tapa kuin Suunnitelma/Käsikirja-
+     * välilehdillä: <details> rakentaa sisällön vasta ensimmäisellä
+     * avauksella, joten 41 kaupungin äänet ja tekstit eivät paina
+     * välilehden ensilatausta. Iso kaari ja ääninäytteet tulevat
+     * js/tyohuone-kehitys-data.js:stä (Fable kirjoittaa); Euroopan
+     * tekstit ja äänet luetaan suoraan paketeista (EUROPE_SAAPUMISET,
+     * KOHTAAMISET, VIHJETEKSTIT) — sama data kuin pelissä, ei kopiota.
+     * ------------------------------------------------------------------ */
+    function aaniRivi(nimi, kuvaus, src) {
+      const rivi = el('div', 'todo-aani');
+      const otsikkoRivi = el('p', 'todo-aani-nimi');
+      otsikkoRivi.appendChild(el('b', null, nimi));
+      rivi.appendChild(otsikkoRivi);
+      if (kuvaus) rivi.appendChild(el('p', 'pieni', kuvaus));
+      const soitin = document.createElement('audio');
+      soitin.controls = true;
+      soitin.preload = 'none';
+      soitin.src = src;
+      rivi.appendChild(soitin);
+      return rivi;
+    }
+
+    const euNimet = Object.fromEntries(
+      (PACKS.find((p) => p.id === 'europe')?.cities ?? []).map((c) => [c.id, c.name]),
+    );
+
+    haitari($('kehitys'), [
+      {
+        otsikko: 'Iso kaari',
+        maara: `${KEHITYS_KAARI.length} jaksoa`,
+        rakenna: () => KEHITYS_KAARI.map((jakso) => {
+          const k = el('div', 'kortti');
+          k.append(el('h3', '', jakso.otsikko));
+          k.append(el('p', '', jakso.teksti));
+          return k;
+        }),
+      },
+      {
+        otsikko: 'Ääninäytteet',
+        maara: `${AANINAYTTEET.reduce((n, r) => n + r.naytteet.length, 0)} kpl`,
+        rakenna: () => AANINAYTTEET.map((ryhma) => {
+          const k = el('div', 'kortti');
+          k.append(el('h3', '', ryhma.ryhma));
+          for (const n of ryhma.naytteet) {
+            k.append(aaniRivi(n.nimi, n.kuvaus, `assets/audio/naytteet/${n.tiedosto}`));
+          }
+          return k;
+        }),
+      },
+      {
+        otsikko: 'Euroopan tekstit ja äänet',
+        maara: `${Object.keys(europeSaap).length} kaupunkia`,
+        rakenna: () => {
+          const ulos = [];
+          for (const id of Object.keys(europeSaap)) {
+            const s = europeSaap[id];
+            const k = el('div', 'kortti');
+            k.append(el('h3', '', euNimet[id] ?? id));
+            k.append(el('p', '', s.kuvaus));
+            k.append(el('p', '', s.nosto));
+            k.append(aaniRivi('Saapuminen', null, `assets/audio/puhe-europe-saapuminen-${id}.mp3`));
+
+            const koh = KOHTAAMISET[id];
+            if (koh) {
+              const nimi = el('p', 'pieni');
+              nimi.append(el('b', null, `Kohtaaminen: ${koh.hahmo ?? ''}`));
+              k.append(nimi);
+              if (koh.tervehdys) k.append(el('p', '', koh.tervehdys));
+              if (koh.loyto) k.append(el('p', '', koh.loyto));
+              if (id === 'lontoo') {
+                k.append(aaniRivi('Tervehdys', null, 'assets/audio/puhe-kohtaaminen-lontoo-tervehdys.mp3'));
+                k.append(aaniRivi('Löytö', null, 'assets/audio/puhe-kohtaaminen-lontoo-loyto.mp3'));
+              }
+            }
+            ulos.push(k);
+          }
+          for (const [alue, teksti] of Object.entries(VIHJETEKSTIT)) {
+            const k = el('div', 'kortti');
+            k.append(el('h3', '', `Aarrevihje: ${alue[0].toUpperCase()}${alue.slice(1)}`));
+            k.append(el('p', '', teksti));
+            k.append(aaniRivi('Vihje', null, `assets/audio/puhe-europe-vihje-${alue}.mp3`));
+            ulos.push(k);
+          }
+          return ulos;
+        },
+      },
+      {
+        otsikko: 'Mannerkokeilut',
+        maara: `${MANTERE_KOKEILUT.length} kpl`,
+        rakenna: () => MANTERE_KOKEILUT.map((m) => {
+          const k = el('div', 'kortti');
+          k.append(el('h3', '', m.lauta));
+          k.append(el('p', '', m.kuvaus));
+          k.append(el('p', '', m.nosto));
+          k.append(aaniRivi('Näyte', null, `assets/audio/naytteet/${m.tiedosto}`));
+          return k;
+        }),
+      },
+    ]);
 
     const napit = [...document.querySelectorAll('#valilehdet button')];
     /* Vanhat kirjanmerkit eivät saa hajota nimien muuttuessa. */
@@ -464,6 +581,43 @@
       }
       return [...paras.values()];
     })();
+
+    /*
+     * TILANNETAULU (omistajan toive 8.8.2026: "yhteenveto, joka
+     * päivittyy, siitä missä tämänhetkinen rakennustyö on menossa").
+     * Data tulee js/tyohuone-tilanne.js:stä — Fable ylläpitää sitä
+     * raporttien tahdissa, tämä sivu vain näyttää sen. Etusivun
+     * (Tilanne-välilehden) kärjessä, ennen lukuja.
+     * ------------------------------------------------------------------ */
+    const TILAN_NIMI = { tyossa: 'työssä', valmis: 'valmis', odottaa: 'odottaa' };
+    function piirraTilannetaulu() {
+      const kohde = $('tilannetaulu');
+      if (!kohde || !TILANNE) return;
+      const k = el('div', 'kortti');
+      const otsikkoRivi = el('div', 'rivi');
+      otsikkoRivi.style.justifyContent = 'space-between';
+      otsikkoRivi.append(el('h2', '', 'Rakennustyön tilanne'));
+      otsikkoRivi.append(el('span', 'pieni', `päivitetty ${TILANNE.paivitetty}`));
+      k.append(otsikkoRivi);
+      if (TILANNE.tavoite) k.append(el('p', 'korostus', TILANNE.tavoite));
+      for (const rivi of TILANNE.rivit ?? []) {
+        const r = el('div', 'kortti');
+        const nimiRivi = el('p', 'todo-aani-nimi');
+        nimiRivi.append(el('b', null, `${rivi.tekija} — ${rivi.rooli}`));
+        nimiRivi.append(el('span', 'merkki', ` ${TILAN_NIMI[rivi.tila] ?? rivi.tila}`));
+        r.append(nimiRivi);
+        if (rivi.tehtava) r.append(el('p', '', rivi.tehtava));
+        if (rivi.seuraavaksi) r.append(el('p', 'pieni', `Seuraavaksi: ${rivi.seuraavaksi}`));
+        k.append(r);
+      }
+      if (TILANNE.odottaaPaatosta?.length) {
+        k.append(el('h3', '', 'Odottaa omistajan päätöstä'));
+        const lista = el('ul');
+        for (const kohta of TILANNE.odottaaPaatosta) lista.append(el('li', '', kohta));
+        k.append(lista);
+      }
+      kohde.replaceChildren(k);
+    }
 
     function piirraLuvut() {
       const luvut = [
@@ -1008,6 +1162,7 @@
 
     // --- käynnistys ------------------------------------------------------
 
+    piirraTilannetaulu();
     piirraLuvut();
     piirraPuutteet();
     piirraLaudat();

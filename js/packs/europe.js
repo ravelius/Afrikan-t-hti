@@ -527,7 +527,7 @@ const VIHJEALUEET = {
     'bukarest', 'kiova', 'odessa', 'moskova'],
 };
 
-const VIHJETEKSTIT = {
+export const VIHJETEKSTIT = {
   pohjoinen: '"Luettelon rivi vie pohjoiseen — sinne, missä kesäyö ei '
     + 'pimene ja meri jäätyy talvella. En ehtinyt." Nuoli osoittaa '
     + 'kartan yläreunaan.',
