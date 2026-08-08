@@ -132,25 +132,22 @@ export const TV_KANAVAT = {
    * videosyöte ohjaa 403:een ja Egypt Todayn syöte on botti-eston
    * takana; avointa mp4-rajapintaa ei ole (tarkistettu 7.8.2026).
    */
-  ITA: {
-    nimi: 'euronews italiano',
-    // Live-sivulta luetaan kulloisenkin lähetyksen tunniste workerin
-    // kautta (luotettava myös iPadilla); upotus on varareitti, jos
-    // workeria ei ole päivitetty tai haku epäonnistuu.
-    livesivu: 'https://www.youtube.com/@euronewsit/live',
-    upotus: 'https://www.youtube.com/embed/live_stream'
-      + '?channel=UC1mX9vuLOYf8fhaXS_KcDRg&autoplay=1',
-  },
-  // RTVE Noticias on Espanjan yleisradion uutiskanava, joka lähettää
-  // YouTubeen ympäri vuorokauden. Kanavatunnus varmistettu YouTuben
-  // omasta kanavasyötteestä (feeds/videos.xml palauttaa nimen
-  // "RTVE Noticias" tälle tunnukselle, 6.8.2026).
-  ESP: {
-    nimi: 'RTVE Noticias',
-    livesivu: 'https://www.youtube.com/@RTVENoticias/live',
-    upotus: 'https://www.youtube.com/embed/live_stream'
-      + '?channel=UC7QZIf0dta-XPXsp9Hv4dTw&autoplay=1',
-  },
+  /*
+   * ITALIALLA JA ESPANJALLA EI OLE TV-NAPPIA (v356).
+   *
+   * Omistajan päätös 8.8.2026: livelähetyksistä luovutaan kokonaan,
+   * myös Italian ja Espanjan osalta. Ne olivat viimeiset kaksi
+   * YouTube-livea (euronews italiano ja RTVE Noticias) ja poistuivat
+   * samalla päätöksellä kuin Britannian ja Egyptin omat aikanaan.
+   *
+   * Syy on sama kuin alun perin: live ei näytä laitteissa
+   * luotettavasti oikein, ja nappi joka joskus toimii ja joskus ei on
+   * huonompi kuin ei nappia lainkaan.
+   *
+   * Tilalle etsitään Saksan mallin mukaisia uutistallenteita (avoin
+   * mp4, CORS sallittu). Jos sellaista ei löydy, maa jää ilman
+   * tv-nappia — se on hyväksytty lopputulos, ei puute.
+   */
   /*
    * Tallenteet suoran lähetyksen sijaan (omistajan päätös 7.8.2026:
    * "Live TV-lähetykset eivät näytä oikein toimivan. Ne voisi vaihtaa

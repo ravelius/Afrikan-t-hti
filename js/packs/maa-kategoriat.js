@@ -2065,7 +2065,7 @@ export const MAA_KATEGORIAT = {
         {
           otsikko: 'Italia on nuorempi kuin luulisi',
           aika: '1861',
-          tiedosto: 'Giuseppe Garibaldi (1866).jpg',
+          tiedosto: 'Garibaldi (1866).jpg',
           teksti: 'Saapasmaa oli vuosisatoja tilkkutäkki kuningaskuntia, '
             + 'herttuakuntia ja kaupunkivaltioita, jotka sotivat keskenään '
             + 'ja puhuivat eri murteita. Yhtenäinen Italia syntyi vasta '

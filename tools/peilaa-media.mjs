@@ -173,14 +173,46 @@ function kohteet() {
   const muut = ['js/aani-ehdokkaat.js', 'js/ui.js']
     .map((f) => readFileSync(join(JUURI, f), 'utf8')).join('\n');
   const kaikki = `${paketit}\n${muut}`;
+  /*
+   * Kommenttirivit pois ennen poimintaa. Ohjeissa näytetään kentän
+   * muoto esimerkkinä (maasto-tekstit-malli.js: "poimii nimet juuri
+   * kuviolla `tiedosto: '...'`"), ja kuvio poimi siitä nimen "...",
+   * jota haettiin joka ajolla ja joka epäonnistui joka ajolla.
+   *
+   * Vain rivin alusta alkavat kommentit poistetaan: keskeltä riviä
+   * `//` on useimmiten osoitteessa (https://), ja sellaisen katkaisu
+   * söisi oikeita lähdeviitteitä.
+   */
+  const ilmanKommentteja = (teksti) => teksti.split('\n')
+    .filter((r) => !/^\s*(\/\/|\*|\/\*)/.test(r))
+    .join('\n');
+  const koodi = ilmanKommentteja(paketit);
 
   // Heittomerkilliset nimet ("Château d\'If") katkesivat yksinkertaisella
   // hakukuviolla ensimmäiseen hipsuun ja päätyivät 404:ään. Siksi
   // kelpuutetaan myös suojatut merkit ja puretaan suojaus.
   const pura = (t) => t.replace(/\\(['"\\])/g, '$1');
+  /*
+   * Kentännimen edellä on oltava jotain muuta kuin kirjain, numero tai
+   * alaviiva — muuten kuvio osuu keskelle sanaa.
+   *
+   * Löytyi QA:ssa 8.8.2026 kahdella tavalla:
+   *   `lippu:` osui selitteen sisään merkkijonossa "…punavalkoinen
+   *   sukeltajalippu: pohjahiekka…" (northamerica-valokuvat.js), ja
+   *   `tiedosto:` osui malliohjeen kommenttiin, jossa kentän muoto
+   *   näytetään esimerkkinä (maasto-tekstit-malli.js).
+   *
+   * Kumpikaan ei kaatanut peilausta, koska olematon nimi vain
+   * epäonnistuu latauksessa — mutta molemmat tuottivat joka ajolla
+   * saman virherivin, ja virhelista, jossa on pysyviä valheita, lakkaa
+   * kertomasta oikeista virheistä.
+   *
+   * JS ei tue takautuvaa katsetta kaikkialla, joten raja luetaan
+   * ryhmänä ja hylätään vasta osuman jälkeen.
+   */
   const poimi = (kentta) => new Set([
-    ...[...paketit.matchAll(new RegExp(`${kentta}: '((?:[^'\\\\]|\\\\.)*)'`, 'g'))].map((m) => pura(m[1])),
-    ...[...paketit.matchAll(new RegExp(`${kentta}: "((?:[^"\\\\]|\\\\.)*)"`, 'g'))].map((m) => pura(m[1])),
+    ...[...koodi.matchAll(new RegExp(`(^|[^\\w])${kentta}: '((?:[^'\\\\]|\\\\.)*)'`, 'gm'))].map((m) => pura(m[2])),
+    ...[...koodi.matchAll(new RegExp(`(^|[^\\w])${kentta}: "((?:[^"\\\\]|\\\\.)*)"`, 'gm'))].map((m) => pura(m[2])),
   ]);
   // `tiedosto:` tarkoittaa paketeissa Commonsin kuvatiedostoa, mutta
   // sama kentännimi on myös repon omilla äänitiedostoilla
