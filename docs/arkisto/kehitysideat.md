@@ -1,3 +1,7 @@
+> **ARKISTOITU 8.8.2026 — ei ohje.** Vanhentunut suunnitelma tai
+> kertaraportti; säilytetty historian vuoksi. Voimassa olevat ohjeet:
+> docs/roolitus.md ja CLAUDE.md.
+
 # Kehitystyökalut — suunnitelma laajentumista varten
 
 Kun peli laajenee uusille mantereille, sisällön määrä moninkertaistuu:

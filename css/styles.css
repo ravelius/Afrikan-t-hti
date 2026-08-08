@@ -5561,8 +5561,14 @@ body.katselu #newgame-btn { display: none; }
   box-shadow: none;
   color: #7a5514;
   letter-spacing: 0.05em;
+  /* Sama kevennys kuin kartan selitteillä: pisteviiva ohuemmaksi ja
+   * haaleammaksi, väli tekstiin isommaksi. Väri on erikseen, koska
+   * ilman sitä pisteet perivät linkin oman ruskean täydellä
+   * voimakkuudella. */
   text-decoration: underline dotted;
-  text-underline-offset: 3px;
+  text-decoration-color: rgba(122, 85, 20, 0.45);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 .wiki-btn:hover:not(:disabled) {
@@ -5581,6 +5587,15 @@ body.katselu #newgame-btn { display: none; }
   max-width: 100%;
   text-decoration: underline;
   text-decoration-style: dotted;
+  /* Sama kevennys kuin muillakin sisältölinkeillä (8.8.2026).
+   * Sävy on sama kuin Lue lisää -napilla, jonka ulkoasua tämä muutenkin
+   * seuraa; ensimmäinen rivi on varasävy vanhoille selaimille, ja
+   * color-mix ottaa vallan siellä missä se tunnetaan, jolloin viiva
+   * seuraa linkin omaa väriä myös sen muuttuessa. */
+  text-decoration-color: rgba(122, 85, 20, 0.45);
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 .nosto-linkki::after { content: ' ↗'; text-decoration: none; }
@@ -8748,11 +8763,19 @@ body.vertailu-tila .pawns { display: none; }
   color: #3a2d1c;
 }
 
+/* Kevyempi alleviivaus (omistajan toive 8.8.2026: "linkkitekstit
+ * voisi olla vähän kevyemmin alleviivattu"). Kolme säädintä yhdessä:
+ * ohuempi viiva, haaleampi sävy ja isompi väli tekstiin. Selitteitä on
+ * kuusi vierekkäin, joten täysvahva viiva teki rivistä raidallisen —
+ * nyt linkki näyttää linkiltä mutta nimi luetaan ensin. Osoittimen
+ * alla viiva tummuu takaisin, eli affordanssi palaa juuri silloin kun
+ * sitä tarvitaan. */
 .dialog .kartta-selitteet button.kartta-selite {
   cursor: pointer;
   text-decoration: underline;
-  text-decoration-color: rgba(70, 51, 31, 0.4);
-  text-underline-offset: 2px;
+  text-decoration-color: rgba(70, 51, 31, 0.26);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
 .dialog .kartta-selitteet button.kartta-selite:hover:not(:disabled) {
@@ -8761,6 +8784,11 @@ body.vertailu-tila .pawns { display: none; }
   text-decoration-color: #16130f;
 }
 
+/* Selitelistan pallo on sama merkki kuin kartalla, joten se on myös
+ * saman värinen (omistajan palaute 8.8.2026: v362:ssa kartan ympyrät
+ * vaalenivat mutta selitelistan pallot jäivät vanhaan kultaan, ja pari
+ * näytti kahdelta eri asialta). Tumma reunaviiva ja lähes musta numero
+ * kuten kartallakin — kontrasti tekstille noin 9:1. */
 .kartta-selite-numero {
   flex: 0 0 auto;
   width: 1.2rem;
@@ -8769,7 +8797,7 @@ body.vertailu-tila .pawns { display: none; }
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #c69e52;
+  background: #e8d3a0;
   border: 1px solid #2c2318;
   color: #2c1e07;
   font-size: 0.64rem;

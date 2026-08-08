@@ -1,3 +1,7 @@
+> **ARKISTOITU 8.8.2026 — ei ohje.** Vanhentunut suunnitelma tai
+> kertaraportti; säilytetty historian vuoksi. Voimassa olevat ohjeet:
+> docs/roolitus.md ja CLAUDE.md.
+
 # QA-raportti — 2026-08-08
 
 Laadunvarmistuskierros koko media-aineistolle ja muutoslokille. Pelkkää lukemista ja

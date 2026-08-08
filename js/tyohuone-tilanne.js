@@ -21,35 +21,37 @@ export const TILANNE = {
       tehtava: 'Koordinointi ja raporttien kokoaminen. Euroopan '
         + 'tarinatekstit valmiit: 41 dekkarimerkintää äänineen, '
         + 'aarrevihjeet ilmansuunnittain, Lontoon kohtaamisluennat.',
-      seuraavaksi: 'Kohtaamisluennat lopuille hahmoille, kun '
-        + 'omistaja on valinnut äänet työhuoneen näytteistä.',
+      seuraavaksi: 'Uusi työtapa 8.8.: uuden jutun ensimmäisen '
+        + 'kierroksen tekee Fable itse omistajan kanssa valmiiksi, '
+        + 'monistus pienemmille vasta täydellä speksillä. '
+        + 'Berliinin pop-upien viimeistely siirtyy Fablelle '
+        + 'Sonnetin korjauskierroksen jälkeen. Lisäksi '
+        + 'kohtaamisluennat, kun äänet on valittu.',
     },
     {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Maalehden rakenneuudistus (omistajan palaute 8.8.): '
-        + 'etusivulle sisällysluettelo kahdessa palstassa kartan '
-        + 'tilalle, hampurilaisvalikko, alavalikko kuntoon, '
-        + 'sivuaiheet nappien alle. Saksasta pois päivän kuva, '
-        + 'valokuvaus ja sarjakuva; ruokasivu uusiksi muotoon '
-        + 'Ruokaa ja tapakulttuuria. Lehden nimeksi Unohdettu '
-        + 'aarre (ent. Matkasanomat). Lisäksi tietovisa '
-        + 'iloisemmaksi ja menovinkit listamalliin (23 maata, erä '
-        + '1/3 mainissa v361).',
-      seuraavaksi: 'Pohja ensin, sitten loput menovinkkierät '
-        + 'uudelle pohjalle. Maalehtien syvyys päätetään omistajan '
-        + 'testikierroksen jälkeen.',
+      tehtava: 'Maalehden rakenneuudistus (sisällysluettelo '
+        + 'etusivulle, hampurilaisvalikko, sivuaiheet nappien '
+        + 'alle, Saksan siivous, Ruokaa ja tapakulttuuria, lehden '
+        + 'nimeksi Unohdettu aarre). Valmiina: v361 menovinkit 8 '
+        + 'maalle, v363 listamalli (4 maata, Suomi pilottina) + '
+        + 'alapalkin järjestys + visa omana korttinaan.',
+      seuraavaksi: 'Loput maat listamallilla; lopuksi v361-maat ja '
+        + 'lehtimaat samaan malliin (kaksi mallia näkyy hetken '
+        + 'rinnakkain, tarkoituksella).',
     },
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'odottaa',
-      tehtava: 'Kaista tyhjä. Valmiina: v362 kaupunkikarttojen '
-        + 'ulkoasu (kontrasti alas, vaaleat numeroympyrät, pieni '
-        + 'OSM-rivi, hover-seloste pöytäkoneelle), v360 Espanjan '
-        + 'tv-nappi, v359 laguuni, v351/v354/v355 kartat.',
-      seuraavaksi: 'Uusi tehtävä testikierroksen tarpeiden mukaan.',
+      tila: 'tyossa',
+      tehtava: 'Pieni hiontaerä: selitelistan pallot samaan '
+        + 'hiekansävyyn kuin kartan ympyrät ja linkkitekstien '
+        + 'alleviivaus kevyemmäksi. Valmiina: v362 karttojen '
+        + 'ulkoasu, v360 Espanjan tv-nappi (iPad-testi OK), v359 '
+        + 'laguuni.',
+      seuraavaksi: 'Raportti Fablelle.',
     },
     {
       tekija: 'Sonnet 1',
@@ -64,17 +66,19 @@ export const TILANNE = {
     {
       tekija: 'Sonnet 2',
       rooli: 'nähtävyysjutut',
-      tila: 'odottaa',
-      tehtava: 'Berliinin kuuden kohteen nähtävyysjutut valmiit '
-        + '(v358): omat jutut, 24 kuvaa tarkistettuina, lainauksia. '
-        + 'Odottaa omistajan katselmusta ennen jatkoa.',
-      seuraavaksi: 'Kairo ja uudet karttakaupungit, jos pilotti '
-        + 'kelpaa.',
+      tila: 'tyossa',
+      tehtava: 'Pilotin korjauskierros omistajan katselmuksesta '
+        + '8.8.: dialogi istumaan näytölle (iPadilla yläreuna '
+        + 'leikkautui eikä taustasivu näkynyt), kuvat selvästi '
+        + 'pienemmiksi (1/juttu lähtökohtana), jutut noin puoleen '
+        + 'mittaan. Sisältö todettiin hyväksi.',
+      seuraavaksi: 'Omistaja katsoo Berliinin uudestaan; muut '
+        + 'kaupungit vasta sen jälkeen.',
     },
   ],
   odottaaPaatosta: [
-    'Berliinin nähtävyyspilotin katselmus (Sonnet 2 odottaa lupaa '
-      + 'jatkaa muihin kaupunkeihin)',
+    'Berliinin nähtävyyspilotin UUSI katselmus, kun korjauskierros '
+      + '(dialogi, kuvakoot, mitta) on mainissa',
     'Kertoja- ja hahmoäänten valinta (kuuntele Kehitys-välilehden '
       + 'näytteet)',
     'Sateenvarjomiehen henkilöllisyys (ehdotus Kehitys-välilehden '
@@ -88,6 +92,15 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Menovinkkien listamalli ja iloisempi visa (v363)',
+    ohje: 'Katso Suomen menovinkit: uusi listamalli ryhmäotsikoin '
+      + '(pikkukuva + nimi linkkinä + lause pari). Alapalkissa '
+      + 'Poistu on nyt aina vasemmalla ja Seuraava oikealla, ja '
+      + 'tietovisa on oma lämpimänvaalea korttinsa. Osa maista '
+      + 'näyttää vielä vanhaa nostomallia — muunnos on jonossa. '
+      + 'Menovinkit löytyvät nyt 12 uudelta maalta.',
+  },
   {
     otsikko: 'Kaupunkikarttojen uusi ilme (v362)',
     ohje: 'Avaa mikä tahansa kuudesta kaupunkikartasta: kartta on '

@@ -27,3 +27,9 @@ luettelon unohdettuja aarteita. Selainpeli ilman build-vaihetta
   ei koskaan repoon eikä lokiin.
 - Konttiympäristössä Noden fetch tarvitsee `NODE_USE_ENV_PROXY=1`;
   Chromium on polussa /opt/pw-browsers/chromium.
+
+## Arkisto
+
+docs/arkisto/ sisältää vanhentuneita suunnitelmia ja kertaraportteja.
+Älä lue sieltä ohjeita — voimassa olevat ohjeet ovat tässä tiedostossa
+ja docs/roolitus.md:ssä.

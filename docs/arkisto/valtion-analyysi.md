@@ -1,3 +1,7 @@
+> **ARKISTOITU 8.8.2026 — ei ohje.** Vanhentunut suunnitelma tai
+> kertaraportti; säilytetty historian vuoksi. Voimassa olevat ohjeet:
+> docs/roolitus.md ja CLAUDE.md.
+
 # Valtion analyysi — "Maa numeroina" -sivu ja Vertailulinssi
 
 Omistajan tilaus 6.8.2026, pohjana ChatGPT:n kanssa hahmoteltu idea.
