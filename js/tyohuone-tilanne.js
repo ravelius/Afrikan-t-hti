@@ -11,8 +11,9 @@
 
 export const TILANNE = {
   paivitetty: '8.8.2026',
-  tavoite: 'Eurooppa valmiiksi → omistajan oma testikierros → vasta '
-    + 'sitten muut maanosat.',
+  tavoite: 'LOPPUKIRI (omistajan tilaus 8.8. ilta): kaikki Euroopan '
+    + 'kaupunki- ja maalehdet valmiiksi. Agenttiparvet sallittu '
+    + 'vauhtiin, kunhan mitään turhaa ei tehdä.',
   rivit: [
     {
       tekija: 'Fable',
@@ -32,24 +33,25 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Omistajan suunnanmuutos 8.8.: menovinkit ensin '
-        + 'kuntoon — Saksasta täysi mallikappale (~20 linkkiä, '
-        + 'ryhmäotsikot), omistaja arvioi, ja vasta sitten muut '
-        + 'maat kerralla hyvänä. Uusien maiden erät tauolle. '
-        + 'Valmiina: v368 kaikki listamalliin, v366 uudistus.',
-      seuraavaksi: 'Raportti Saksan mallista; monistus '
-        + 'hyväksynnän jälkeen.',
+      tehtava: 'Loppukiri: Saksan menovinkkimalli valmiiksi ja '
+        + 'monistus heti kaikkiin maihin, maalehti jokaiselle '
+        + 'Euroopan maalle uudella pohjalla (Ranskan Historia-sivu '
+        + 'mukaan) ja lyhyt kaupunkilehti jokaiselle kaupungille, '
+        + 'jolta se puuttuu. Agenttiparvet 3–4 rinnakkain.',
+      seuraavaksi: 'Välitilanneraportti puolivälissä; loppuraportti '
+        + 'kun Eurooppa on valmis.',
     },
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'odottaa',
-      tehtava: 'Kaista tyhjä. Valmiina: v364 selitepallot kartan '
-        + 'sävyyn ja linkkien kevyempi alleviivaus (lehti ja '
-        + 'karttanäkymä; aloitusnäkymän linkki jätetty vahvaksi '
-        + 'luettavuuden takia), v362 karttojen ilme, v360 Espanjan '
-        + 'tv-nappi.',
-      seuraavaksi: 'Uusi tehtävä testikierroksen tarpeiden mukaan.',
+      tila: 'tyossa',
+      tehtava: 'Loppukiri: maakartta (korkokartta + '
+        + 'kaupunkipisteet) ja intro jokaiselle Euroopan maalle, '
+        + 'jolta ne puuttuvat — ITA/ESP/SWE-mallilla, '
+        + 'agenttiparvet 3–4 rinnakkain, erä per PR. '
+        + 'Kaupunkikartat uusille kaupungeille vasta '
+        + 'nähtävyysvaiheessa.',
+      seuraavaksi: 'Eräraportit Fablelle; esteistä heti.',
     },
     {
       tekija: 'Sonnet 1',
