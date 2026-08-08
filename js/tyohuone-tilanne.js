@@ -28,10 +28,10 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Omistajan päätös 8.8.: menovinkkisivu kaikille 23 '
-        + 'maalle, joilta lehti puuttuu (2–3 erää, ~140 nostoa). '
-        + 'Valmiina: v357 radio- ja tv-napit, v353 menovinkit '
-        + 'lehtimaille, v350 lehtijako.',
+      tehtava: 'Menovinkit uudella listamallilla (omistajan ohje '
+        + '8.8.): selvät yläotsikot, pikkukuva + lyhyt selitys + '
+        + 'linkki, jopa ~20 linkkiä per maa. Ensin 23 uutta maata, '
+        + 'lopuksi kuusi lehtimaata samaan malliin.',
       seuraavaksi: 'Maalehtien syvyys päätetään vasta omistajan '
         + 'testikierroksen jälkeen (Ranskan pilotti odottaa '
         + 'haaralla).',
