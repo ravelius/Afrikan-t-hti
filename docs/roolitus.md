@@ -53,8 +53,17 @@ tämän ja ottaa roolinsa tästä. Omistaja ohjaa kaikkea Fablen kautta.)*
 | Rooli | Sessio-id | Kirjattu |
 | --- | --- | --- |
 | Fable | session_01R1jVv12E56gbU5qtH5xGaG | 8.8.2026 |
-| Opus | session_01AEN2as7TAggi2SX3w3DqWV | 8.8.2026 |
+| Opus 1 | session_01AEN2as7TAggi2SX3w3DqWV | 8.8.2026 |
+| Opus 2 | session_017kajFQA5rFWByGvVLXc9Df | 8.8.2026 |
 | Sonnet | session_01MAirFte9MpE1HnVRpCj2Mb | 8.8.2026 |
+
+Kaistajako, kun Opus-sessioita on kaksi: **Opus 1** — lehtisisällöt
+(maa-kategoriat.js, menovinkit), UI ja rakenne (radio/tv-napit
+molempiin lehtiin, uutislahteet.js). **Opus 2** — kartat ja introt
+(maakartat.js, assets/kartat, europe-artikkelit.js,
+piirra-kaupunkikartta.mjs) järjestyksessä ITA → ESP → SWE, sen
+jälkeen tv-tallennekandidaattien haku. Kaistat eivät koske samoihin
+tiedostoihin; muutokset kaistajakoon sovitaan Fablen kautta.
 
 ## Julkaisusäännöt (kaikille rooleille)
 
@@ -95,7 +104,13 @@ vasta testauksen jälkeen.**
 - **Sonnet:** QA-kierros jokaisen ison erän jälkeen; iso
   loppu-QA koko Euroopalle ennen omistajan testiä; raportit
   Fablelle.
-- **Omistajalta odottaa päätöstä:** riisutaanko Italian ja Espanjan
-  YouTube-livet (tv-tallenteet jäivät ITA/ESP/DEU:lle);
-  sateenvarjoseuraajan paljastuksen suunta (raamattu);
-  naisäänet ElevenLabs-kirjastoon Elsalle ja Rosalle.
+- **Omistajan päätökset 8.8.2026:** Lontoon 5 sivua jää; muut
+  kaupungit lyhyemmiksi tarveharkinnalla, mieluummin useampi sivu
+  kuin yksi pitkä; live-lähetyksistä luovutaan kokonaan — tilalle
+  uutistallenteita Saksan malliin, tai nappi pois; radio- ja
+  videonapit näkyviin sekä kaupunki- että maalehteen;
+  luentaäänissä otetaan englanninkieliset äänet käyttöön (suomea
+  monikielisesti) — valinta työhuoneen ääninäytteistä.
+- **Omistajalta odottaa yhä päätöstä:** sateenvarjoseuraajan
+  paljastuksen suunta (ehdotus työhuoneen Kehitys-sivulla) ja
+  kertoja-/hahmoäänten valinta näytteiden kuuntelun jälkeen.
