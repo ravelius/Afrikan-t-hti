@@ -40,7 +40,8 @@ export const TILANNE = {
         + 'v379 menovinkit TUR/RUS/UKR/ROU. Saksa palautettu 20 '
         + 'kohteeseen (julkaisu seuraavassa erässä).',
       seuraavaksi: 'HRV+BIH julkaisuun, BGR ja Wien agenteilla; '
-        + 'sitten loput maalehdet ja kaupunkilehdet.',
+        + 'hampurilainen pois kaupunkilehdestä (omistajan päätös — '
+        + 'liian vähän sivuja); sitten loput lehdet.',
     },
     {
       tekija: 'Opus 2',
