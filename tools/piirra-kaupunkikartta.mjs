@@ -59,13 +59,23 @@ const KAUPUNGIT = {
   },
 };
 
-/** Katuluokkien piirtojärjestys ja -tyyli (pienestä isoon). */
+/*
+ * Katuluokkien piirtojärjestys ja -tyyli (pienestä isoon).
+ *
+ * MIEDOMPI KONTRASTI (omistajan toive 7.8.2026: "kokeile tehdä
+ * kaupungin kartta miedommalla kontrastilla"). Ensimmäinen versio veti
+ * pääkadut lähes mustina (#322717) vaalealle paperille, ja kartta
+ * hallitsi sivua enemmän kuin sen kohteet. Sävyt nostettiin
+ * pergamentin puoleen niin, että ero pienimmän ja suurimman kadun
+ * välillä säilyy — kartta on yhä luettava, mutta se on nyt tausta eikä
+ * julistetta. Viivanleveyksiä hiukan ohennettiin samasta syystä.
+ */
 const KADUT = [
-  { luokat: ['residential', 'unclassified', 'living_street', 'pedestrian'], vari: '#8d7d61', leveys: 1.6 },
-  { luokat: ['tertiary', 'tertiary_link'], vari: '#6b5b41', leveys: 2.6 },
-  { luokat: ['secondary', 'secondary_link'], vari: '#544430', leveys: 3.4 },
-  { luokat: ['primary', 'primary_link'], vari: '#3f321f', leveys: 4.4 },
-  { luokat: ['trunk', 'trunk_link', 'motorway', 'motorway_link'], vari: '#322717', leveys: 5.6 },
+  { luokat: ['residential', 'unclassified', 'living_street', 'pedestrian'], vari: '#bcae91', leveys: 1.4 },
+  { luokat: ['tertiary', 'tertiary_link'], vari: '#b0a084', leveys: 2.2 },
+  { luokat: ['secondary', 'secondary_link'], vari: '#9a8a6a', leveys: 2.9 },
+  { luokat: ['primary', 'primary_link'], vari: '#8a7a5b', leveys: 3.7 },
+  { luokat: ['trunk', 'trunk_link', 'motorway', 'motorway_link'], vari: '#7a6a4d', leveys: 4.6 },
 ];
 
 /*
@@ -78,7 +88,7 @@ const KADUT = [
 const VESI = '#e8d5a9';
 const VESIREUNA = '#b99a68';
 const PUISTO = '#efe6ca';
-const RATA = '#c9bb9e';
+const RATA = '#d5c9b0';
 const PAPERI = '#f6eeda';
 
 async function haeOverpass(rajat) {

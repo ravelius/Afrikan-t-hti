@@ -373,6 +373,24 @@
    </div>
   </dialog>
 
+  <!--
+    Nähtävyys: kaupunkikartan kohteen oma juttu (omistajan toive
+    7.8.2026: "kirjoita itse nähtävyyksien tekstit ... kuvia voisi
+    näyttää niiden nostossa gallerian sijaan tekstin joukossa 3-5").
+    Kuvat ladotaan kappaleiden väliin kuten lehtijutussa, ei
+    galleriaselaimeksi.
+  -->
+  <dialog id="nahtavyys-dialog" class="dialog arkki nahtavyys-arkki">
+   <div class="dialog-card nahtavyys-kortti" tabindex="-1" autofocus>
+    <p id="nahtavyys-aika" class="nahtavyys-aika" hidden></p>
+    <h2 id="nahtavyys-otsikko"></h2>
+    <div id="nahtavyys-sisalto" class="nahtavyys-sisalto"></div>
+    <form method="dialog" class="dialog-actions">
+      <button class="primary" value="close">Sulje</button>
+    </form>
+   </div>
+  </dialog>
+
   <!-- Tapahtumakortti: kysymyksen sijaan tapahtuu jotain -->
   <dialog id="event-dialog" class="dialog">
    <div class="dialog-card arrival-card" tabindex="-1" autofocus>

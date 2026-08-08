@@ -127,7 +127,7 @@ export const KULTTUURI_KATEGORIAT = {
             + 'hetkenä — ilman jonoa levynkansikävelijöitä.',
           lahde: 'Misterweiss, Wikimedia Commons (PD)',
           wiki: 'The Beatles',
-          musiikki: 'https://music.apple.com/fi/artist/the-beatles/136975',
+          musiikki: 'https://music.apple.com/fi/album/come-together-2019-mix/1474815798?i=1474815799',
           musiikkiNimi: 'The Beatles Apple Musicissa',
           // Juuri sen levyn avausraita, jonka kannesta teksti kertoo.
           esikuuntelu: 'The Beatles Come Together',
@@ -1447,7 +1447,7 @@ export const KULTTUURI_KATEGORIAT = {
             + 'Egyptin neljänneksi pyramidiksi.',
           lahde: 'Wikimedia Commons (PD)',
           wiki: 'Umm Kulthum',
-          musiikki: 'https://music.apple.com/fi/artist/umm-kulthum/81179580',
+          musiikki: 'https://music.apple.com/fi/album/enta-oumry-remastered/922753882?i=922753943',
           musiikkiNimi: 'Umm Kulthum Apple Musicissa',
           // Laulajan rakastetuin kappale.
           esikuuntelu: 'Umm Kulthum Enta Omri',
@@ -2035,7 +2035,7 @@ export const KULTTUURI_KATEGORIAT = {
             + 'Salomonin kuuluisa otos.',
           lahde: 'Erich Salomon, Wikimedia Commons (Public domain)',
           wiki: 'Marlene Dietrich',
-          musiikki: 'https://music.apple.com/fi/search?term=Marlene%20Dietrich',
+          musiikki: 'https://music.apple.com/fi/album/lili-marleen/724182416?i=724182571',
           musiikkiNimi: 'Marlene Dietrichin lauluja Apple Musicissa',
           // Juuri se laulu, josta teksti kertoo.
           esikuuntelu: 'Marlene Dietrich Lili Marleen',

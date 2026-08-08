@@ -419,7 +419,7 @@ export const MAA_KATEGORIAT = {
             + 'on yhä käytössä oleva tavallinen katu.',
           lahde: 'Sander Lamme, Wikimedia Commons (CC BY 3.0)',
           wiki: 'The Beatles',
-          musiikki: 'https://music.apple.com/fi/album/hey-jude/1441133100',
+          musiikki: 'https://music.apple.com/fi/album/hey-jude/1441133181?i=1441134371',
           musiikkiNimi: 'The Beatles: Hey Jude',
           esikuuntelu: 'Beatles Hey Jude',
         },
@@ -1402,7 +1402,7 @@ export const MAA_KATEGORIAT = {
             + 'kaupunki näytti, kun sen laulut lähtivät maailmalle.',
           lahde: 'Rijksmuseum, Wikimedia Commons (CC0)',
           wiki: 'O sole mio',
-          musiikki: 'https://music.apple.com/fi/search?term=O%20sole%20mio',
+          musiikki: 'https://music.apple.com/fi/album/o-sole-mio-orch-chiaramello-live-at-piazza-grande-modena/6795110776?i=6795111186',
           musiikkiNimi: 'Napolin lauluja Apple Musicissa',
           // Tunnetuin tulkinta: oopperatähti, jonka teksti mainitsee.
           esikuuntelu: 'O sole mio Pavarotti',
@@ -1872,7 +1872,7 @@ export const MAA_KATEGORIAT = {
             + 'taputtajat.',
           lahde: 'El Pantera, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Flamenco',
-          musiikki: 'https://music.apple.com/fi/artist/paco-de-luc%C3%ADa/463800',
+          musiikki: 'https://music.apple.com/fi/album/entre-dos-aguas/1451208136?i=1451208220',
           musiikkiNimi: 'Paco de Lucía Apple Musicissa',
           // Tekstin mainitseman uudistajan tunnetuin kappale.
           esikuuntelu: 'Paco de Lucía Entre dos aguas',
@@ -1896,7 +1896,7 @@ export const MAA_KATEGORIAT = {
             + 'ja niissä kasvaa puita neljältä mantereelta.',
           lahde: 'Barcex, Wikimedia Commons (CC BY-SA 3.0)',
           wiki: 'Concierto de Aranjuez',
-          musiikki: 'https://music.apple.com/fi/search?term=Concierto%20de%20Aranjuez',
+          musiikki: 'https://music.apple.com/fi/album/concierto-de-aranjuez-adagio/696551481?i=696551486',
           musiikkiNimi: 'Concierto de Aranjuez Apple Musicissa',
           // Juuri se hidas osa, josta teksti kertoo.
           esikuuntelu: 'Rodrigo Concierto de Aranjuez Adagio',
@@ -2372,7 +2372,7 @@ export const MAA_KATEGORIAT = {
             + 'Göteborgissa 1979, yhtyeen suosion huipulla.',
           lahde: 'Kåre Eide, Wikimedia Commons (CC0)',
           wiki: 'Abba',
-          musiikki: 'https://music.apple.com/fi/search?term=ABBA%20Waterloo',
+          musiikki: 'https://music.apple.com/fi/album/waterloo/1422648512?i=1422649021',
           musiikkiNimi: 'ABBA Apple Musicissa',
           // Juuri se voittokappale, josta teksti kertoo.
           esikuuntelu: 'ABBA Waterloo',
@@ -2393,7 +2393,7 @@ export const MAA_KATEGORIAT = {
             + 'Melodifestivalenissa 2025.',
           lahde: 'Jonatan Svensson Glad, Wikimedia Commons (CC BY-SA 2.0)',
           wiki: 'Melodifestivalen',
-          musiikki: 'https://music.apple.com/fi/search?term=Melodifestivalen',
+          musiikki: 'https://music.apple.com/fi/album/euphoria-single-version/499907070?i=499907132',
           musiikkiNimi: 'Melodifestivalenin kappaleita Apple Musicissa',
           // Kisan tunnetuin voittaja: Loreen voitti myös euroviisut
           // kahdesti, ainoana naisena.
@@ -2842,7 +2842,7 @@ export const MAA_KATEGORIAT = {
             + 'Viimeinen paraati pidettiin 2010.',
           lahde: 'Ago76, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Love Parade',
-          musiikki: 'https://music.apple.com/fi/search?term=berlin%20techno',
+          musiikki: 'https://music.apple.com/fi/album/sky-and-sand/1676029121?i=1676029548',
           musiikkiNimi: 'Berliiniläistä teknoa Apple Musicissa',
           // Berliiniläisen teknon tunnetuin kappale (Berlin Calling).
           esikuuntelu: 'Paul Kalkbrenner Sky and Sand',
