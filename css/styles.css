@@ -3751,6 +3751,42 @@ body.radio-tila .board-hint {
   fill: rgba(70, 51, 31, 0.42);
 }
 
+/*
+ * "i" maan nimen perässä avaa maan lehden (omistajan toive 8.8.2026).
+ *
+ * Nimi itse on tarkoituksella haalea kartan koriste. Nappi ei ole
+ * koriste vaan ainoa pysyvä reitti maalehteen laudalta, joten se on
+ * selvästi tummempi — muuten se katoaa samaan sävyyn kuin nimi.
+ */
+.maa-i { cursor: pointer; }
+
+.maa-i-kehä {
+  fill: rgba(245, 231, 200, 0.92);
+  stroke: rgba(70, 51, 31, 0.75);
+  stroke-width: 1.4;
+}
+
+.maa-i-kirjain {
+  fill: rgba(70, 51, 31, 0.9);
+  font-family: var(--font-kauno);
+  font-style: italic;
+  pointer-events: none;
+}
+
+/* Läpinäkyvä osumapinta: nappi näyttää pieneltä, mutta osuu sormella. */
+.maa-i-osuma { fill: transparent; }
+
+.maa-i:hover .maa-i-kehä,
+.maa-i:focus-visible .maa-i-kehä {
+  fill: var(--map-ink);
+  stroke: var(--map-ink);
+}
+
+.maa-i:hover .maa-i-kirjain,
+.maa-i:focus-visible .maa-i-kirjain { fill: rgba(245, 231, 200, 0.95); }
+
+.maa-i:focus-visible { outline: none; }
+
 .wave { fill: none; stroke: var(--sea-ink); stroke-width: 2; opacity: 0.45; stroke-linecap: round; }
 
 .route { stroke: #6d5333; stroke-width: 2.2; opacity: 0.42; fill: none; }
@@ -9258,15 +9294,41 @@ body.maatiedot-tila .board-hint {
  * dialogia, koska lehti on jo dialogissa ja sisäkkäiset modaalit
  * sotkevat näppäimistön ja paluunapin.
  */
+/*
+ * Sisällys aukeaa ALAREUNAAN pop-uppina (omistajan toive 8.8.2026:
+ * "Se saisi aueta tosin vain alareunaan pop uppina").
+ *
+ * Aiemmin tämä oli koko lehden peittävä levy. Se oli liikaa: lukija
+ * hyppää sivulta toiselle ja palaa lukemaan, eikä lehden pidä kadota
+ * väliltä. Nyt levy nousee alalaidasta, peittää enintään puolet
+ * korkeudesta ja jättää luettavan sivun näkyviin yläpuolelle.
+ *
+ * inset ilman ylälaitaa: levy on niin korkea kuin sisältö vaatii,
+ * max-height leikkaa pitkän luettelon ja jättää sen vieritettäväksi.
+ */
 .sisallys-levy {
   position: absolute;
-  inset: 0;
+  inset: auto 0 0 0;
   z-index: 6;
   display: flex;
   flex-direction: column;
-  padding: 1rem 1.1rem 1.2rem;
+  padding: 0.75rem 1.1rem 1rem;
+  max-height: 52%;
   overflow-y: auto;
-  background: rgba(247, 240, 224, 0.97);
+  background: rgba(247, 240, 224, 0.98);
+  border-top: 1px solid rgba(70, 51, 31, 0.35);
+  border-radius: 0.7rem 0.7rem 0 0;
+  box-shadow: 0 -0.6rem 1.4rem rgba(28, 20, 12, 0.28);
+  animation: sisallys-nousee 180ms ease-out;
+}
+
+@keyframes sisallys-nousee {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sisallys-levy { animation: none; }
 }
 
 .sisallys-levy-ylä {
