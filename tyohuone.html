@@ -203,6 +203,7 @@
     } from './js/tyohuone-data.js';
     import {
       KEHITYS_KAARI, AANINAYTTEET, MANTERE_KOKEILUT, LYHYT_KOKEILUT, UUDET_VALIT,
+      VISA_AARRE_KOKEILUT,
     } from './js/tyohuone-kehitys-data.js';
     import { TILANNE, TESTATTAVAA } from './js/tyohuone-tilanne.js';
     import { KOHTAAMISET } from './js/packs/kohtaamiset.js';
@@ -466,6 +467,31 @@
               if (vanha.nosto) k.append(el('p', '', vanha.nosto));
             }
             if (m.tiedosto) k.append(aaniRivi('Luenta', null, `assets/audio/naytteet/${m.tiedosto}`));
+            return k;
+          })];
+        },
+      },
+      {
+        otsikko: 'Isoisä visaan ja aarteeseen (8.8.)',
+        maara: `${VISA_AARRE_KOKEILUT.kohteet.length} kpl`,
+        rakenna: () => {
+          const johdanto = el('div', 'kortti');
+          johdanto.append(el('h3', '', 'Miksi nämä ovat olemassa'));
+          johdanto.append(el('p', '', VISA_AARRE_KOKEILUT.johdanto));
+          const nimio = (teksti) => {
+            const b = el('p', 'pieni');
+            b.append(el('b', null, teksti));
+            return b;
+          };
+          return [johdanto, ...VISA_AARRE_KOKEILUT.kohteet.map((m) => {
+            const k = el('div', 'kortti');
+            k.append(el('h3', '', m.otsikko));
+            k.append(nimio('Saapuminen (ilman isoisää, koko välimitta)'));
+            k.append(el('p', '', m.saapuminen));
+            k.append(nimio('Kohtaaminen tietovisassa'));
+            k.append(el('p', '', m.visa));
+            k.append(nimio('Aarteen paljastuminen'));
+            k.append(el('p', '', m.aarre));
             return k;
           })];
         },
