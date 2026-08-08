@@ -32,13 +32,12 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'JÄRJESTYS MUUTTUI (omistajan palaute 8.8. ilta): '
-        + 'kuusi lehtimaata listamalliin HETI, DEU ensin — '
-        + 'Berliinin menovinkit näyttivät vielä vanhaa nostomallia. '
-        + 'Sitten v361-maat, vasta lopuksi 19 uutta maata. '
-        + 'Valmiina: v366 rakenneuudistus, v363 listamalli, v361.',
-      seuraavaksi: 'Raportti DEU:sta heti kun valmis, jotta '
-        + 'omistaja voi katsoa Berliinin uudestaan.',
+      tehtava: 'Loput Euroopan maat listamallilla uudelle pohjalle '
+        + '(tyhjiä maita vielä kymmenkunta). Valmiina: v368 KOKO '
+        + 'PELI YHTÄ MENOVINKKIMALLIA (19 maata, 116 riviä, '
+        + 'ryhmäotsikot maan mukaan), v366 rakenneuudistus.',
+      seuraavaksi: 'Määrän kasvatus (~20 linkkiä/maa) vasta kun '
+        + 'kaikilla mailla on lehti.',
     },
     {
       tekija: 'Opus 2',
@@ -90,6 +89,14 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Berliinin menovinkit listamallina — KATSO UUDESTAAN (v368)',
+    ohje: 'Avaa Berliinin kaupunkilehden viimeinen sivu: menovinkit '
+      + 'ovat nyt listaa ryhmäotsikoin, pikkukuvin ja linkein — '
+      + 'sama malli nyt kaikissa maissa. HUOM: varmista ensin että '
+      + 'pelin alakulmassa lukee v368 — jos ei, sulje ja avaa peli '
+      + 'pari kertaa, niin uusi versio latautuu.',
+  },
   {
     otsikko: 'Berliinin nähtävyysjutut korjattu — KATSO UUDESTAAN (v367)',
     ohje: 'Avaa Berliinin kaupunkikartta ja napauta numeroita: '
