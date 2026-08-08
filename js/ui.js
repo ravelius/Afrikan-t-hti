@@ -7736,17 +7736,31 @@ export class UI {
       + ' stroke="currentColor" stroke-width="2" stroke-linecap="round"'
       + ' stroke-linejoin="round"/></svg>';
     this.arrivalDialog.appendChild(vakanen);
+    /*
+     * Vierityksen aikaleima kaistanapautuksen vahdiksi. iPadilla
+     * momentum-vierityksen pysäyttävä sormi tuottaa click-tapahtuman,
+     * ja ylöspäin rullatessa se osui alakaistaan — sivu vieritti
+     * itsensä takaisin pohjaan ja "vieritys loppui muutaman sentin
+     * jälkeen" (omistajan havainto 8.8.2026, toistui loputtomasti).
+     * Kaista tottelee vain napautusta, jota EI edeltänyt tuore
+     * vieritys.
+     */
+    let viimeVieritys = 0;
     const paivitaVakanen = () => {
       const pohjassa = kortti.scrollTop + kortti.clientHeight >= kortti.scrollHeight - 8;
       vakanen.hidden = pohjassa || kortti.scrollHeight <= kortti.clientHeight + 8;
     };
-    kortti.addEventListener('scroll', paivitaVakanen, { passive: true });
+    kortti.addEventListener('scroll', () => {
+      viimeVieritys = Date.now();
+      paivitaVakanen();
+    }, { passive: true });
     this.arrivalDialog.addEventListener('close', () => { vakanen.hidden = true; });
     this.tutkiVakanen = paivitaVakanen;
 
     kortti.addEventListener('click', (e) => {
       if (!this.arrivalDialog.open) return;
       if (e.target.closest('button, a, img, .tutki-nuoli')) return;
+      if (Date.now() - viimeVieritys < 350) return;
       const laatikko = kortti.getBoundingClientRect();
       const yla = e.clientY - laatikko.top;
       const ala = laatikko.bottom - e.clientY;
