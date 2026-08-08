@@ -3145,7 +3145,11 @@ export class UI {
 
   /** Vuorossa olevan pelaajan nappulan kohta laudan koordinaateissa. */
   pelaajanKohta() {
-    const pelaaja = this.game.players?.[this.game.turn];
+    // turn voi olla määrittelemättä heti tallennuksen latauduttua
+    // (mitattu 8.8.2026: players oli jo paikallaan, turn ei) — silloin
+    // players[undefined] hukkasi pelaajan ja kartta keskittyi laudan
+    // keskelle. Yksinpelissä oletus 0 on aina oikein.
+    const pelaaja = this.game.players?.[this.game.turn ?? 0];
     const kaupunki = pelaaja && this.game.board?.cityById?.get(pelaaja.pos?.city);
     return kaupunki ? { x: kaupunki.x, y: kaupunki.y } : null;
   }
@@ -3304,6 +3308,21 @@ export class UI {
 
   /** Mantereen lähikuvan mitat ja rajat. */
   sovitaMannerZoom(paneW, paneH) {
+    /*
+     * Vanhentunut panorointi hylätään, kun ruudun koko on muuttunut
+     * laskennan jälkeen. Latauksessa pan ehdittiin laskea ennen kuin
+     * asettelu oli lopullinen, ja väärä arvo jäi voimaan — kartta
+     * aukesi aina keskelle Atlanttia vaikka kohde (pelaajan kaupunki)
+     * oli koko ajan oikein (omistajan havainto 8.8.2026, v386;
+     * mitattu: sama laskenta oikealla koolla keskittää täsmälleen).
+     * Käsin panorointi säilyy niin kauan kuin koko ei muutu.
+     */
+    if (this.panX != null
+      && (this.panKoko?.w !== paneW || this.panKoko?.h !== paneH)) {
+      this.panX = null;
+      this.panY = null;
+    }
+    this.panKoko = { w: paneW, h: paneH };
     const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
     const yleiskuva = Math.min(paneW / box.w, paneH / box.h);
     // Zoomitaso tulee portaikosta: automaattinen saapumiszoom käyttää
@@ -3346,7 +3365,14 @@ export class UI {
     this.panVara = this.kiertava() ? 0 : Math.max(0, leveys - paneW);
     this.panVaraY = Math.max(0, korkeus - paneH);
     if (this.panX == null || this.panY == null) {
-      const kohde = this.zoomKohde ?? { x: box.x + box.w / 2, y: box.y + box.h / 2 };
+      /*
+       * Ilman asetettua kohdetta keskitetään PELAAJAAN, ei laudan
+       * geometriseen keskipisteeseen — maailmanlaudalla keskipiste on
+       * keskellä Atlanttia, ja päivityksen jälkeinen uusi lataus
+       * aukesi aina sinne (omistajan havainto 8.8.2026, v386).
+       */
+      const kohde = this.zoomKohde ?? this.pelaajanKohta()
+        ?? { x: box.x + box.w / 2, y: box.y + box.h / 2 };
       const keskus = this.mantereenKeskitys(kohde, paneW, paneH, skaala);
       this.panX = paneW / 2 - (keskus.x - box.x) * skaala;
       this.panY = paneH / 2 - (keskus.y - ylaReuna) * skaala;
@@ -3395,10 +3421,14 @@ export class UI {
     const [vx, vy, vw, vh] = (this.svg.getAttribute('viewBox') ?? '0 0 1000 1000')
       .split(/\s+/).map(Number);
     // Kohde: pelaajan nappula, tai näkymän keskus jos sitä ei löydy.
+    // pelaajanKohta on toinen varareitti: uudelleenlatauksessa cityOf
+    // ei palauttanut koordinaatteja, ja näkymä putosi laudan keskelle
+    // — maailmanlaudalla keskelle Atlanttia (omistajan havainto
+    // 8.8.2026, v386: "Päivityksen jälkeen kartta siirtyy aina tänne").
     const oma = this.game.cityOf?.();
     const kohde = oma && Number.isFinite(oma.x)
       ? { x: oma.x, y: oma.y, id: oma.id }
-      : { x: vx + vw / 2, y: vy + vh / 2 };
+      : (this.pelaajanKohta() ?? { x: vx + vw / 2, y: vy + vh / 2 });
 
     this.mannerZoom = true;
     this.panX = null;
