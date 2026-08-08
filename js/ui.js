@@ -1865,6 +1865,27 @@ export class UI {
     }
 
     /*
+     * Maiden lehdet -nappi (omistajan havainto 8.8.2026: *"Kartalta
+     * pitäisi päästä myös"*).
+     *
+     * Sama kartan tila kuin Maiden tiedot -varusteella, mutta ilman
+     * varustetta: maalehti on hakuteos, ja hakuteokseen pitää päästä
+     * käsiksi ensimmäisestä pelihetkestä alkaen. Varuste jää
+     * ennalleen — omistaja päättää myöhemmin, mikä siitä tulee
+     * (docs/tutki-aiheet.md).
+     */
+    const maaNappi = document.getElementById('maalehti-nappi');
+    if (maaNappi) {
+      maaNappi.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.maaNappiPaalla = !this.maaNappiPaalla;
+        sfx.play('paper');
+        this.tahdistaMaatiedot(this.maatiedotHalutaan());
+        this.paivitaMaalehtiNappi();
+      });
+    }
+
+    /*
      * Linssivalitsin ylärivissä (docs/linssit-suunnitelma.md luku 5.1).
      *
      * Kotelo on index.html:ssä valmiina mutta piilossa: nappi ilmestyy
@@ -3134,7 +3155,30 @@ export class UI {
    * katoa vaan menee pois käytöstä — katoava nappi saa sormen etsimään
    * sitä, ja kartan reunassa se olisi erityisen ärsyttävää.
    */
+  /**
+   * Onko maiden tiedot -tila päällä: napista tai varusteesta.
+   *
+   * Kaksi lähdettä yhdelle tilalle tarvitsee yhden totuuden, tai
+   * varusteen vaihto sammuttaisi napilla avatun tilan.
+   */
+  maatiedotHalutaan() {
+    return Boolean(this.maaNappiPaalla) || this.linssiValittu === 'maatiedot';
+  }
+
+  /** Napin ulkoasu ja näkyvyys: vain laudoilla, joilla on maiden rajat. */
+  paivitaMaalehtiNappi() {
+    const nappi = document.getElementById('maalehti-nappi');
+    if (!nappi) return;
+    const rajat = Boolean(this.game?.pack?.map?.countryShapes);
+    nappi.hidden = !rajat || this.avausNakymassa();
+    nappi.setAttribute('aria-pressed', String(this.maatiedotHalutaan()));
+  }
+
   paivitaZoomiNapit() {
+    // Maiden lehdet -nappi elää samaa elämää kuin zoomi: se piiloutuu
+    // avausnäkymässä ja palaa kartan mukana. Kutsu on ennen zoomin
+    // varhaista paluuta, jottei se jää tekemättä.
+    this.paivitaMaalehtiNappi();
     const sisaan = document.getElementById('zoom-in');
     const ulos = document.getElementById('zoom-out');
     if (!sisaan || !ulos) return;
@@ -7439,9 +7483,13 @@ export class UI {
     seuraava.querySelector('.alanappi-aihe').textContent = sivunNimi(nyt + 1);
     edellinen.hidden = nyt <= 0;
     seuraava.hidden = viimeisella;
-    // Valikko vain maalehdessä: kaupunkilehdessä on kolme sivua eikä
-    // sisällysluetteloa, joten napille ei olisi mitään avattavaa.
-    palkki.querySelector('.sisallysnappi').hidden = !maalehti || sivuja < 3;
+    /*
+     * Valikko molemmissa lehdissä. Aiemmin se oli vain maalehdessä,
+     * koska kaupunkilehdellä ei ole omaa sisällyssivua — mutta juuri
+     * siksi se tarvitsee valikon: ilman sitä maaosioon pääsi vain
+     * etusivun pienestä kulmalinkistä, jota omistaja ei löytänyt.
+     */
+    palkki.querySelector('.sisallysnappi').hidden = sivuja < 3;
     palkki.hidden = sivuja < 2;
   }
 
@@ -7455,8 +7503,7 @@ export class UI {
   avaaSisallysvalikko() {
     const vanha = this.arrivalDialog.querySelector(':scope > .sisallys-levy');
     if (vanha) { vanha.remove(); return; }
-    const sisallys = this.tutkiSivut?.find?.((s) => s.sisallys)?.sisallys
-      ?? this.tutkiSivut ?? [];
+    const sisallys = this.sisallysRivit();
     const levy = html('div', 'sisallys-levy');
     const sulje = () => levy.remove();
     const otsikkoRivi = html('div', 'sisallys-levy-ylä');
@@ -8024,6 +8071,9 @@ export class UI {
    * ensimmäinen kuva on käytännössä aina sen paras kuva.
    */
   sisallysTiedot(osa) {
+    // Toimintorivi (esim. maaosio) kertoo itse mitä se on: sillä ei ole
+    // nostoja, joista ingressin voisi johtaa.
+    if (osa.toiminto) return { kuva: osa.kuva ?? null, ingressi: osa.ingressi ?? '' };
     if (osa.kartta) return { kuva: osa.kartta.tiedosto, ingressi: 'Kaupungit ja maasto kartalla.' };
     if (osa.numerot) return { kuva: null, ingressi: 'Väkiluku, pinta-ala ja muut tunnusluvut.' };
     const ensimmainen = osa.lista?.[0]?.kohteet?.[0] ?? osa.nostot?.[0] ?? null;
@@ -8050,6 +8100,42 @@ export class UI {
     kohde.appendChild(this.rakennaSisallysLista(kategoria.sisallys));
   }
 
+  /**
+   * Sisällysluettelon rivit sille lehdelle, joka on nyt auki.
+   *
+   * Maalehdellä on oma sisällyssivunsa, jonka rivit ovat valmiina.
+   * Kaupunkilehdellä ei ole — sen sisällys ON tämä lista, ja se
+   * kootaan sivupinosta.
+   *
+   * Viimeisenä maaosio omana rivinään (omistajan havainto 8.8.2026:
+   * *"En pääse Saksan lehteen mistään?"*). Etusivun kulmalinkki jäi
+   * löytymättä, koska se on pieni ja näkyy vain etusivulla; tässä se on
+   * samassa luettelossa kuin kaikki muukin, mistä sitä osataan etsiä.
+   */
+  sisallysRivit() {
+    const omaSisallys = this.tutkiSivut?.find?.((s) => s.sisallys)?.sisallys;
+    const rivit = [...(omaSisallys ?? this.tutkiSivut ?? [])];
+    // Vain kaupunkilehdessä: maalehti on oma lehtensä, eikä se voi
+    // linkittää itseensä.
+    if (this.tutkiTila !== 'maa' && this.tutkiMaaIso) {
+      const maa = this.arrivalMaaTiedot?.nimi ?? 'Maa';
+      const iso = this.tutkiMaaIso;
+      // Kuva samasta aineistosta kuin maalehden oma sisällys: kartta jos
+      // maalla on, muuten maan ensimmäinen aihekuva. Kuvaton rivi
+      // erottuisi muista, ja juuri tämän rivin pitää näyttää samalta.
+      const ensimmainen = (MAA_KATEGORIAT[iso] ?? [])
+        .flatMap((a) => [...(a.nostot ?? []), ...(a.lista ?? []).flatMap((r) => r.kohteet ?? [])])
+        .find((k) => k.tiedosto)?.tiedosto ?? null;
+      rivit.push({
+        nimi: `${maa}-osio`,
+        kuva: MAAKARTAT[iso]?.tiedosto ?? ensimmainen,
+        ingressi: 'Koko maan oma lehti: kartta, tunnusluvut ja menovinkit.',
+        toiminto: () => this.avaaMaalehti(iso),
+      });
+    }
+    return rivit;
+  }
+
   /** Sisällysluettelon rivit. Käytetään sekä etusivulla että valikossa. */
   rakennaSisallysLista(sisallys, { suljeValikko = null } = {}) {
     const lista = html('div', 'sisallys');
@@ -8070,6 +8156,12 @@ export class UI {
       if (ingressi) teksti.appendChild(html('span', 'sisallys-ingressi', ingressi));
       rivi.appendChild(teksti);
       rivi.addEventListener('click', () => {
+        /*
+         * Rivi vie joko lehden sivulle tai omaan toimintoonsa. Maaosio
+         * on jälkimmäinen: se avaa kokonaan toisen lehden, eikä sille
+         * ole sivunumeroa tässä pinossa.
+         */
+        if (osa.toiminto) { suljeValikko?.(); osa.toiminto(); return; }
         const i = (this.tutkiSivut ?? []).indexOf(osa);
         if (i >= 0) {
           suljeValikko?.();
@@ -10596,9 +10688,12 @@ export class UI {
     // (kerros: false) — se kytketään tässä samalla tavalla.
     this.tahdistaVertailu(tunnus === 'vertailu');
     if (this.dead) return;
-    // Maiden tiedot on samaa perhettä: kartan tila, ei kerros.
-    this.tahdistaMaatiedot(tunnus === 'maatiedot');
+    // Maiden tiedot on samaa perhettä: kartan tila, ei kerros. Tila
+    // voi olla päällä myös kartan omasta napista, joten varusteen
+    // vaihto ei saa sammuttaa sitä yksin (ks. maatiedotHalutaan).
+    this.tahdistaMaatiedot(this.maatiedotHalutaan());
     if (this.dead) return;
+    this.paivitaMaalehtiNappi();
     this.paivitaLinssiNappi();
     this.paivitaLinssiTiedot();
     this.piirraLinssiSelite();

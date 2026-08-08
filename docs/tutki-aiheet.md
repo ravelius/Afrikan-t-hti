@@ -387,3 +387,22 @@ kuvakertomus alkoi, sen sijaan että se kantaisi omaa sivuaan.
 Sama koskee valokuvausta: sekin oli Saksalla yhden noston sivu ja
 poistettiin. Yhden noston aihesivu on lähes aina merkki siitä, että
 aihe kuuluu jonkin toisen sivun sisään tai toiseen maahan.
+
+## Maiden tiedot -varusteelle pitää keksiä uusi merkitys
+
+Omistaja ei löytänyt maalehteä pelistä (8.8.2026: *"En pääse Saksan
+lehteen mistään?"* ja *"Kartalta pitäisi päästä myös"*). Maalehden
+ainoa normaalireitti oli kaupunkilehden etusivun pieni kulmalinkki
+"Saksa-osio ›", ja kartalta se aukesi vain Maiden tiedot -varusteella,
+joka ansaitaan kokemuspisteillä.
+
+v380:ssa löydettävyys korjattiin kolmella reitillä: kartan oma
+"Maiden lehdet" -nappi, maaosion rivi kaupunkilehden
+sisällysvalikossa ja sama valikko käyttöön myös kaupunkilehdessä.
+
+**Varuste jätettiin ennalleen tarkoituksella** (Fablen ohje: älä
+poista äläkä muuta tässä kirissä), mutta sen päähyöty on nyt
+poissa — se avaa saman kartan tilan, johon pääsee ilmankin.
+Omistaja päättää myöhemmin, tuleeko varusteelle uusi merkitys (esim.
+maiden vertailu, tunnusluvut kartalle tai suodatin "mitkä maat olen
+jo lukenut") vai poistetaanko se. Tätä EI ratkaista loppukirissä.

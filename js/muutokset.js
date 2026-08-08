@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 382, teksti: 'Maan lehteen pääsee nyt kartalta ja sisällysvalikosta' },
   { v: 381, teksti: 'Lontoon nähtävyysjutut samaan tiiviiseen malliin' },
   { v: 380, teksti: 'Pohjolan ja Baltian maakartat: kuusi maata lisää' },
   { v: 379, teksti: 'Menovinkit Turkille, Venäjälle, Ukrainalle ja Romanialle' },
