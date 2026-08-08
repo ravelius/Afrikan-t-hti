@@ -19,6 +19,13 @@ tämän ja ottaa roolinsa tästä. Omistaja ohjaa kaikkea Fablen kautta.)*
   tilannetaulua (js/tyohuone-tilanne.js) — päivitys aina, kun
   raportti saapuu tai työjono muuttuu; muut sessiot eivät kirjoita
   siihen.
+- **Uuden jutun ensimmäinen kierros (omistajan ohje 8.8.2026):**
+  kun peliin tulee uudentyyppinen ominaisuus tai sisältölaji
+  (esim. kaupunkien nähtävyys-pop-upit), Fable tekee ensimmäisen
+  toteutuksen ITSE ja hioo sen omistajan kanssa valmiiksi asti.
+  Vasta sitten työ monistetaan Opukselle tai Sonnetille — täysin
+  speksattuna, valmiin mallin kanssa. Pienemmille malleille menee
+  monistustyö, ei muodon hakeminen.
 
 ## Opus — toimitus: lehdet ja koodi
 
