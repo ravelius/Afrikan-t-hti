@@ -6735,7 +6735,19 @@ export class UI {
     }
     nayta();
     kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
-    this.arrivalDialog.appendChild(kortti);
+    /*
+     * Suurennos liitetään PÄÄLLIMMÄISEEN avoimeen dialogiin. Modaali
+     * (showModal) elää selaimen top layer -kerroksessa, joka peittää
+     * kaiken ulkopuolisen z-indexistä riippumatta — kun kuvaa
+     * napautettiin nähtävyysikkunassa, arrivalDialogiin liitetty
+     * suurennos jäi ikkunan TAAKSE (omistajan löytö 8.8.2026).
+     * Saman dialogin lapsena suurennos on samassa kerroksessa ja
+     * z-index 70 nostaa sen kortin ylle; position: fixed kattaa yhä
+     * koko ruudun, koska dialogilla ei ole transformia.
+     */
+    const nahtavyys = document.getElementById('nahtavyys-dialog');
+    const isanta = nahtavyys?.open ? nahtavyys : this.arrivalDialog;
+    isanta.appendChild(kortti);
     this.kulttuuriKuvaEl = kortti;
   }
 
@@ -8378,6 +8390,20 @@ export class UI {
   avaaNahtavyys(kohde, numero) {
     const dialogi = document.getElementById('nahtavyys-dialog');
     if (!dialogi) return;
+    /*
+     * Sulku taustaa napauttamalla (omistajan toive 8.8.2026). Kortti
+     * täyttää dialogin tarkalleen, joten dialogiin itseensä osuva
+     * napautus voi tulla vain reunojen ulkopuolelta eli taustalta.
+     * Jos kuvasuurennos on auki, suljetaan ensin vain se.
+     */
+    if (!dialogi.dataset.taustaSulkee) {
+      dialogi.dataset.taustaSulkee = '1';
+      dialogi.addEventListener('click', (e) => {
+        if (e.target !== dialogi) return;
+        if (this.kulttuuriKuvaEl) { this.suljeKulttuuriKuva(); return; }
+        dialogi.close();
+      });
+    }
     document.getElementById('nahtavyys-otsikko').textContent = kohde.nimi;
     const aika = document.getElementById('nahtavyys-aika');
     aika.textContent = [numero ? `Kohde ${numero}` : null, kohde.aika]
@@ -8419,6 +8445,10 @@ export class UI {
       if (paikat[j] <= kappaleet.length) return;
       sisalto.appendChild(this.nahtavyydenKuva(kuva));
     });
+
+    // Jutun ensimmäinen kuva saa oman luokkansa: vaakana se levenee
+    // koko palstalle, pystynä se pysyy pienenä (omistajan ohje).
+    sisalto.querySelector('.nahtavyys-kuvakehys')?.classList.add('nahtavyys-ensikuva');
 
     if (kohde.wiki) {
       const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
@@ -8488,6 +8518,19 @@ export class UI {
     el.alt = kuva.selite ?? '';
     // Sama peiliputki ja suurennus kuin nostojen kuvilla.
     this.varustaNostonKuva(el, kuva, 900);
+    /*
+     * Kuvan suunta luokaksi kehykseen (omistajan ohje 8.8.2026:
+     * jutun ensimmäinen kuva saa olla iso jos se on vaaka; pysty
+     * pidetään pienempänä). Suunta selviää vasta kun selain tietää
+     * kuvan mitat, joten luokka lisätään load-hetkellä — CSS päättää
+     * koon vasta ensikuva+suunta-yhdistelmästä.
+     */
+    const luokita = () => {
+      if (!el.naturalWidth || !el.naturalHeight) return;
+      kehys.classList.add(el.naturalWidth >= el.naturalHeight ? 'kuva-vaaka' : 'kuva-pysty');
+    };
+    if (el.complete) luokita();
+    el.addEventListener('load', luokita, { once: true });
     kehys.appendChild(el);
     const teksti = html('figcaption', 'nahtavyys-kuvateksti');
     if (kuva.selite) teksti.appendChild(html('span', 'nahtavyys-selite', kuva.selite));

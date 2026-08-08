@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 372, teksti: 'Suurennos ikkunan eteen ja pop-up kiinni taustaa napauttaen' },
+  { v: 371, teksti: 'Nähtävyysjutun avauskuva: vaaka isona, pysty pienempänä' },
+  { v: 370, teksti: 'Lehden nimiö aina keskellä, osiolinkki omalle rivilleen' },
+  { v: 369, teksti: 'Nähtävyyskortti keskelle ruutua kaikilla laitteilla' },
   { v: 368, teksti: 'Kaikkien maiden menovinkit samaan listamalliin' },
   { v: 367, teksti: 'Nähtävyysjutut lyhyemmiksi, pienemmät kuvat, pop-up korjattu' },
   { v: 366, teksti: 'Lehden nimi on nyt Unohdettu aarre' },

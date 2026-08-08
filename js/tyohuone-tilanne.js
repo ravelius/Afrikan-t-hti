@@ -11,8 +11,9 @@
 
 export const TILANNE = {
   paivitetty: '8.8.2026',
-  tavoite: 'Eurooppa valmiiksi → omistajan oma testikierros → vasta '
-    + 'sitten muut maanosat.',
+  tavoite: 'LOPPUKIRI (omistajan tilaus 8.8. ilta): kaikki Euroopan '
+    + 'kaupunki- ja maalehdet valmiiksi. Agenttiparvet sallittu '
+    + 'vauhtiin, kunhan mitään turhaa ei tehdä.',
   rivit: [
     {
       tekija: 'Fable',
@@ -32,24 +33,27 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'JÄRJESTYS MUUTTUI (omistajan palaute 8.8. ilta): '
-        + 'kuusi lehtimaata listamalliin HETI, DEU ensin — '
-        + 'Berliinin menovinkit näyttivät vielä vanhaa nostomallia. '
-        + 'Sitten v361-maat, vasta lopuksi 19 uutta maata. '
-        + 'Valmiina: v366 rakenneuudistus, v363 listamalli, v361.',
-      seuraavaksi: 'Raportti DEU:sta heti kun valmis, jotta '
-        + 'omistaja voi katsoa Berliinin uudestaan.',
+      tehtava: 'Loppukiri: menovinkit 6–10 parasta per maa, '
+        + 'painotus museoihin ja näyttelyihin joissa verkossa '
+        + 'pääsee oikeasti katsomaan sisältöä (ei '
+        + 'yleisesittelyjä). Maalehti jokaiselle Euroopan maalle '
+        + '(Ranskan Historia-sivu mukaan) ja lyhyt kaupunkilehti '
+        + 'jokaiselle kaupungille, jolta se puuttuu. Agenttiparvet '
+        + '3–4 rinnakkain.',
+      seuraavaksi: 'Välitilanneraportti puolivälissä; loppuraportti '
+        + 'kun Eurooppa on valmis.',
     },
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'odottaa',
-      tehtava: 'Kaista tyhjä. Valmiina: v364 selitepallot kartan '
-        + 'sävyyn ja linkkien kevyempi alleviivaus (lehti ja '
-        + 'karttanäkymä; aloitusnäkymän linkki jätetty vahvaksi '
-        + 'luettavuuden takia), v362 karttojen ilme, v360 Espanjan '
-        + 'tv-nappi.',
-      seuraavaksi: 'Uusi tehtävä testikierroksen tarpeiden mukaan.',
+      tila: 'tyossa',
+      tehtava: 'Loppukiri: maakartta (korkokartta + '
+        + 'kaupunkipisteet) ja intro jokaiselle Euroopan maalle, '
+        + 'jolta ne puuttuvat — ITA/ESP/SWE-mallilla, '
+        + 'agenttiparvet 3–4 rinnakkain, erä per PR. '
+        + 'Kaupunkikartat uusille kaupungeille vasta '
+        + 'nähtävyysvaiheessa.',
+      seuraavaksi: 'Eräraportit Fablelle; esteistä heti.',
     },
     {
       tekija: 'Sonnet 1',
@@ -90,6 +94,14 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Berliinin menovinkit listamallina — KATSO UUDESTAAN (v368)',
+    ohje: 'Avaa Berliinin kaupunkilehden viimeinen sivu: menovinkit '
+      + 'ovat nyt listaa ryhmäotsikoin, pikkukuvin ja linkein — '
+      + 'sama malli nyt kaikissa maissa. HUOM: varmista ensin että '
+      + 'pelin alakulmassa lukee v368 — jos ei, sulje ja avaa peli '
+      + 'pari kertaa, niin uusi versio latautuu.',
+  },
   {
     otsikko: 'Berliinin nähtävyysjutut korjattu — KATSO UUDESTAAN (v367)',
     ohje: 'Avaa Berliinin kaupunkikartta ja napauta numeroita: '
