@@ -8871,16 +8871,31 @@ body.vertailu-tila .pawns { display: none; }
  * mitään" ei voita "asetin jonkin arvon" samalla erottelutarkkuudella.
  */
 .dialog.nahtavyys-arkki {
+  /*
+   * Keskitys on kumottava erikseen: .dialog.arkki asettaa
+   * margin: 0 + inset: 0 (lehti täyttää ruudun, joten sillä ei ole
+   * keskitettävää), ja pelkkä koon palautus jätti nähtävyyskortin
+   * roikkumaan vasempaan yläkulmaan — iPhonella otsikko jäi
+   * tilapalkin alle eikä taustasivu näkynyt vasemmalla (omistajan
+   * löytö 8.8.2026, v368). inset: 0 + margin: auto on tapa, jolla
+   * selain itse keskittää modaalin molemmilla akseleilla.
+   */
+  inset: 0;
+  margin: auto;
   width: min(90vw, 640px);
   height: auto;
-  max-height: 92dvh;
+  /* Safe area mukaan: iOS:n loveus ja kotipalkki eivät saa syödä
+   * kortin reunoja, joten pystyvara lasketaan niiden yli. */
+  max-height: calc(100dvh - 3rem
+    - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
 }
 
 .dialog.nahtavyys-arkki .nahtavyys-kortti {
   width: auto;
   max-width: none;
   height: auto;
-  max-height: 92dvh;
+  /* Kortti ei koskaan ylitä dialogia — vieritys pysyy kortin sisällä. */
+  max-height: 100%;
   padding: 1.2rem 1.15rem 1rem;
 }
 
